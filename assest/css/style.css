@@ -17,36 +17,57 @@ a {
     text-decoration: none; /* bỏ gạch chân thẻ a */
 }
 
-.header {
-    width: 1170px;
+.header-content {
+    width: 1400px;
     max-width: calc(100% - 48px);
     margin-left: auto;
     margin-right: auto;
 }
 
 /* header */
+.header {
+    background-color: #eaf9fc;
+    position: fixed;
+    right: 0;
+    left: 0;
+}
+
 .header-body {
     display: flex;
+    align-items: center; /*canh giữa*/
+
+}
+
+.logo {
+    width: 150px;
+    height: 100px;
 }
 
 .nav {
     margin-left: auto;
 }
 
-.nav ul {
+.nav ul, .action ul {
     display: flex;
 }
 
 .nav a {
     color: gray;
     font-size: 1.6rem;
-    padding: 8px 21px;
+    padding: 8px 20px;
 }
 
 .nav a:hover {
     color: black;
-    text-shadow: 1px 0 0 currentColor;
+    text-shadow: 1px 0 0 currentColor; /*text-shadow - tạo đổ bóng cho item*/
 }
+
+.action .btn {
+    font-size: 1.6rem;
+    padding: 8px 10px;
+}
+
+
 
 
 
