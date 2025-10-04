@@ -9,4 +9,45 @@ html {
 /* Khôi phục lại cỡ chữ mặc định theo rem */
 body {
     font-size: 1.6rem;
+    font-family: "Poppins", sans-serif;
 }
+
+/* common */
+a {
+    text-decoration: none; /* bỏ gạch chân thẻ a */
+}
+
+.header {
+    width: 1170px;
+    max-width: calc(100% - 48px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* header */
+.header-body {
+    display: flex;
+}
+
+.nav {
+    margin-left: auto;
+}
+
+.nav ul {
+    display: flex;
+}
+
+.nav a {
+    color: gray;
+    font-size: 1.6rem;
+    padding: 8px 21px;
+}
+
+.nav a:hover {
+    color: black;
+    text-shadow: 1px 0 0 currentColor;
+}
+
+
+
+/* text-align: center - canh giữa box chứa nó */
