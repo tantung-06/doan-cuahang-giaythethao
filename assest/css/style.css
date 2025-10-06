@@ -67,16 +67,6 @@ a {
     text-shadow: 0 0 1px currentColor; /*text-shadow: offsetX: dịch sang trái/phải, offsetY: dịch lên/xuống, blur: làm mờ bóng, color; - tạo đổ bóng cho item*/
 }
 
-@media screen and (max-width: 800px){
-    .nav {
-        display: none;
-    }
-
-    .action {
-        margin-left: auto;
-    }
-}
-
 .action .btn {
     font-size: 1.6rem;
     font-weight: 500;
@@ -105,6 +95,8 @@ a {
     width: 16.6667%;
     border-right: 1px solid rgba(0, 0, 0, 0.2)
 }
+
+
 
 .container-right {
     padding-left: 5px;
@@ -181,6 +173,7 @@ a {
     margin: 0 5px 10px 5px;
     display: block;
     overflow: hidden;
+    white-space: nowrap;
 }
 
 .price {
@@ -197,4 +190,20 @@ a {
 
 .price-current {
     color: black;
+}
+
+@media screen and (max-width: 800px){
+    .nav {
+        width: 100%;
+        display: none;
+    }
+
+    .action {
+        margin-left: auto;
+    }
+
+    .container-left {
+        width: 100%;
+        display: none;
+    }
 }
