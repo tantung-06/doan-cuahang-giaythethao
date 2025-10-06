@@ -79,6 +79,7 @@ a {
 
 .action .btn {
     font-size: 1.6rem;
+    font-weight: 500;
     padding: 0 7px;
     color: black;
 }
@@ -99,21 +100,31 @@ a {
 }
 
 .container-left {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 5px;
+    padding-right: 5px;
     width: 16.6667%;
-    border-right: 1px solid rgba(0, 0, 0, 0.2);
+    border-right: 1px solid rgba(0, 0, 0, 0.2)
 }
 
 .container-right {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: 5px;
+    padding-right: 5px;
     width: 83.3333%;
 }
 
+.container-product {
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 20%;
+}
+
+/* category */
 .category {
     background-color: white;
     border-radius: 2px; /*bo góc*/
+    display: block;
+    overflow: hidden;
+    padding: 0 5px;
 }
 
 .category h3{
@@ -137,4 +148,53 @@ a {
 .category-list:hover {
     color: black;
     text-shadow: 0 0 1px currentColor;
+}
+
+/* product */
+.product {
+    display: flex;
+}
+
+.product-item {
+    background-color: white;
+}
+
+.product-img {
+    width: 100%;
+    height: auto;
+}
+
+.product-name {
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: black;
+    line-height: 1.8rem;
+    height: 3.8rem;
+    margin: 10px 5px;
+    display: block;
+    overflow: hidden;
+}
+
+.product-company {
+    font-size: 1.5rem;
+    color: rgba(0, 0, 0, 0.5);
+    margin: 0 5px 10px 5px;
+    display: block;
+    overflow: hidden;
+}
+
+.price {
+    font-size: 1.5rem;
+    margin: 0 5px;
+    padding-bottom: 10px;
+    display: block;
+    overflow: hidden;
+}
+
+.price-old {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.price-current {
+    color: black;
 }
