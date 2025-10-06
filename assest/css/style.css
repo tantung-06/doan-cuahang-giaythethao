@@ -38,7 +38,6 @@ a {
 .header-body {
     display: flex;
     align-items: center; /*canh giữa*/
-
 }
 
 .logo {
@@ -72,6 +71,10 @@ a {
     font-weight: 500;
     padding: 0 7px;
     color: black;
+}
+
+.nav_bars {
+    display: none;
 }
 
 /* container */
@@ -115,7 +118,7 @@ a {
     background-color: white;
     border-radius: 2px; /*bo góc*/
     display: block;
-    overflow: hidden;
+    /* overflow: hidden; */
     padding: 0 5px;
 }
 
@@ -124,6 +127,7 @@ a {
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     padding: 12px 24px;
     font-weight: 600; /*điều chỉnh độ đậm của chữ (nét dày)*/
+    /* white-space: nowrap; */
 }
 
 .category-item {
@@ -133,8 +137,10 @@ a {
 .category-list {
     font-size: 1.5rem;
     color: black;
-    padding: 4px 0;
     display: block;
+    margin: 10px 0; 
+    /* display: block; */
+    /* white-space: nowrap; */
 }
 
 .category-list:hover {
@@ -145,10 +151,13 @@ a {
 /* product */
 .product {
     display: flex;
+    flex-wrap: wrap;
 }
 
 .product-item {
     background-color: white;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
 }
 
 .product-img {
@@ -163,7 +172,7 @@ a {
     line-height: 1.8rem;
     height: 3.8rem;
     margin: 10px 5px;
-    display: block;
+    /* display: block; */
     overflow: hidden;
 }
 
@@ -171,8 +180,8 @@ a {
     font-size: 1.5rem;
     color: rgba(0, 0, 0, 0.5);
     margin: 0 5px 10px 5px;
-    display: block;
-    overflow: hidden;
+    /* display: block; */
+    /* overflow: hidden; */
     white-space: nowrap;
 }
 
@@ -180,19 +189,34 @@ a {
     font-size: 1.5rem;
     margin: 0 5px;
     padding-bottom: 10px;
-    display: block;
-    overflow: hidden;
+    /* display: block; */
+    /* overflow: hidden; */
 }
 
 .price-old {
     color: rgba(0, 0, 0, 0.5);
+    text-decoration: line-through;
 }
 
 .price-current {
-    color: black;
+    color: red;
 }
 
-@media screen and (max-width: 800px){
+/* footer */
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Mobile and Tablet: width < 1024px */
+@media only screen and (max-width: 1023px) {
+
+}
+
+/* Mobile: width < 740px */
+@media only screen and (max-width: 739px) {
+    /* header */
     .nav {
         width: 100%;
         display: none;
@@ -202,8 +226,32 @@ a {
         margin-left: auto;
     }
 
+    .nav_bars {
+        display: block;
+        width: 24px;
+        height: 24px;
+    }
+
+    /* container */
+    .container-right {
+        width: 100%
+    }
+    
+    .container-product {
+        width: 50%;
+    }
+
     .container-left {
-        width: 100%;
         display: none;
     }
+
 }
+/* Tablet: width >= 740px and width < 1024px */
+@media only screen and (min-width: 740px) and (max-width: 1023px) {
+    /* container */
+    .container-product {
+        width: 25%;
+    }
+}
+/* PC: width >= 1024px */
+
