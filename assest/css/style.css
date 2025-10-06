@@ -9,7 +9,7 @@ html {
 /* Khôi phục lại cỡ chữ mặc định theo rem */
 body {
     font-size: 1.6rem;
-    font-family: "Poppins", sans-serif;
+    font-family: "Poppins", sans-serif; /*kiểu chữ*/
 }
 
 /* common */
@@ -22,14 +22,17 @@ a {
     max-width: calc(100% - 48px);
     margin-left: auto;
     margin-right: auto;
+    padding: 0 10px;
 }
 
 /* header */
 .header {
     background-color: #eaf9fc;
     position: fixed;
+    top: 0;
     right: 0;
     left: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .header-body {
@@ -45,30 +48,93 @@ a {
 
 .nav {
     margin-left: auto;
+    margin-right: auto;
 }
 
 .nav ul, .action ul {
     display: flex;
+    white-space: nowrap; /*không cho text xuống dòng*/
 }
 
 .nav a {
     color: gray;
     font-size: 1.6rem;
-    padding: 8px 20px;
+    padding: 0 10px;
 }
 
 .nav a:hover {
     color: black;
-    text-shadow: 1px 0 0 currentColor; /*text-shadow - tạo đổ bóng cho item*/
+    text-shadow: 0 0 1px currentColor; /*text-shadow: offsetX: dịch sang trái/phải, offsetY: dịch lên/xuống, blur: làm mờ bóng, color; - tạo đổ bóng cho item*/
+}
+
+@media screen and (max-width: 800px){
+    .nav {
+        display: none;
+    }
+
+    .action {
+        margin-left: auto;
+    }
 }
 
 .action .btn {
     font-size: 1.6rem;
-    padding: 8px 10px;
+    padding: 0 7px;
+    color: black;
 }
 
+/* container */
+.container {
+    margin-top: 100px;
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
+.container-main {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 1400px;
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+}
 
+.container-left {
+    padding-left: 12px;
+    padding-right: 12px;
+    width: 16.6667%;
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
 
+.container-right {
+    padding-left: 12px;
+    padding-right: 12px;
+    width: 83.3333%;
+}
 
-/* text-align: center - canh giữa box chứa nó */
+.category {
+    background-color: white;
+    border-radius: 2px; /*bo góc*/
+}
+
+.category h3{
+    font-size: 1.8rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    padding: 12px 24px;
+    font-weight: 600; /*điều chỉnh độ đậm của chữ (nét dày)*/
+}
+
+.category-item {
+    padding: 8px 24px;;
+}
+
+.category-list {
+    font-size: 1.5rem;
+    color: black;
+    padding: 4px 0;
+    display: block;
+}
+
+.category-list:hover {
+    color: black;
+    text-shadow: 0 0 1px currentColor;
+}
