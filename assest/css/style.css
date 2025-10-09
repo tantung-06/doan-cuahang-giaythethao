@@ -40,6 +40,15 @@ a {
     align-items: center; /*canh giữa*/
 }
 
+.nav_bars {
+    display: none;
+    font-size: 2rem;
+}
+
+.bars {
+    color: black;
+}
+
 .logo {
     width: 150px;
     height: 100px;
@@ -62,19 +71,18 @@ a {
 }
 
 .nav a:hover {
+    cursor: pointer;
     color: black;
     text-shadow: 0 0 1px currentColor; /*text-shadow: offsetX: dịch sang trái/phải, offsetY: dịch lên/xuống, blur: làm mờ bóng, color; - tạo đổ bóng cho item*/
 }
 
-.action .btn {
-    font-size: 1.6rem;
-    font-weight: 500;
-    padding: 0 7px;
-    color: black;
+.action {
+    font-size: 2rem;
 }
 
-.nav_bars {
-    display: none;
+.icon {
+    margin: 0 4px;
+    color: black;
 }
 
 /* container */
@@ -98,8 +106,6 @@ a {
     width: 16.6667%;
     border-right: 1px solid rgba(0, 0, 0, 0.2)
 }
-
-
 
 .container-right {
     padding-left: 5px;
@@ -146,6 +152,7 @@ a {
 .category-list:hover {
     color: black;
     text-shadow: 0 0 1px currentColor;
+    cursor: pointer;
 }
 
 /* product */
@@ -204,9 +211,6 @@ a {
 
 /* footer */
 .footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
 /* Mobile and Tablet: width < 1024px */
@@ -228,8 +232,6 @@ a {
 
     .nav_bars {
         display: block;
-        width: 24px;
-        height: 24px;
     }
 
     /* container */
@@ -253,5 +255,3 @@ a {
         width: 25%;
     }
 }
-/* PC: width >= 1024px */
-
