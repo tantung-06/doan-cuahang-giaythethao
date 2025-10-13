@@ -131,7 +131,7 @@ a {
 .category h3{
     font-size: 1.8rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    padding: 12px 24px;
+    padding: 18px 24px;
     font-weight: 600; /*điều chỉnh độ đậm của chữ (nét dày)*/
     /* white-space: nowrap; */
 }
@@ -210,8 +210,13 @@ a {
 }
 
 /* footer */
-/* .footer {
-} */
+.footer {
+    background: #333;
+    color: #fff;
+    font-size: 14px;
+    height: 100px;
+    padding: 10px 0 0 10px;
+}
 
 /* Mobile and Tablet: width < 1024px */
 @media only screen and (max-width: 1023px) {
