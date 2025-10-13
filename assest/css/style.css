@@ -27,7 +27,7 @@ a {
 
 /* header */
 .header {
-    background-color: #eaf9fc;
+    background: linear-gradient(to right, #f4fbfc, #e0f8fd);
     position: fixed;
     top: 0;
     right: 0;
