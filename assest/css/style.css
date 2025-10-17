@@ -251,6 +251,10 @@ a {
         margin-left: auto;
     }
 
+    .btn {
+        display: none;
+    }
+
     .nav_bars {
         display: block;
     }
