@@ -12,8 +12,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Sen:wght@400.800&display=swap" rel="stylesheet">
 
-    <!-- style scc -->
+    <!-- css -->
     <link rel="stylesheet" href="./assest/css/style.css">
+    <link rel="stylesheet" href="./assest/css/register_login.css">
 
     <!-- fonts icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
@@ -21,14 +22,14 @@
     <title>StepLab Store</title>
 </head>
 
-<body style="height: auto">
+<body>
     <!-- header -->
-    <header class="header">
+    <header>
         <div class="header-content">
             <div class="header-body">
                 <!-- nav bars -->
                 <div class="nav_bars">
-                    <a href="#" class="bars"><i class="fa-solid fa-bars"></i></a>
+                    <a href="#"><i class="fa-solid fa-bars"></i></a>
                 </div>
                 <!-- logo -->
                 <img src="./assest/img/StepLab_Logo.svg" alt="3S_Logo" class="logo">
@@ -37,18 +38,16 @@
                 <div class="nav">
                     <ul>
                         <li><a href="#">Trang Chủ</a></li>
-                        <li><a href="#">Sản Phẩm</a></li>
                         <li><a href="#">Giới Thiệu</a></li>
+                        <li><a href="#">Sản Phẩm</a></li>
                     </ul>
                 </div>
 
-                <!-- btn action -->
-
+                <!-- icon -->
                 <div class="action">
                     <ul>
-                        <li><a href="./pages/login.html" class="icon"><i class="fa-solid fa-user"></i></a></li>
-                        <li><a href="./pages/login.html" class="btn">Đăng nhập</a></li>
-                        <!-- <li><a href="./pages/register.html" class="btn">Đăng ký</a></li> -->
+                        <li><a href="#" class="icon"><i class="fa-solid fa-user"></i></a></li>
+                        <li><a href="#" class="btn">Đăng nhập</a></li>
                         <li><a href="#" class="icon"><i class="fa-solid fa-cart-shopping"></i></a></li>
                         <li><a href="#" class="btn">Giỏ hàng</a></li>
                     </ul>
@@ -56,6 +55,36 @@
             </div>
         </div>
     </header>
+
+    <!-- form login/register -->
+    <div class="login-register" id="login">
+        <div class="container-login-register">
+            <div class="form-box" id="login-form">
+                <form action="" id="form-1">
+                    <h2>Đăng nhập</h2>
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                    <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+                    <button type="submit" name="login">Đăng nhập</button>
+                    <p>Bạn chưa có tài khoản? <a href="#">Đăng ký</a></p>
+                </form>    
+            </div>
+        </div>
+    </div>
+
+    <div class="login-register" id="register">
+        <div class="container-login-register">
+            <div class="form-box" id="register-form">
+                <form action="" id="form-2">
+                    <h2>Đăng ký</h2>
+                    <input type="text" name="username" placeholder="Họ và tên" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Mật khẩu" required>
+                    <button type="submit" name="register">Đăng ký</button>
+                    <p>Bạn đã có tài khoản? <a href="#">Đăng nhập</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <!-- container -->
     <div class="container">
@@ -79,7 +108,7 @@
             <!-- container right -->
             <div class="container-right">
                 <div class="product">
-                    <div class="container-product">
+                    <div class="product-list">
                         <div class="product-item">
                             <img class="product-img" src="./assest/img/Nike_Pegasus_Plus.jpg" alt="Nike Pegasus Plus">
                             <h4 class="product-name">Giày Chạy Bộ Nam Nike Pegasus Plus - Đen</h4>
@@ -90,7 +119,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container-product">
+                    <div class="product-list">
                         <div class="product-item">
                             <img class="product-img" src="./assest/img/Nike_Reactx_Infinity_Run4.jpg" alt="Nike Pegasus Plus">
                             <h4 class="product-name">Giày Chạy Bộ Nam Nike React Infinity Run4 - Đen</h4>
@@ -101,7 +130,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container-product">
+                    <div class="product-list">
                         <div class="product-item">
                             <img class="product-img" src="./assest/img/Under_Armour_Halo_Runner.jpg" alt="Nike Pegasus Plus">
                             <h4 class="product-name">Giày Chạy Bộ Nữ Under Armour Halo Runner</h4>
@@ -112,7 +141,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container-product">
+                    <div class="product-list">
                         <div class="product-item">
                             <img class="product-img" src="./assest/img/Puma_Deviate_Nitro3.jpg" alt="Nike Pegasus Plus">
                             <h4 class="product-name">Giày Chạy Bộ Nam Puma Deviate Nitro 3 - Xanh Lá</h4>
@@ -123,7 +152,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container-product">
+                    <div class="product-list">
                         <div class="product-item">
                             <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
                             <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
@@ -134,7 +163,51 @@
                             </div>
                         </div>
                     </div>
-                    <div class="container-product">
+                    <div class="product-list">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
+                            <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
+                            <p class="product-company">HOKA</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-list">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
+                            <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
+                            <p class="product-company">HOKA</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-list">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
+                            <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
+                            <p class="product-company">HOKA</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-list">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
+                            <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
+                            <p class="product-company">HOKA</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="product-list">
                         <div class="product-item">
                             <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
                             <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
@@ -158,6 +231,6 @@
     </footer>
 
     <!-- java script -->
-    <script src="./main.js"></script>
+    <script src="./js/main.js"></script>
 </body>
 </html>
