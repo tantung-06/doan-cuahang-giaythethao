@@ -1,4 +1,5 @@
 // === QUẢN LÝ TÀI KHOẢN ===
+
 // Lấy các phần tử
 const loginForm = document.getElementById('login');
 const registerForm = document.getElementById('register');
@@ -190,6 +191,7 @@ navBars.addEventListener('click', function(e) {
 // === QUẢN LÝ SẢN PHẨM ===
 
 // Xem danh danh sách theo loại (phân trang) 
+
 // lấy tất cả các thẻ a trong danh mục và các sản phẩm
 const categoryItems = document.querySelectorAll(".category-list");
 const products = document.querySelectorAll(".product-list");
@@ -219,3 +221,22 @@ categoryItems.forEach(item => {
 })
 
 // Xem chi tiết sản phẩm
+
+// Lấy phần chi tiết sản phẩm và nút đóng
+const productDetail = document.querySelector('.product-detail');
+const closeBtn = document.getElementById('close');
+
+// Lấy tất cả sản phẩm
+const productItems = document.querySelectorAll('.product-item');
+
+// Khi click vào sản phẩm thì hiện chi tiết
+productItems.forEach(item => {
+    item.addEventListener('click', () => {
+        productDetail.style.display = 'flex';
+    });
+});
+
+// Khi click vào nút X thì ẩn chi tiết
+closeBtn.addEventListener('click', () => {
+    productDetail.style.display = 'none';
+});

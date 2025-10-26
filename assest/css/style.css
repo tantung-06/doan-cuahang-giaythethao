@@ -111,7 +111,7 @@ header {
 .container-left {
     padding: 0 5px;
     width: 16.6667%;
-    border-right: 1px solid rgba(0, 0, 0, 0.1)
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* category */
@@ -172,6 +172,7 @@ header {
 .product-list {
     padding: 0 5px;
     width: 20%;
+    cursor: pointer;
 }
 
 .product-item {
@@ -179,6 +180,7 @@ header {
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
     margin-bottom: 10px;
     border-radius: 2px;
+    cursor: pointer;
 }
 
 .product-img {
@@ -218,16 +220,120 @@ header {
     color: red;
 }
 
+/* Chi tiết sản phẩm */
+.product-detail {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    display: none;
+}
+
+.product-detail-container {
+    position: relative;
+    background-color: #fff;
+    width: 100%;
+    max-width: 1000px;
+    height: 500px;
+    padding: 25px;
+    border-radius: 5px;
+    display: flex;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    color: #333;
+}
+
+.product-detail-container img {
+    width: 50%;
+    height: auto;
+    margin-right: 25px;
+}
+
+.product-info {
+    width: 50%;
+}
+
+.product-info .product-company {
+    margin: 20px 5px;
+}
+
+.product-info .product-name {
+    font-weight: 600;
+    font-size: 2rem;
+}
+
+.product-size {
+    display: flex;
+    margin: 20px 5px;
+}
+
+.product-size label,
+.product-quantity label {
+    margin-right: 10px;
+    padding-top: 3px;
+}
+
+.product-size select,
+.product-quantity input {
+    padding: 5px;
+}
+
+
+.product-quantity {
+    display: flex;
+    margin: 20px 5px;
+}
+
+.product-quantity input {
+    width: 100px;
+}
+
+.product-buttons {
+    display: flex;
+    margin: 25px 0;
+}
+
+.product-buttons button {
+    margin: 0 5px;
+    border-radius: 0;
+}
+
+.buy-now {
+    font-size: 1.4rem;
+}
+
+.add-cart {
+    font-size: 1.4rem;
+    background-color: #fff;
+    color: #333;
+    border: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+.add-cart:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
 /* footer */
 .footer {
     background: #333;
     color: #fff;
-    font-size: 14px;
+    font-size: 1.5rem;
     height: 100px;
 }
 
 .footer-list {
-    padding: 10px 0 0 10px;
+    padding: 10px 0 0 20px;
     line-height: 20px;
 }
 
