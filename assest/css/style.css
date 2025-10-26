@@ -128,6 +128,7 @@ header {
     padding: 18px 24px;
     font-weight: 600;
     color: #333;
+    text-align: center;
 }
 
 .category-item {
@@ -138,14 +139,22 @@ header {
     font-size: 1.5rem;
     color: #333;
     display: block;
-    margin: 10px 0; 
+    margin: 8px 0;
+    padding: 6px 8px;
+    cursor: pointer;
+    transition: 0.1s; 
 }
 
 .category-list:hover {
-    color: black;
-    text-shadow: 0 0 1px currentColor;
-    cursor: pointer;
-    transition: 0.5s;
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.category-list.active {
+    font-weight: bold;
+    color:  #3b98fb;
+    background-color: #e9f2ff;
+    border-left: 3px solid  #3b98fb;
+
 }
 
 /* == container right == */
@@ -188,7 +197,7 @@ header {
 }
 
 .product-company {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: rgba(0, 0, 0, 0.5);
     margin: 0 5px 10px 5px;
     white-space: nowrap;
@@ -287,7 +296,6 @@ header {
     .container-left {
         display: none;
     }
-
 }
 /* Tablet: width >= 740px and width < 1024px */
 @media only screen and (min-width: 740px) and (max-width: 1023px) {

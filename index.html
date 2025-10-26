@@ -14,7 +14,7 @@
 
     <!-- css -->
     <link rel="stylesheet" href="./assest/css/style.css">
-    <link rel="stylesheet" href="./assest/css/register_login.css">
+    <link rel="stylesheet" href="./assest/css/register_login_customer.css">
 
     <!-- fonts icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <!-- header -->
+    <!-- === header === -->
     <header>
         <div class="header-content">
             <div class="header-body">
@@ -43,11 +43,15 @@
                     </ul>
                 </div>
 
-                <!-- icon -->
+                <!-- icon, đăng nhập, đăng ký, thông tin khách hàng -->
                 <div class="action">
                     <ul>
+                        <!-- đăng nhập, đăng ký -->
                         <li><a href="#" class="icon"><i class="fa-solid fa-user"></i></a></li>
                         <li><a href="#" class="btn">Đăng nhập</a></li>
+                        <!-- Tên khách hàng -->
+                        <span id="user-name" class="user-name"></span>
+                        <!-- Giỏ hàng -->
                         <li><a href="#" class="icon"><i class="fa-solid fa-cart-shopping"></i></a></li>
                         <li><a href="#" class="btn">Giỏ hàng</a></li>
                     </ul>
@@ -86,7 +90,33 @@
         </div>
     </div>
 
-    <!-- container -->
+    <!-- Thông tin khách hàng -->
+    <div class="login-register" id="customer-info">
+        <div class="container-login-register">
+            <div class="form-box">
+                <h2>Thông tin khách hàng</h2>
+                <label>Họ và tên:</label>
+                <input type="text" id="info-name" disabled>
+    
+                <label>Email:</label>
+                <input type="text" id="info-email" disabled>
+    
+                <label>Mật khẩu:</label>
+                <input type="password" id="info-password" disabled>
+    
+                <div>
+                    <div class="form-btn">
+                        <button id="edit-btn">Sửa</button>
+                        <button id="save-btn">Lưu</button>
+                    </div>
+                    
+                    <button id="logout-btn">Đăng xuất</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- === container === -->
     <div class="container">
         <div class="container-main">
             <!-- container left -->
@@ -95,12 +125,12 @@
                     <h3>Danh Mục</h3>
                     <div class="category-item">
                         <ul>
-                            <li><a href="#" class="category-list">Giày Chạy Bộ</a></li>
-                            <li><a href="#" class="category-list">Giày Tập Gym</a></li>
-                            <li><a href="#" class="category-list">Giày Bóng Đá</a></li>
-                            <li><a href="#" class="category-list">Giày Sneaker</a></li>
-                            <li><a href="#" class="category-list">Giày Nam</a></li>
-                            <li><a href="#" class="category-list">Giày Nữ</a></li>
+                            <li><a href="#" class="category-list active" data-filter="tat-ca">Tất cả</a></li>
+                            <li><a href="#" class="category-list" data-filter="giay-chay-bo">Giày Chạy Bộ</a></li>
+                            <li><a href="#" class="category-list" data-filter="giay-bong-da">Giày Bóng Đá</a></li>
+                            <li><a href="#" class="category-list" data-filter="giay-sneaker">Giày Sneaker</a></li>
+                            <li><a href="#" class="category-list" data-filter="giay-nam">Giày Nam</a></li>
+                            <li><a href="#" class="category-list" data-filter="giay-nu">Giày Nữ</a></li>
                         </ul>
                     </div>
                 </div>
@@ -108,9 +138,10 @@
             <!-- container right -->
             <div class="container-right">
                 <div class="product">
-                    <div class="product-list">
+                    <!-- Giày chạy bộ -->
+                    <div class="product-list" data-category="giay-chay-bo giay-nam">
                         <div class="product-item">
-                            <img class="product-img" src="./assest/img/Nike_Pegasus_Plus.jpg" alt="Nike Pegasus Plus">
+                            <img class="product-img" src="./assest/img/Nike_Pegasus_Plus.jpg" alt="Giày Chạy Bộ Nam Nike Pegasus Plus - Đen">
                             <h4 class="product-name">Giày Chạy Bộ Nam Nike Pegasus Plus - Đen</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
@@ -119,10 +150,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="product-list">
+
+                    <div class="product-list" data-category="giay-chay-bo giay-nam">
                         <div class="product-item">
-                            <img class="product-img" src="./assest/img/Nike_Reactx_Infinity_Run4.jpg" alt="Nike Pegasus Plus">
-                            <h4 class="product-name">Giày Chạy Bộ Nam Nike React Infinity Run4 - Đen</h4>
+                            <img class="product-img" src="./assest/img/Nike_Reactx_Infinity_Run4.jpg" alt="Giày Chạy Bộ Nam Nike React Infinity Run 4 - Đen">
+                            <h4 class="product-name">Giày Chạy Bộ Nam Nike React Infinity Run 4 - Đen</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
                                 <span class="price-old">5.000.000đ</span>
@@ -130,9 +162,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="product-list">
+
+                    <div class="product-list" data-category="giay-chay-bo giay-nu">
                         <div class="product-item">
-                            <img class="product-img" src="./assest/img/Under_Armour_Halo_Runner.jpg" alt="Nike Pegasus Plus">
+                            <img class="product-img" src="./assest/img/Under_Armour_Halo_Runner.jpg" alt="Giày Chạy Bộ Nữ Under Armour Halo Runner">
                             <h4 class="product-name">Giày Chạy Bộ Nữ Under Armour Halo Runner</h4>
                             <p class="product-company">UNDER ARMOUR</p>
                             <div class="price">
@@ -141,9 +174,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="product-list">
+
+                    <div class="product-list" data-category="giay-chay-bo giay-nam">
                         <div class="product-item">
-                            <img class="product-img" src="./assest/img/Puma_Deviate_Nitro3.jpg" alt="Nike Pegasus Plus">
+                            <img class="product-img" src="./assest/img/Puma_Deviate_Nitro3.jpg" alt="Giày Chạy Bộ Nam Puma Deviate Nitro 3 - Xanh Lá">
                             <h4 class="product-name">Giày Chạy Bộ Nam Puma Deviate Nitro 3 - Xanh Lá</h4>
                             <p class="product-company">PUMA</p>
                             <div class="price">
@@ -152,9 +186,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="product-list">
+
+                    <div class="product-list" data-category="giay-chay-bo giay-nam">
                         <div class="product-item">
-                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
+                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu">
                             <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
                             <p class="product-company">HOKA</p>
                             <div class="price">
@@ -163,57 +198,304 @@
                             </div>
                         </div>
                     </div>
-                    <div class="product-list">
+
+                    <div class="product-list" data-category="giay-chay-bo giay-nu">
                         <div class="product-item">
-                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
-                            <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
-                            <p class="product-company">HOKA</p>
+                            <img class="product-img" src="./assest/img/Asics_Gel-Kayano_32_Lite-Show.jpg" alt="Giày Chạy Bộ Nữ Asics Gel-Kayano 32 Lite-Show - Xanh Lá">
+                            <h4 class="product-name">Giày Chạy Bộ Nữ Asics Gel-Kayano 32 Lite-Show - Xanh Lá</h4>
+                            <p class="product-company">ASICS</p>
                             <div class="price">
                                 <span class="price-old">5.000.000đ</span>
                                 <span class="price-current">4.000.000đ</span>
                             </div>
                         </div>
                     </div>
-                    <div class="product-list">
+
+                    <div class="product-list" data-category="giay-chay-bo giay-nu">
                         <div class="product-item">
-                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
-                            <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
-                            <p class="product-company">HOKA</p>
+                            <img class="product-img" src="./assest/img/On_Running_Cloudsurfer_Max.jpg" alt="Giày Chạy Bộ Nữ On Running Cloudsurfer Max - Xanh Dương">
+                            <h4 class="product-name">Giày Chạy Bộ Nữ On Running Cloudsurfer Max - Xanh Dương</h4>
+                            <p class="product-company">ON RUNNING</p>
                             <div class="price">
                                 <span class="price-old">5.000.000đ</span>
                                 <span class="price-current">4.000.000đ</span>
                             </div>
                         </div>
                     </div>
-                    <div class="product-list">
+
+                    <div class="product-list" data-category="giay-chay-bo giay-nu">
                         <div class="product-item">
-                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
-                            <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
-                            <p class="product-company">HOKA</p>
+                            <img class="product-img" src="./assest/img/Nike_Journey_Run.jpg" alt="Giày Chạy Bộ Nữ Nike Journey Run - Trắng">
+                            <h4 class="product-name">Giày Chạy Bộ Nữ Nike Journey Run - Trắng</h4>
+                            <p class="product-company">NIKE</p>
                             <div class="price">
                                 <span class="price-old">5.000.000đ</span>
                                 <span class="price-current">4.000.000đ</span>
                             </div>
                         </div>
                     </div>
-                    <div class="product-list">
+
+                    <div class="product-list" data-category="giay-chay-bo giay-nu">
                         <div class="product-item">
-                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
-                            <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
-                            <p class="product-company">HOKA</p>
+                            <img class="product-img" src="./assest/img/Nike_Structure_26.jpg" alt="Giày Chạy Bộ Nữ Nike Structure 26 - Xanh Lá">
+                            <h4 class="product-name">Giày Chạy Bộ Nữ Nike Structure 26 - Xanh Lá</h4>
+                            <p class="product-company">NIKE</p>
                             <div class="price">
                                 <span class="price-old">5.000.000đ</span>
                                 <span class="price-current">4.000.000đ</span>
                             </div>
                         </div>
                     </div>
-                    <div class="product-list">
+
+                    <div class="product-list" data-category="giay-chay-bo giay-nam">
                         <div class="product-item">
-                            <img class="product-img" src="./assest/img/Hoka_Bondi_9_Wide.jpg" alt="Nike Pegasus Plus">
-                            <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
-                            <p class="product-company">HOKA</p>
+                            <img class="product-img" src="./assest/img/Nike_Zoom_Fly_6.jpg" alt="Giày Chạy Bộ Nam Nike Zoom Fly 6 - Cam">
+                            <h4 class="product-name">Giày Chạy Bộ Nam Nike Zoom Fly 6 - Cam</h4>
+                            <p class="product-company">NIKE</p>
                             <div class="price">
                                 <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Giày bóng đá -->
+                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Nike_Legend_10_Academy.jpg" alt="Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương">
+                            <h4 class="product-name">Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương</h4>
+                            <p class="product-company">NIKE</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Nike_Phantom_Lunali_Academy.jpg" alt="Giày Đá Bóng Nam Nike Phantom Luna li Academy - Xanh Dương">
+                            <h4 class="product-name">Giày Đá Bóng Nam Nike Phantom Luna li Academy - Xanh Dương</h4>
+                            <p class="product-company">NIKE</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Adidas_Samba_Messi.jpg" alt="Giày Đá Bóng Nam Adidas Samba Messi - Trắng">
+                            <h4 class="product-name">Giày Đá Bóng Nam Adidas Samba Messi - Trắng</h4>
+                            <p class="product-company">ADIDAS</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Adidas_F50_Elite.jpg" alt="Giày Đá Bóng Nam Adidas F50 Elite - Tím">
+                            <h4 class="product-name">Giày Đá Bóng Nam Adidas F50 Elite - Tím</h4>
+                            <p class="product-company">ADIDAS</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Puma_King_Match_Tt.jpg" alt="Giày Đá Bóng Nam Puma King Match Tt - Trắng">
+                            <h4 class="product-name">Giày Đá Bóng Nam Puma King Match Tt - Trắng</h4>
+                            <p class="product-company">PUMA</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Adidas_Predator_Club.jpg" alt="Giày Đá Bóng Nam Adidas Predator Club - Đen">
+                            <h4 class="product-name">Giày Đá Bóng Nam Adidas Predator Club - Đen</h4>
+                            <p class="product-company">ADIDAS</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Adidas_Samba_Inter_Milan.jpg" alt="Giày Đá Bóng Nam Adidas Samba Inter Milan - Trắng">
+                            <h4 class="product-name">Giày Đá Bóng Nam Adidas Samba Inter Milan - Trắng</h4>
+                            <p class="product-company">ADIDAS</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Nike_Mercurial_Vapol_16_Academy.jpg" alt="Giày Đá Bóng Nam Nike Mercurial Vapor 16 Academy 'Kylian Mbappé' - Vàng">
+                            <h4 class="product-name">Giày Đá Bóng Nam Nike Mercurial Vapor 16 Academy 'Kylian Mbappé' - Vàng</h4>
+                            <p class="product-company">NIKE</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Nike_Zoom_Vapor_16_Academy_Tf.jpg" alt="Giày Bóng Đá Nam Nike Zoom Vapor 16 Academy Tf - Đỏ">
+                            <h4 class="product-name">Giày Bóng Đá Nam Nike Zoom Vapor 16 Academy Tf - Đỏ</h4>
+                            <p class="product-company">NIKE</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Puma_Ultra_6_Play_Tt.jpg" alt="Giày Đá Bóng Nam Puma Ultra 6 Play Tt - Cam">
+                            <h4 class="product-name">Giày Đá Bóng Nam Puma Ultra 6 Play Tt - Cam</h4>
+                            <p class="product-company">PUMA</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Giày sneaker -->
+                    <div class="product-list" data-category="giay-sneaker giay-nu">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/On_Running_Cloudtilt.jpg" alt="Giày Sneaker Nữ On Running Cloudtilt - Xám">
+                            <h4 class="product-name">Giày Sneaker Nữ On Running Cloudtilt - Xám</h4>
+                            <p class="product-company">ON RUNNING</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>   
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-sneaker giay-nu">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Adidas_Tekwen.jpg" alt="Giày Sneaker Nữ Adidas Tekwen - Đen">
+                            <h4 class="product-name">Giày Sneaker Nữ Adidas Tekwen - Đen</h4>
+                            <p class="product-company">ADIDAS</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>   
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-sneaker giay-nu">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Under_Armour_Shift.jpg" alt="Giày Sneaker Nữ Under Armour Shift">
+                            <h4 class="product-name">Giày Sneaker Nữ Under Armour Shift</h4>
+                            <p class="product-company">UNDER ARMOUR</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>   
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-sneaker giay-nu">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Asics_Gel-1130.jpg" alt="Giày Sneaker Nữ Asics Gel-1130 - Be">
+                            <h4 class="product-name">Giày Sneaker Nữ Asics Gel-1130 - Be</h4>
+                            <p class="product-company">ASICS</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>   
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-sneaker giay-nu">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Nike_Air_Force.jpg" alt="Giày Sneaker Nữ Nike Air Force 1 '07 - Trắng">
+                            <h4 class="product-name">Giày Sneaker Nữ Nike Air Force 1 '07 - Trắng</h4>
+                            <p class="product-company">NIKE</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>   
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-sneaker giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Asics_Jog_100S.jpg" alt="Giày Sneaker Nam Asics Jog 100S - Đen">
+                            <h4 class="product-name">Giày Sneaker Nam Asics Jog 100S - Đen</h4>
+                            <p class="product-company">ASICS</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>   
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-sneaker giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Asics_Japan_S.jpg" alt="Giày Sneaker Nam Asics Japan S - Trắng">
+                            <h4 class="product-name">Giày Sneaker Nam Asics Japan S - Trắng</h4>
+                            <p class="product-company">ASICS</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>   
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-sneaker giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Nike_V2K_Run.jpg" alt="Giày Sneaker Nam Nike V2K Run - Đen">
+                            <h4 class="product-name">Giày Sneaker Nam Nike V2K Run - Đen</h4>
+                            <p class="product-company">NIKE</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>   
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-sneaker giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Nike_Big_Low.jpg" alt="Giày Sneaker Nam Nike Big Low - Trắng">
+                            <h4 class="product-name">Giày Sneaker Nam Nike Big Low - Trắng</h4>
+                            <p class="product-company">NIKE</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>   
+                                <span class="price-current">4.000.000đ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="product-list" data-category="giay-sneaker giay-nam">
+                        <div class="product-item">
+                            <img class="product-img" src="./assest/img/Adidas_Grand_Court_2.jpg" alt="Giày Sneaker Nam Adidas Grand Court 2.0 - Be">
+                            <h4 class="product-name">Giày Sneaker Nam Adidas Grand Court 2.0 - Be</h4>
+                            <p class="product-company">ADIDAS</p>
+                            <div class="price">
+                                <span class="price-old">5.000.000đ</span>   
                                 <span class="price-current">4.000.000đ</span>
                             </div>
                         </div>
@@ -223,7 +505,7 @@
         </div>
     </div>
 
-    <!-- footer -->
+    <!-- === footer === -->
     <footer class="footer">
         <div class="footer-list">
             <p>© 2025 StepLab<br>Hình ảnh tham khảo: <a href="https://supersports.com.vn/">https://supersports.com.vn/</a></p>
