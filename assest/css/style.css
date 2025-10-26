@@ -142,7 +142,7 @@ header {
     margin: 8px 0;
     padding: 6px 8px;
     cursor: pointer;
-    transition: 0.1s; 
+    transition: all 0.2s ease; 
 }
 
 .category-list:hover {
