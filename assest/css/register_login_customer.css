@@ -58,7 +58,7 @@ button {
     transition: 0.5s;
 }
 
-button:hover {
+.login-register button:hover {
     background-color: #007bff;
     transition: .5s;
 }

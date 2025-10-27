@@ -38,9 +38,14 @@
                 <div class="nav">
                     <ul>
                         <li><a href="#">Trang Chủ</a></li>
-                        <li><a href="#">Giới Thiệu</a></li>
+                        <!-- <li><a href="#">Giới Thiệu</a></li> -->
                         <li><a href="#">Sản Phẩm</a></li>
                     </ul>
+                </div>
+                <!-- tìm kiếm -->
+                <div class="search-bar">
+                    <input type="text" class="basic-search" id="basic-search" placeholder="Bạn đang tìm gì...">
+                    <button class="basic-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </div>
 
                 <!-- icon, đăng nhập, đăng ký, thông tin khách hàng -->
@@ -130,17 +135,64 @@
                         <ul>
                             <li><a href="#" class="category-list active" data-filter="tat-ca">Tất cả</a></li>
                             <li><a href="#" class="category-list" data-filter="giay-chay-bo">Giày Chạy Bộ</a></li>
-                            <li><a href="#" class="category-list" data-filter="giay-bong-da">Giày Bóng Đá</a></li>
+                            <li><a href="#" class="category-list" data-filter="giay-da-bong">Giày Đá Bóng</a></li>
                             <li><a href="#" class="category-list" data-filter="giay-sneaker">Giày Sneaker</a></li>
                             <li><a href="#" class="category-list" data-filter="giay-nam">Giày Nam</a></li>
                             <li><a href="#" class="category-list" data-filter="giay-nu">Giày Nữ</a></li>
                         </ul>
                     </div>
                 </div>
+                <!-- Bộ lọc tìm kiếm (tìm kiếm nâng cao) -->
+                <div class="category">
+                    <h3>Bộ lọc tìm kiếm</h3>
+                    <div class="category-item">
+                        <div class="search-filter" id="earch-filter">
+                            <div class="search-filter-list">
+                                <h4>Thương Hiệu</h4>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="nike" id="nike">
+                                    <label for="nike">Nike</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="under-armour" id="under-armour">
+                                    <label for="under-armour">Under Armour</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="puma" id="puma">
+                                    <label for="puma">Puma</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="hoka" id="hoka">
+                                    <label for="hoka">HOKA</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="asics" id="asics">
+                                    <label for="asics">Asics</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="on-running" id="on-running">
+                                    <label for="on-running">On Running</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="adidas" id="adidas">
+                                    <label for="adidas">Adidas</label>
+                                </div>
+
+                                <h4>Khoảng giá</h4>
+                                <div class="search-filter-price">
+                                    <input type="text" placeholder="Từ">
+                                    <div class="range-line"></div>
+                                    <input type="text" placeholder="Đến">
+                                </div>
+
+                                <button class="search-filter-btn">ÁP DỤNG</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <!-- container right -->
             <div class="container-right">
-                <!-- ==  -->
                 <div class="product">
                     <!-- Giày chạy bộ -->
                     <div class="product-list" data-category="giay-chay-bo giay-nam">
@@ -263,8 +315,8 @@
                         </div>
                     </div>
 
-                    <!-- Giày bóng đá -->
-                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                    <!-- Giày đá bóng -->
+                    <div class="product-list" data-category="giay-da-bong giay-nam">
                         <div class="product-item" data-id="sp-gbd-1">
                             <img class="product-img" src="./assest/img/Nike_Legend_10_Academy.jpg" alt="Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương">
                             <h4 class="product-name">Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương</h4>
@@ -276,7 +328,7 @@
                         </div>
                     </div>
 
-                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                    <div class="product-list" data-category="giay-da-bong giay-nam">
                         <div class="product-item" data-id="sp-gbd-2">
                             <img class="product-img" src="./assest/img/Nike_Phantom_Lunali_Academy.jpg" alt="Giày Đá Bóng Nam Nike Phantom Luna li Academy - Xanh Dương">
                             <h4 class="product-name">Giày Đá Bóng Nam Nike Phantom Luna li Academy - Xanh Dương</h4>
@@ -288,7 +340,7 @@
                         </div>
                     </div>
 
-                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                    <div class="product-list" data-category="giay-da-bong giay-nam">
                         <div class="product-item" data-id="sp-gbd-3">
                             <img class="product-img" src="./assest/img/Adidas_Samba_Messi.jpg" alt="Giày Đá Bóng Nam Adidas Samba Messi - Trắng">
                             <h4 class="product-name">Giày Đá Bóng Nam Adidas Samba Messi - Trắng</h4>
@@ -300,7 +352,7 @@
                         </div>
                     </div>
 
-                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                    <div class="product-list" data-category="giay-da-bong giay-nam">
                         <div class="product-item" data-id="sp-gbd-4">
                             <img class="product-img" src="./assest/img/Adidas_F50_Elite.jpg" alt="Giày Đá Bóng Nam Adidas F50 Elite - Tím">
                             <h4 class="product-name">Giày Đá Bóng Nam Adidas F50 Elite - Tím</h4>
@@ -312,7 +364,7 @@
                         </div>
                     </div>
 
-                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                    <div class="product-list" data-category="giay-da-bong giay-nam">
                         <div class="product-item" data-id="sp-gbd-5">
                             <img class="product-img" src="./assest/img/Puma_King_Match_Tt.jpg" alt="Giày Đá Bóng Nam Puma King Match Tt - Trắng">
                             <h4 class="product-name">Giày Đá Bóng Nam Puma King Match Tt - Trắng</h4>
@@ -324,7 +376,7 @@
                         </div>
                     </div>
 
-                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                    <div class="product-list" data-category="giay-da-bong giay-nam">
                         <div class="product-item" data-id="sp-gbd-6">
                             <img class="product-img" src="./assest/img/Adidas_Predator_Club.jpg" alt="Giày Đá Bóng Nam Adidas Predator Club - Đen">
                             <h4 class="product-name">Giày Đá Bóng Nam Adidas Predator Club - Đen</h4>
@@ -336,7 +388,7 @@
                         </div>
                     </div>
 
-                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                    <div class="product-list" data-category="giay-da-bong giay-nam">
                         <div class="product-item" data-id="sp-gbd-7">
                             <img class="product-img" src="./assest/img/Adidas_Samba_Inter_Milan.jpg" alt="Giày Đá Bóng Nam Adidas Samba Inter Milan - Trắng">
                             <h4 class="product-name">Giày Đá Bóng Nam Adidas Samba Inter Milan - Trắng</h4>
@@ -348,7 +400,7 @@
                         </div>
                     </div>
 
-                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                    <div class="product-list" data-category="giay-da-bong giay-nam">
                         <div class="product-item" data-id="sp-gbd-8">
                             <img class="product-img" src="./assest/img/Nike_Mercurial_Vapol_16_Academy.jpg" alt="Giày Đá Bóng Nam Nike Mercurial Vapor 16 Academy 'Kylian Mbappé' - Vàng">
                             <h4 class="product-name">Giày Đá Bóng Nam Nike Mercurial Vapor 16 Academy 'Kylian Mbappé' - Vàng</h4>
@@ -360,10 +412,10 @@
                         </div>
                     </div>
 
-                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                    <div class="product-list" data-category="giay-da-bong giay-nam">
                         <div class="product-item" data-id="sp-gbd-9">
                             <img class="product-img" src="./assest/img/Nike_Zoom_Vapor_16_Academy_Tf.jpg" alt="Giày Bóng Đá Nam Nike Zoom Vapor 16 Academy Tf - Đỏ">
-                            <h4 class="product-name">Giày Bóng Đá Nam Nike Zoom Vapor 16 Academy Tf - Đỏ</h4>
+                            <h4 class="product-name">Giày Đá Bóng Nam Nike Zoom Vapor 16 Academy Tf - Đỏ</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
                                 <span class="price-old">5.000.000đ</span>
@@ -372,7 +424,7 @@
                         </div>
                     </div>
 
-                    <div class="product-list" data-category="giay-bong-da giay-nam">
+                    <div class="product-list" data-category="giay-da-bong giay-nam">
                         <div class="product-item" data-id="sp-gbd-10">
                             <img class="product-img" src="./assest/img/Puma_Ultra_6_Play_Tt.jpg" alt="Giày Đá Bóng Nam Puma Ultra 6 Play Tt - Cam">
                             <h4 class="product-name">Giày Đá Bóng Nam Puma Ultra 6 Play Tt - Cam</h4>

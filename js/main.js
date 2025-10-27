@@ -190,7 +190,7 @@ navBars.addEventListener('click', function(e) {
 
 // === QUẢN LÝ SẢN PHẨM ===
 
-// Xem danh danh sách theo loại (phân trang) 
+// - Xem danh danh sách theo loại (phân trang) 
 
 // lấy tất cả các thẻ a trong danh mục và các sản phẩm
 const categoryItems = document.querySelectorAll(".category-list");
@@ -220,7 +220,7 @@ categoryItems.forEach(item => {
     })
 })
 
-// Xem chi tiết sản phẩm
+// - Xem chi tiết sản phẩm
 
 const productItems = document.querySelectorAll('.product-item');
 const productDetails = document.querySelectorAll('.product-detail');
@@ -272,5 +272,69 @@ closeBtns.forEach(btn => {
         if(loginRegister) {
             loginRegister.style.display = 'none';
         }
+    });
+});
+
+// - Tìm kiếm cơ bản theo tên
+const searchInput = document.getElementById('basic-search');
+const searchBtn = document.querySelector('.basic-btn');
+const productLists = document.querySelectorAll('.product-list');
+
+// Hàm xóa dấu tiếng Việt
+function removeVietnameseTones(str) {
+    return str.normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d").replace(/Đ/g, "D");
+}
+
+// Hàm tìm kiếm
+function searchProducts() {
+    const keyword = removeVietnameseTones(searchInput.value.trim().toLowerCase());
+
+    productLists.forEach(productList => {
+        const name = removeVietnameseTones(productList.querySelector('.product-name').textContent.toLowerCase());
+        const company = removeVietnameseTones(productList.querySelector('.product-company').textContent.toLowerCase());
+        const match = name.includes(keyword) || company.includes(keyword);
+
+        productList.style.display = match ? 'block' : 'none';
+    });
+}
+
+// Nhấn nút tìm
+searchBtn.addEventListener('click', searchProducts);
+
+// Nhấn Enter cũng tìm
+searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchProducts();
+    }
+});
+
+// - Tìm kiếm nâng cao (bộ lọc tìm kiếm)
+const checkboxes = document.querySelectorAll('.search-filter-item input[type="checkbox"]');
+const applyBtn = document.querySelector('.search-filter-btn');
+const productItemsFilter = document.querySelectorAll('.product-item');
+
+applyBtn.addEventListener('click', () => {
+    const selectedBrands = [];
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) {
+            selectedBrands.push(checkbox.id.toUpperCase().replace('-', ' '));
+        }
+    });
+
+    const priceInputs = document.querySelectorAll('.search-filter-price input');
+    const minPrice = priceInputs[0].value.trim() === "" ? 0 : parseInt(priceInputs[0].value.replace(/\D/g, ""));
+    const maxPrice = priceInputs[1].value.trim() === "" ? Infinity : parseInt(priceInputs[1].value.replace(/\D/g, ""));
+
+    productItemsFilter.forEach(product => {
+        const brand = product.querySelector('.product-company').textContent.trim().toUpperCase();
+        const priceText = product.querySelector('.price-current').textContent.trim().replace(/\./g, '').replace('đ', '');
+        const price = parseInt(priceText);
+
+        const matchBrand = selectedBrands.length === 0 || selectedBrands.includes(brand);
+        const matchPrice = price >= minPrice && price <= maxPrice;
+
+        product.style.display = matchBrand && matchPrice ? 'block' : 'none';
     });
 });
