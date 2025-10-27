@@ -222,21 +222,55 @@ categoryItems.forEach(item => {
 
 // Xem chi tiết sản phẩm
 
-// Lấy phần chi tiết sản phẩm và nút đóng
-const productDetail = document.querySelector('.product-detail');
-const closeBtn = document.getElementById('close');
-
-// Lấy tất cả sản phẩm
 const productItems = document.querySelectorAll('.product-item');
-
-// Khi click vào sản phẩm thì hiện chi tiết
+const productDetails = document.querySelectorAll('.product-detail');
+// Bắt sự kiện click vào từng sản phẩm
 productItems.forEach(item => {
     item.addEventListener('click', () => {
-        productDetail.style.display = 'flex';
+        const id = item.getAttribute('data-id');
+        
+        // Ẩn tất cả chi tiết
+        productDetails.forEach(detail => {
+            detail.style.display = 'none';
+        });
+
+        // Hiện đúng chi tiết có data-id trùng
+        const targetDetail = document.querySelector(`.product-detail[data-id="${id}"]`);
+        if (targetDetail) {
+            targetDetail.style.display = 'flex';
+        }
     });
 });
 
-// Khi click vào nút X thì ẩn chi tiết
-closeBtn.addEventListener('click', () => {
-    productDetail.style.display = 'none';
+// Đóng chi tiết sản phẩm khi click ra ngoài
+const allProductDetails = document.querySelectorAll('.product-detail');
+
+allProductDetails.forEach(detail => {
+    const container = detail.querySelector('.product-detail-container');
+
+    detail.addEventListener('click', (e) => {
+        // nếu click không nằm trong container thì ẩn chi tiết
+        if (!container.contains(e.target)) {
+            detail.style.display = 'none';
+        }
+    });
+});
+
+// === Đóng khi bấm vào nút X ===
+const closeBtns = document.querySelectorAll('.close');
+closeBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const productDetail = btn.closest('.product-detail');
+        const loginRegister = btn.closest('.login-register');
+
+        // nút close ở chi tiết sản phẩm
+        if(productDetail) {
+            productDetail.style.display = 'none';
+        }
+
+        // nút close ở đăng nhập, đăng ký, thông tin khách hàng
+        if(loginRegister) {
+            loginRegister.style.display = 'none';
+        }
+    });
 });
