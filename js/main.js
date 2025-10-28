@@ -315,7 +315,9 @@ const checkboxes = document.querySelectorAll('.search-filter-item input[type="ch
 const applyBtn = document.querySelector('.search-filter-btn');
 const productItemsFilter = document.querySelectorAll('.product-item');
 
+// khi click áp dụng
 applyBtn.addEventListener('click', () => {
+    // mảng lưu các thương hiệu
     const selectedBrands = [];
     checkboxes.forEach(checkbox => {
         if (checkbox.checked) {
@@ -323,10 +325,12 @@ applyBtn.addEventListener('click', () => {
         }
     });
 
+    // lấy khoảng giá từ 2 ô input
     const priceInputs = document.querySelectorAll('.search-filter-price input');
     const minPrice = priceInputs[0].value.trim() === "" ? 0 : parseInt(priceInputs[0].value.replace(/\D/g, ""));
     const maxPrice = priceInputs[1].value.trim() === "" ? Infinity : parseInt(priceInputs[1].value.replace(/\D/g, ""));
 
+    // lọc sản phẩm
     productItemsFilter.forEach(product => {
         const brand = product.querySelector('.product-company').textContent.trim().toUpperCase();
         const priceText = product.querySelector('.price-current').textContent.trim().replace(/\./g, '').replace('đ', '');
@@ -335,6 +339,27 @@ applyBtn.addEventListener('click', () => {
         const matchBrand = selectedBrands.length === 0 || selectedBrands.includes(brand);
         const matchPrice = price >= minPrice && price <= maxPrice;
 
+        // hiện thị or ẩn sản phẩm
         product.style.display = matchBrand && matchPrice ? 'block' : 'none';
+    });
+    
+    // Dồn sản phẩm lọc được lên trên
+    const productContainer = document.querySelector(".product");
+    const allProducts = Array.from(productContainer.querySelectorAll(".product-item"));
+
+    const matched = [];
+    const unmatched = [];
+
+    allProducts.forEach(item => {
+        if (item.style.display !== "none") {
+            matched.push(item); // sản phẩm hiển thị
+        } else {
+            unmatched.push(item); // sản phẩm bị ẩn
+        }
+    });
+
+    // thay đổi vị trí
+    matched.reverse().forEach(item => {
+        productContainer.prepend(item.closest('.product-list')); 
     });
 });
