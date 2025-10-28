@@ -8,8 +8,9 @@ html {
     font-size: 62.5%;
 }
 
-/* :root {
-} */
+:root {
+    --deepskyblue: #00bfff;
+}
 
 body {
     font-size: 1.6rem;
@@ -26,7 +27,8 @@ ul {
 
 /* ==== header === */
 header {
-    background: linear-gradient(135deg, #98d4fe, #3b98fb);
+    /* background: linear-gradient(135deg, #98d4fe, #3b98fb); */
+    background: var(--deepskyblue);
     position: fixed;
     top: 0;
     right: 0;
@@ -141,7 +143,7 @@ header {
     margin-right: 10px;
     cursor: pointer;
     margin-top: 2px;
-    accent-color: #3b98fb;
+    accent-color: #00bfff;
 }
 
 .search-filter-price {
@@ -168,7 +170,7 @@ header {
 }
 
 .search-filter-btn:hover {
-    background-color: #007bff;
+    background-color: #00a6dd;
 }
 
 /* === container === */
@@ -194,7 +196,7 @@ header {
 
 /* category */
 .category {
-    background-color: white;
+    background-color: #fff;
     border-radius: 2px;
     display: block;
     padding: 0 5px;
@@ -230,9 +232,9 @@ header {
 
 .category-list.active {
     font-weight: bold;
-    color:  #3b98fb;
+    color:  #00bfff;
     background-color: #e9f2ff;
-    border-left: 3px solid  #3b98fb;
+    border-left: 3px solid  #00bfff;
 
 }
 
@@ -255,7 +257,7 @@ header {
 }
 
 .product-item {
-    background-color: white;
+    background-color: #fff;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
     margin-bottom: 10px;
     border-radius: 2px;
@@ -395,7 +397,7 @@ header {
 }
 
 .buy-now:hover {
-    background-color: #007bff;
+    background-color: #00a6dd;
 }
 
 .add-cart {
