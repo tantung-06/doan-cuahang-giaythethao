@@ -10,7 +10,7 @@
     <!-- embed fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Sen:wght@400.800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
 
     <!-- css -->
     <link rel="stylesheet" href="./assest/css/style.css">
@@ -37,9 +37,9 @@
                 <!-- nav -->
                 <div class="nav">
                     <ul>
-                        <li><a href="#">Trang Chủ</a></li>
+                        <li><a href="#" id="home-link" class="active">Trang Chủ</a></li>
                         <!-- <li><a href="#">Giới Thiệu</a></li> -->
-                        <li><a href="#">Sản Phẩm</a></li>
+                        <li><a href="#" id="product-link">Sản Phẩm</a></li>
                     </ul>
                 </div>
                 <!-- tìm kiếm -->
@@ -47,13 +47,23 @@
                     <input type="text" class="basic-search" id="basic-search" placeholder="Bạn đang tìm gì...">
                     <button class="basic-btn"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </div>
+                
+                <!-- Tìm kiếm năng cao (bộ lọc) -->
+                <!-- <div class="search-filter">
+                    <button class="filter-btn"><i class="fa-solid fa-filter"></i></button>
+                </div> -->
 
                 <!-- icon, đăng nhập, đăng ký, thông tin khách hàng -->
                 <div class="action">
                     <ul>
                         <!-- đăng nhập, đăng ký -->
-                        <li><a href="#" class="icon"><i class="fa-solid fa-user"></i></a></li>
-                        <li><a href="#" class="btn">Đăng nhập</a></li>
+                        <li class="user-section">
+                            <a href="#" class="icon"><i class="fa-solid fa-user"></i></a>
+                            <div class="user-links">
+                                <a href="#" class="btn">Đăng nhập</a>
+                                <a href="#" class="btn">Đăng ký </a>
+                            </div>
+                        </li>
                         <!-- Tên khách hàng -->
                         <span id="user-name" class="user-name"></span>
                         <!-- Giỏ hàng -->
@@ -125,7 +135,28 @@
     </div>
 
     <!-- === container === -->
-    <div class="container">
+    <div class="container no-sidebar">
+        <!-- Slider -->
+        <section class="slider">
+            <div class="slider-container">
+                <div class="slider-content">
+                    <div class="slider-item">
+                        <a href="#"><img src="./assest/img/banner1.jpg" alt="banner1"></a>
+                    </div>
+                    <div class="slider-item">
+                        <a href="#"><img src="./assest/img/banner2.jpg" alt="banner2"></a>
+                    </div>
+                    <div class="slider-item">
+                        <a href="#"><img src="./assest/img/banner3.jpg" alt="banner3"></a>
+                    </div>
+                </div>
+                <div class="slider-item-btn">
+                    <i class="fa-solid fa-chevron-left"></i>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </div>
+            </div>
+        </section>
+
         <div class="container-main">
             <!-- container left -->
             <div class="container-left">
@@ -1556,7 +1587,7 @@
     <!-- === footer === -->
     <footer class="footer">
         <div class="footer-list">
-            <p>© 2025 StepLab<br>Hình ảnh tham khảo: <a href="https://supersports.com.vn/">https://supersports.com.vn/</a></p>
+            <p>© 2025 StepLab</p>
         </div>
     </footer>
 

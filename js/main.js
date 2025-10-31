@@ -5,40 +5,59 @@ const loginForm = document.getElementById('login');
 const registerForm = document.getElementById('register');
 const customerInfo = document.getElementById('customer-info');
 const loginBtn = document.querySelectorAll('.action .btn')[0];
+const registerBtn = document.querySelectorAll('.action .btn')[1];
 const userIcon = document.querySelector('.action .icon');
 const userNameDisplay = document.getElementById('user-name');
 const containerLoginRegister = document.querySelectorAll('.container-login-register');
 
-// Hiển thị form đăng nhập
+// === Hiển thị / Ẩn form ===
 function showLoginForm() {
     loginForm.style.display = 'block';
     registerForm.style.display = 'none';
     customerInfo.style.display = 'none';
 }
 
-// Hiển thị form đăng ký
 function showRegisterForm() {
     registerForm.style.display = 'block';
     loginForm.style.display = 'none';
     customerInfo.style.display = 'none';
 }
 
-// Ẩn tất cả form
 function hideAllForms() {
     loginForm.style.display = 'none';
     registerForm.style.display = 'none';
     customerInfo.style.display = 'none';
 }
 
-// Khi click vào nút "Đăng nhập" hoặc icon user
+// === Xử lý sự kiện click ===
 loginBtn.addEventListener('click', function(e) {
     e.preventDefault();
     showLoginForm();
 });
 
+registerBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    showRegisterForm();
+});
+
+// Khi click vào icon user
 userIcon.addEventListener('click', function(e) {
     e.preventDefault();
-    showLoginForm();
+    const storedUser = localStorage.getItem('user');
+
+    // Nếu chưa có user hoặc đã bị xóa => mở form đăng nhập
+    if (!storedUser || storedUser === 'null' || storedUser === 'undefined') {
+        showLoginForm();
+        return;
+    }
+
+    // Nếu có user thật => mở thông tin khách hàng
+    const user = JSON.parse(storedUser);
+    if (user && user.username) {
+        showCustomerInfo(user);
+    } else {
+        showLoginForm();
+    }
 });
 
 // Khi click vào link "Đăng ký"
@@ -62,7 +81,7 @@ containerLoginRegister.forEach(function(container) {
     });
 });
 
-// Xử lý Đăng ký
+// === Đăng ký ===
 const formRegister = document.getElementById('form-2');
 formRegister.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -72,61 +91,73 @@ formRegister.addEventListener('submit', function(e) {
     const password = formRegister.querySelector('input[name="password"]').value;
 
     if (username && email && password) {
-        const user = { username, email, password };
-        localStorage.setItem('user', JSON.stringify(user));
+        // Lấy danh sách khách hàng từ localStorage (nếu chưa có thì tạo mảng rỗng)
+        let customers = JSON.parse(localStorage.getItem('customers')) || [];
+
+        // Kiểm tra trùng email
+        const exists = customers.some(c => c.email === email);
+        if (exists) {
+            alert('Email này đã được sử dụng! Vui lòng chọn email khác.');
+            return;
+        }
+
+        // Thêm khách hàng mới
+        const newUser = { username, email, password };
+        customers.push(newUser);
+        localStorage.setItem('customers', JSON.stringify(customers));
+
         alert('Đăng ký thành công! Bạn có thể đăng nhập ngay.');
-        hideAllForms();
         formRegister.reset();
+
+        registerForm.style.display = 'none';
+        loginForm.style.display = 'block';
     } else {
         alert('Vui lòng điền đầy đủ thông tin!');
     }
 });
 
-// Xử lý Đăng nhập
+// === Đăng nhập ===
 const formLogin = document.getElementById('form-1');
 formLogin.addEventListener('submit', function(e) {
     e.preventDefault();
 
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const storedUser = JSON.parse(localStorage.getItem('user'));
 
-    if (!storedUser) {
-        alert('Bạn chưa có tài khoản! Vui lòng đăng ký.');
-        showRegisterForm();
-        return;
-    }
+    // Lấy danh sách khách hàng
+    const customers = JSON.parse(localStorage.getItem('customers')) || [];
 
-    if (email === storedUser.email && password === storedUser.password) {
+    // Tìm khách hàng khớp email và mật khẩu
+    const user = customers.find(c => c.email === email && c.password === password);
+
+    if (user) {
+        // Lưu thông tin người đăng nhập hiện tại
+        localStorage.setItem('user', JSON.stringify(user));
         alert('Đăng nhập thành công!');
         hideAllForms();
-        showUserName(storedUser.username);
+        showUserName(user.username);
         formLogin.reset();
     } else {
         alert('Email hoặc mật khẩu không chính xác!');
     }
 });
 
-// Hiển thị tên người dùng trên header
+// === Hiển thị tên người dùng trên header ===
 function showUserName(name) {
     loginBtn.style.display = 'none';
-    userIcon.style.display = 'block';
+    registerBtn.style.display = 'none';
+    userIcon.style.display = 'inline-block';
     userNameDisplay.textContent = name;
     userNameDisplay.style.display = 'inline-block';
 }
 
-// Khi click vào icon user và tên khách hàng => mở form thông tin
-userIcon.addEventListener('click', function() {
-    const storedUser = JSON.parse(localStorage.getItem('user'));
-    if (storedUser) showCustomerInfo(storedUser);
-});
-
+// === Khi click vào tên người dùng => mở thông tin khách hàng ===
 userNameDisplay.addEventListener('click', function() {
     const storedUser = JSON.parse(localStorage.getItem('user'));
     if (storedUser) showCustomerInfo(storedUser);
 });
 
-// Hiển thị thông tin khách hàng
+// === Hiển thị thông tin khách hàng ===
 function showCustomerInfo(user) {
     document.getElementById('info-name').value = user.username;
     document.getElementById('info-email').value = user.email;
@@ -137,7 +168,7 @@ function showCustomerInfo(user) {
     registerForm.style.display = 'none';
 }
 
-// Nút Sửa / Lưu / Đăng xuất
+// === Nút Sửa / Lưu / Đăng xuất ===
 const editBtn = document.getElementById('edit-btn');
 const saveBtn = document.getElementById('save-btn');
 const logoutBtn = document.getElementById('logout-btn');
@@ -167,8 +198,10 @@ saveBtn.addEventListener('click', function() {
 
 // Khi bấm Đăng xuất
 logoutBtn.addEventListener('click', function() {
+    localStorage.removeItem('user');
     hideAllForms();
     loginBtn.style.display = 'inline-block';
+    registerBtn.style.display = 'inline-block';
     userIcon.style.display = 'inline-block';
     userNameDisplay.style.display = 'none';
     alert('Bạn đã đăng xuất!');
@@ -187,10 +220,116 @@ navBars.addEventListener('click', function(e) {
     e.preventDefault();
     nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
 });
+// === HEADER NAV ===
+const homeLink = document.getElementById("home-link");
+const productLink = document.getElementById("product-link");
+const containerLeft = document.querySelector(".container-left");
+const containerRight = document.querySelector(".container-right");
+
+// Khi bấm Trang Chủ => ẩn phần bên trái và canh giữa phần bên phải
+homeLink.addEventListener("click", function(e) {
+    e.preventDefault();
+    containerLeft.style.display = "none";
+
+    // Thêm màu cho Trang Chủ, bỏ màu ở Sản Phẩm
+    homeLink.classList.add("active");
+    productLink.classList.remove("active");
+});
+
+// Khi bấm Sản Phẩm => hiện lại phần bên trái, bỏ canh giữa
+productLink.addEventListener("click", function(e) {
+    e.preventDefault();
+    containerLeft.style.display = "block";
+
+    // Thêm màu cho Sản Phẩm, bỏ màu ở Trang Chủ
+    productLink.classList.add("active");
+    homeLink.classList.remove("active");
+});
+
+// Khi vừa vào trang => hiển thị Trang Chủ trước
+window.addEventListener("load", function() {
+    containerLeft.style.display = "none";
+});
+
+// === SLIDER ===
+const sliderContent = document.querySelector('.slider-content');
+const slides = document.querySelectorAll('.slider-item');
+const prev = document.querySelector('.fa-chevron-left');
+const next = document.querySelector('.fa-chevron-right');
+
+let index = 0;
+let interval;
+
+// Clone slide đầu và cuối để tạo vòng lặp mượt
+const firstClone = slides[0].cloneNode(true);
+const lastClone = slides[slides.length - 1].cloneNode(true);
+
+sliderContent.appendChild(firstClone);
+sliderContent.prepend(lastClone);
+
+const allSlides = document.querySelectorAll('.slider-item');
+let slideCount = allSlides.length;
+sliderContent.style.transform = `translateX(-100%)`; // bắt đầu từ slide đầu thật
+
+// Hiển thị slide dựa trên index
+function showSlide(i) {
+    sliderContent.style.transition = 'transform 0.5s ease-in-out';
+    sliderContent.style.transform = `translateX(${-100 * (i + 1)}%)`;
+}
+
+// Khi chuyển tiếp slide
+next.addEventListener('click', () => {
+    index++;
+    showSlide(index);
+    resetInterval();
+});
+
+// Khi chuyển lùi slide
+prev.addEventListener('click', () => {
+    index--;
+    showSlide(index);
+    resetInterval();
+});
+
+// Khi transition kết thúc, reset vị trí nếu tới clone
+sliderContent.addEventListener('transitionend', () => {
+    if(index >= slides.length) { // đi tới clone đầu
+        sliderContent.style.transition = 'none';
+        index = 0;
+        sliderContent.style.transform = `translateX(-100%)`;
+    }
+    if(index < 0) { // đi tới clone cuối
+        sliderContent.style.transition = 'none';
+        index = slides.length - 1;
+        sliderContent.style.transform = `translateX(${-100 * slides.length}%)`;
+    }
+});
+
+// Tự động chạy slider
+function startInterval() {
+    interval = setInterval(() => {
+        index++;
+        showSlide(index);
+    }, 5000);
+}
+
+// Dừng khi hover
+document.querySelector('.slider-container').addEventListener('mouseenter', () => clearInterval(interval));
+document.querySelector('.slider-container').addEventListener('mouseleave', startInterval);
+
+// Reset interval khi bấm nút
+function resetInterval() {
+    clearInterval(interval);
+    startInterval();
+}
+
+// Khởi tạo
+showSlide(index);
+startInterval();
 
 // === QUẢN LÝ SẢN PHẨM ===
 
-// - Xem danh danh sách theo loại (phân trang) 
+// - Xem danh danh sách theo loại
 
 // lấy tất cả các thẻ a trong danh mục và các sản phẩm
 const categoryItems = document.querySelectorAll(".category-list");

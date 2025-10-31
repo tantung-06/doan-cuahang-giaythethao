@@ -7,6 +7,7 @@
     bottom: 0;
     left: 0;
     display: none;
+    z-index: 1;
 }
 
 .container-login-register {
@@ -53,14 +54,9 @@ button {
     cursor: pointer;
     font-size: 16px;
     font-weight: 500;
-    background: #00bfff;
+    background: var(--dark-navy-blue);
     color: #fff;
     transition: 0.5s;
-}
-
-.login-register button:hover {
-    background-color: #00a6dd;
-    transition: .5s;
 }
 
 p {
@@ -69,7 +65,7 @@ p {
 }
 
 p a {
-    color: #00bfff;
+    color: var(--bright-green);
     text-decoration: none;
 }
 
@@ -82,8 +78,7 @@ p a:hover {
     display: none;
     cursor: pointer;
     padding-right: 15px;
-    font-weight: 600;
-    color: #333;
+    color: #fff;
 }
 
 .form-btn {
