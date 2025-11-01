@@ -221,34 +221,38 @@ navBars.addEventListener('click', function(e) {
     nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
 });
 // === HEADER NAV ===
-const homeLink = document.getElementById("home-link");
-const productLink = document.getElementById("product-link");
-const containerLeft = document.querySelector(".container-left");
-const containerRight = document.querySelector(".container-right");
+const homeLink = document.getElementById('home-link');
+const productLink = document.getElementById('product-link');
+const containerLeft = document.querySelector('.container-left');
+const containerRight = document.querySelector('.container-right');
+const slider = document.querySelector('.slider');
 
 // Khi bấm Trang Chủ => ẩn phần bên trái và canh giữa phần bên phải
-homeLink.addEventListener("click", function(e) {
+homeLink.addEventListener('click', function(e) {
     e.preventDefault();
-    containerLeft.style.display = "none";
+    containerLeft.style.display = 'none';
+    slider.style.display = 'block';
 
     // Thêm màu cho Trang Chủ, bỏ màu ở Sản Phẩm
-    homeLink.classList.add("active");
-    productLink.classList.remove("active");
+    homeLink.classList.add('active');
+    productLink.classList.remove('active');
 });
 
 // Khi bấm Sản Phẩm => hiện lại phần bên trái, bỏ canh giữa
-productLink.addEventListener("click", function(e) {
+productLink.addEventListener('click', function(e) {
     e.preventDefault();
-    containerLeft.style.display = "block";
+    containerLeft.style.display = 'block';
+    slider.style.display = 'none';
+
 
     // Thêm màu cho Sản Phẩm, bỏ màu ở Trang Chủ
-    productLink.classList.add("active");
-    homeLink.classList.remove("active");
+    productLink.classList.add('active');
+    homeLink.classList.remove('active');
 });
 
 // Khi vừa vào trang => hiển thị Trang Chủ trước
-window.addEventListener("load", function() {
-    containerLeft.style.display = "none";
+window.addEventListener('load', function() {
+    containerLeft.style.display = 'none';
 });
 
 // === SLIDER ===
