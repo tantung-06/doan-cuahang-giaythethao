@@ -130,6 +130,28 @@
 
     <!-- === container === -->
     <div class="container no-sidebar">
+        <!-- container top -->
+        <div class="container-top">
+            <div class="container-top-content">
+                <div class="container-top-item">
+                    <i class="fa-regular fa-truck"></i>
+                    <p>Giao hàng nhanh toàn quốc
+                </div>
+                <div class="container-top-item">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <p>Miễn phí đổi hàng trong 07 ngày</p>
+                </div>
+                <div class="container-top-item">
+                    <i class="fa-solid fa-check"></i>
+                    <p>Cam kết hàng 100% chính hãng</p>
+                </div>
+                <div class="container-top-item">
+                    <i class="fa-solid fa-box"></i>
+                    <p>Đóng gói cẩn thận</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Slider -->
         <section class="slider">
             <div class="slider-container">
@@ -151,29 +173,51 @@
             </div>
         </section>
 
+        <!-- container-title -->
+        <div class="container-title">
+            <div class="container-title-content">
+                <p>TẤT CẢ SẢN PHẨM</p>
+            </div>
+        </div>
+
         <div class="container-main">
             <!-- container left -->
             <div class="container-left">
                 <div class="category">
-                    <h3>Danh Mục</h3>
-                    <div class="category-item">
-                        <ul>
-                            <li><a href="#" class="category-list active" data-filter="tat-ca">Tất cả</a></li>
-                            <li><a href="#" class="category-list" data-filter="giay-chay-bo">Giày Chạy Bộ</a></li>
-                            <li><a href="#" class="category-list" data-filter="giay-da-bong">Giày Đá Bóng</a></li>
-                            <li><a href="#" class="category-list" data-filter="giay-sneaker">Giày Sneaker</a></li>
-                            <li><a href="#" class="category-list" data-filter="giay-nam">Giày Nam</a></li>
-                            <li><a href="#" class="category-list" data-filter="giay-nu">Giày Nữ</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- Bộ lọc tìm kiếm (tìm kiếm nâng cao) -->
-                <div class="category">
-                    <h3>Bộ lọc tìm kiếm</h3>
+                    <h3>Loại Giày</h3>
                     <div class="category-item">
                         <div class="search-filter" id="earch-filter">
                             <div class="search-filter-list">
-                                <h4>Thương Hiệu</h4>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="giay-chay-bo" id="giay-chay-bo">
+                                    <label for="giay-chay-bo">Giày Chạy Bộ</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="giay-da-bong" id="giay-da-bong">
+                                    <label for="giay-da-bong">Giày Đá Bóng</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="giay-sneaker" id="giay-sneaker">
+                                    <label for="giay-sneaker">Giày Sneaker</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="giay-nam" id="giay-nam">
+                                    <label for="giay-nam">Giày Nam</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="giay-nu" id="giay-nu">
+                                    <label for="giay-nu">Giày Nữ</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category">
+                    <h3>Thương Hiệu</h3>
+                    <div class="category-item">
+                        <div class="search-filter" id="earch-filter">
+                            <div class="search-filter-list">
                                 <div class="search-filter-item">
                                     <input type="checkbox" name="nike" id="nike">
                                     <label for="nike">Nike</label>
@@ -202,15 +246,44 @@
                                     <input type="checkbox" name="adidas" id="adidas">
                                     <label for="adidas">Adidas</label>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                                <h4>Khoảng giá</h4>
-                                <div class="search-filter-price">
-                                    <input type="text" placeholder="Từ">
-                                    <div class="range-line"></div>
-                                    <input type="text" placeholder="Đến">
+                <div class="category">
+                    <h3>Giá</h3>
+                    <div class="category-item">
+                        <div class="search-filter" id="earch-filter">
+                            <div class="search-filter-list">
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="gia-duoi-500" id="gia-duoi-500">
+                                    <label for="gia-duoi-500">Dưới 500.000₫</label>
                                 </div>
-
-                                <button class="search-filter-btn">ÁP DỤNG</button>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="gia-500-1000" id="gia-500-1000">
+                                    <label for="gia-500-1000">500.000₫ - 1.000.000₫</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="gia-1000-2000" id="gia-1000-2000">
+                                    <label for="gia-1000-2000">1.000.000₫ - 2.000.000₫</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="gia-2000-3000" id="gia-2000-3000">
+                                    <label for="gia-2000-3000">2.000.000₫ - 3.000.000₫</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="gia-3000-4000" id="gia-3000-4000">
+                                    <label for="gia-3000-4000">3.000.000₫ - 4.000.000₫</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="gia-4000-5000" id="gia-4000-5000">
+                                    <label for="gia-4000-5000">4.000.000₫ - 5.000.000₫</label>
+                                </div>
+                                <div class="search-filter-item">
+                                    <input type="checkbox" name="gia-tren-5000" id="gia-tren-5000">
+                                    <label for="gia-tren-5000">Trên 5.000.000₫</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -218,6 +291,9 @@
             </div>
             <!-- container right -->
             <div class="container-right">
+                <div class="no-product">
+                    <p>Không có sản phẩm phù hợp với yêu cầu</p>
+                </div>
                 <div class="product">
                     <!-- Giày chạy bộ -->
                     <div class="product-list" data-category="giay-chay-bo giay-nam">
@@ -226,8 +302,8 @@
                             <h4 class="product-name">Giày Chạy Bộ Nam Nike Pegasus Plus - Đen</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.890.000₫</span>
+                                <span class="price-current">3.485.400₫</span>
                             </div>
                         </div>
                     </div>
@@ -238,8 +314,8 @@
                             <h4 class="product-name">Giày Chạy Bộ Nam Nike React Infinity Run 4 - Đen</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -250,8 +326,8 @@
                             <h4 class="product-name">Giày Chạy Bộ Nữ Under Armour Halo Runner</h4>
                             <p class="product-company">UNDER ARMOUR</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -262,8 +338,8 @@
                             <h4 class="product-name">Giày Chạy Bộ Nam Puma Deviate Nitro 3 - Xanh Lá</h4>
                             <p class="product-company">PUMA</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -274,8 +350,8 @@
                             <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
                             <p class="product-company">HOKA</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -286,8 +362,8 @@
                             <h4 class="product-name">Giày Chạy Bộ Nữ Asics Gel-Kayano 32 Lite-Show - Xanh Lá</h4>
                             <p class="product-company">ASICS</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -298,8 +374,8 @@
                             <h4 class="product-name">Giày Chạy Bộ Nữ On Running Cloudsurfer Max - Xanh Dương</h4>
                             <p class="product-company">ON RUNNING</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -310,8 +386,8 @@
                             <h4 class="product-name">Giày Chạy Bộ Nữ Nike Journey Run - Trắng</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -322,8 +398,8 @@
                             <h4 class="product-name">Giày Chạy Bộ Nữ Nike Structure 26 - Xanh Lá</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -334,8 +410,8 @@
                             <h4 class="product-name">Giày Chạy Bộ Nam Nike Zoom Fly 6 - Cam</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -347,8 +423,8 @@
                             <h4 class="product-name">Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -359,8 +435,8 @@
                             <h4 class="product-name">Giày Đá Bóng Nam Nike Phantom Luna li Academy - Xanh Dương</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -371,8 +447,8 @@
                             <h4 class="product-name">Giày Đá Bóng Nam Adidas Samba Messi - Trắng</h4>
                             <p class="product-company">ADIDAS</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -383,8 +459,8 @@
                             <h4 class="product-name">Giày Đá Bóng Nam Adidas F50 Elite - Tím</h4>
                             <p class="product-company">ADIDAS</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -395,8 +471,8 @@
                             <h4 class="product-name">Giày Đá Bóng Nam Puma King Match Tt - Trắng</h4>
                             <p class="product-company">PUMA</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -407,8 +483,8 @@
                             <h4 class="product-name">Giày Đá Bóng Nam Adidas Predator Club - Đen</h4>
                             <p class="product-company">ADIDAS</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -419,8 +495,8 @@
                             <h4 class="product-name">Giày Đá Bóng Nam Adidas Samba Inter Milan - Trắng</h4>
                             <p class="product-company">ADIDAS</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -431,8 +507,8 @@
                             <h4 class="product-name">Giày Đá Bóng Nam Nike Mercurial Vapor 16 Academy 'Kylian Mbappé' - Vàng</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -443,8 +519,8 @@
                             <h4 class="product-name">Giày Đá Bóng Nam Nike Zoom Vapor 16 Academy Tf - Đỏ</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -455,8 +531,8 @@
                             <h4 class="product-name">Giày Đá Bóng Nam Puma Ultra 6 Play Tt - Cam</h4>
                             <p class="product-company">PUMA</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -468,8 +544,8 @@
                             <h4 class="product-name">Giày Sneaker Nữ On Running Cloudtilt - Xám</h4>
                             <p class="product-company">ON RUNNING</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>   
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>   
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -480,8 +556,8 @@
                             <h4 class="product-name">Giày Sneaker Nữ Adidas Tekwen - Đen</h4>
                             <p class="product-company">ADIDAS</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>   
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>   
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -492,8 +568,8 @@
                             <h4 class="product-name">Giày Sneaker Nữ Under Armour Shift</h4>
                             <p class="product-company">UNDER ARMOUR</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>   
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>   
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -504,8 +580,8 @@
                             <h4 class="product-name">Giày Sneaker Nữ Asics Gel-1130 - Be</h4>
                             <p class="product-company">ASICS</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>   
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>   
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -516,8 +592,8 @@
                             <h4 class="product-name">Giày Sneaker Nữ Nike Air Force 1 '07 - Trắng</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>   
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>   
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -528,8 +604,8 @@
                             <h4 class="product-name">Giày Sneaker Nam Asics Jog 100S - Đen</h4>
                             <p class="product-company">ASICS</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>   
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>   
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -540,8 +616,8 @@
                             <h4 class="product-name">Giày Sneaker Nam Asics Japan S - Trắng</h4>
                             <p class="product-company">ASICS</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>   
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>   
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -552,8 +628,8 @@
                             <h4 class="product-name">Giày Sneaker Nam Nike V2K Run - Đen</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>   
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>   
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -564,8 +640,8 @@
                             <h4 class="product-name">Giày Sneaker Nam Nike Big Low - Trắng</h4>
                             <p class="product-company">NIKE</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>   
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>   
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
@@ -576,16 +652,16 @@
                             <h4 class="product-name">Giày Sneaker Nam Adidas Grand Court 2.0 - Be</h4>
                             <p class="product-company">ADIDAS</p>
                             <div class="price">
-                                <span class="price-old">5.000.000đ</span>   
-                                <span class="price-current">4.000.000đ</span>
+                                <span class="price-old">5.000.000₫</span>   
+                                <span class="price-current">4.000.000₫</span>
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
     </div>
-
     <!-- == Chi tiết sản phẩm == -->
     <!-- Giày chạy bộ -->
     <div class="product-detail" data-id="sp-gcb-1">
@@ -596,8 +672,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Chạy Bộ Nam Nike Pegasus Plus - Đen</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">3.485.400₫</span>
+                    <span class="price-old">5.890.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -629,8 +705,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Chạy Bộ Nam Nike React Infinity Run 4 - Đen</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -662,8 +738,8 @@
                 <p class="product-company">UNDER ARMOUR</p>
                 <h4 class="product-name">Giày Chạy Bộ Nữ Under Armour Halo Runner</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -695,8 +771,8 @@
                 <p class="product-company">PUMA</p>
                 <h4 class="product-name">Giày Chạy Bộ Nam Puma Deviate Nitro 3 - Xanh Lá</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -728,8 +804,8 @@
                 <p class="product-company">HOKA</p>
                 <h4 class="product-name">Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -761,8 +837,8 @@
                 <p class="product-company">ASICS</p>
                 <h4 class="product-name">Giày Chạy Bộ Nữ Asics Gel-Kayano 32 Lite-Show - Xanh Lá</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -794,8 +870,8 @@
                 <p class="product-company">ON RUNNING</p>
                 <h4 class="product-name">Giày Chạy Bộ Nữ On Running Cloudsurfer Max - Xanh Dương</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -827,8 +903,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Chạy Bộ Nữ Nike Journey Run - Trắng</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -860,8 +936,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Chạy Bộ Nữ Nike Structure 26 - Xanh Lá</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -893,8 +969,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Chạy Bộ Nam Nike Zoom Fly 6 - Cam</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -926,8 +1002,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -959,8 +1035,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Đá Bóng Nam Nike Phantom Luna li Academy - Xanh Dương</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -992,8 +1068,8 @@
                 <p class="product-company">ADIDAS</p>
                 <h4 class="product-name">Giày Đá Bóng Nam Adidas Samba Messi - Trắng</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1025,8 +1101,8 @@
                 <p class="product-company">ADIDAS</p>
                 <h4 class="product-name">Giày Đá Bóng Nam Adidas F50 Elite - Tím</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1058,8 +1134,8 @@
                 <p class="product-company">PUMA</p>
                 <h4 class="product-name">Giày Đá Bóng Nam Puma King Match Tt - Trắng</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1091,8 +1167,8 @@
                 <p class="product-company">ADIDAS</p>
                 <h4 class="product-name">Giày Đá Bóng Nam Adidas Predator Club - Đen</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1124,8 +1200,8 @@
                 <p class="product-company">ADIDAS</p>
                 <h4 class="product-name">Giày Đá Bóng Nam Adidas Samba Inter Milan - Trắng</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1157,8 +1233,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Đá Bóng Nam Nike Mercurial Vapor 16 Academy 'Kylian Mbappé' - Vàng</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1190,8 +1266,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Bóng Đá Nam Nike Zoom Vapor 16 Academy Tf - Đỏ</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1223,8 +1299,8 @@
                 <p class="product-company">PUMA</p>
                 <h4 class="product-name">Giày Đá Bóng Nam Puma Ultra 6 Play Tt - Cam</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1256,8 +1332,8 @@
                 <p class="product-company">ON RUNNING</p>
                 <h4 class="product-name">Giày Sneaker Nữ On Running Cloudtilt - Xám</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1289,8 +1365,8 @@
                 <p class="product-company">ADIDAS</p>
                 <h4 class="product-name">Giày Sneaker Nữ Adidas Tekwen - Đen</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1322,8 +1398,8 @@
                 <p class="product-company">UNDER ARMOUR</p>
                 <h4 class="product-name">Giày Sneaker Nữ Under Armour Shift</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1355,8 +1431,8 @@
                 <p class="product-company">ASICS</p>
                 <h4 class="product-name">Giày Sneaker Nữ Asics Gel-1130 - Be</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1388,8 +1464,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Sneaker Nữ Nike Air Force 1 '07 - Trắng</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1421,8 +1497,8 @@
                 <p class="product-company">ASICS</p>
                 <h4 class="product-name">Giày Sneaker Nam Asics Jog 100S - Đen</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1454,8 +1530,8 @@
                 <p class="product-company">ASICS</p>
                 <h4 class="product-name">Giày Sneaker Nam Asics Japan S - Trắng</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1487,8 +1563,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Sneaker Nam Nike V2K Run - Đen</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1520,8 +1596,8 @@
                 <p class="product-company">NIKE</p>
                 <h4 class="product-name">Giày Sneaker Nam Nike Big Low - Trắng</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -1553,8 +1629,8 @@
                 <p class="product-company">ADIDAS</p>
                 <h4 class="product-name">Giày Sneaker Nam Adidas Grand Court 2.0 - Be</h4>
                 <div class="price">
-                    <span class="price-current">4.000.000đ</span>
-                    <span class="price-old">5.000.000đ</span>
+                    <span class="price-current">4.000.000₫</span>
+                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
