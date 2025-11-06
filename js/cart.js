@@ -16,11 +16,12 @@ function toggleCart(e) {
 }
 
 cartIcon.addEventListener('click', toggleCart);
+cartIconNotice.addEventListener('click', toggleCart);
 if (cartText) cartText.addEventListener('click', toggleCart);
 
 // Đóng khi click ngoài giỏ
 document.addEventListener('click', (e) => {
-    if (!e.target.closest('.header-cart') && !e.target.closest('.fa-cart-shopping') && !e.target.closest('#action-btn')) {
+    if (!e.target.closest('.header-cart') && !e.target.closest('.fa-cart-shopping') && !e.target.closest('.icon-notice') && !e.target.closest('#action-btn')) {
         cartBox.style.display = 'none';
     }
 });
