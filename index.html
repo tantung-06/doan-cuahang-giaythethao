@@ -15,6 +15,7 @@
     <!-- css -->
     <link rel="stylesheet" href="./assest/css/style.css">
     <link rel="stylesheet" href="./assest/css/register_login_customer.css">
+    <link rel="stylesheet" href="./assest/css/cart_detail.css">
 
     <!-- fonts icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
@@ -39,6 +40,7 @@
                     <ul>
                         <li><a href="#" id="home-link" class="active">Trang Chủ</a></li>
                         <li><a href="#" id="product-link">Sản Phẩm</a></li>
+                        <li><a href="#" id="about-link">Liên Hệ</a></li>
                     </ul>
                 </div>
                 <!-- tìm kiếm -->
@@ -61,8 +63,39 @@
                         <!-- Tên khách hàng -->
                         <span id="user-name" class="user-name"></span>
                         <!-- Giỏ hàng -->
-                        <li><a href="#" class="icon"><i class="fa-solid fa-cart-shopping"></i></a></li>
-                        <li><a href="#" class="btn">Giỏ hàng</a></li>
+                        <li><a href="#" class="icon">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span class="icon-notice">0</span>
+                        </a></li>
+                        <li><a href="#" class="btn" id="action-btn">Giỏ hàng</a>
+                            <div class="header-cart">
+                                <div class="header-cart-list">
+                                    <h4>GIỎ HÀNG</h4>
+                                    <img src="./assest/img/no-cart.png" alt="no cart" class="header-no-cart-img">
+                                    <span class="header-no-cart-msg">Hiện chưa có sản phẩm</span>
+                                    <!-- <div class="header-cart-list-item">
+                                        <img src="./assest/img/Nike_Pegasus_Plus.jpg" alt="Giày Chạy Bộ Nam Nike Pegasus Plus - Đen" class="header-cart-list-img">
+                                        <div class="header-cart-info">
+                                            <p class="header-cart-name">Giày Chạy Bộ Nam Nike Pegasus Plus - Đen</p>
+                                            <p class="header-cart-size">36</p>
+                                            <div class="header-cart-price">
+                                                <input type="text" value="1" min="1" class="header-cart-qty">
+                                                <span class="header-cart-item-price">3.485.400₫</span>
+                                            </div>
+                                        </div>
+                                        <span class="header-cart-remove">×</span>
+                                    </div> -->
+                                    <div class="cart-total">
+                                        <span>TỔNG TIỀN:</span>
+                                        <label>0₫</label>
+                                    </div>
+                                    <div class="cart-buttons">
+                                        <button class="btn-view">XEM GIỎ HÀNG</button>
+                                        <button class="btn-pay">THANH TOÁN</button>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -100,6 +133,45 @@
             </div>
         </div>
     </div>
+    <!-- Chi tiết giỏ hàng -->
+    <!-- <div class="cart-detail">
+        <div class="cart-detail-container">
+            <div class="cart-detail-forrm">
+                <h4>GIỎ HÀNG CỦA BẠN</h4>
+                <div class="close" id="closeCart"><i class="fa-solid fa-xmark"></i></div>
+                <div class="cart-detail-header">
+                    <div>Hình ảnh</div>
+                    <div>Tên sản phẩm</div>
+                    <div>Kích thước</div>
+                    <div>Số lượng</div>
+                    <div>Đơn giá</div>
+                    <div>Tổng cộng</div>
+                    <div>Thao tác</div>
+                </div>
+                <div class="cart-detail-items" id="cartItems"> -->
+                    <!-- Sản phẩm sẽ được JS thêm vào đây -->
+                    <!-- <div class="cart-detail-item">
+                        <div><img src="./assest/img/Nike_Pegasus_Plus.jpg" alt="Giày Chạy Bộ Nam Nike Pegasus Plus - Đen"></div>
+                        <div class="cart-detail-product">
+                            <h3 class="cart-detail-product-name">Giày Chạy Bộ Nam Nike Pegasus Plus - Đen</h3>
+                        </div>
+                        <div class="cart-detail-size">38</div>
+                        <div class="cart-detail-quantity">
+                            <input type="number" value="1" min="1" class="quantity-input">
+                        </div>
+                        <div class="cart-detail-price">4.590.000₫</div>
+                        <div class="cart-detail-price-total">4.590.000₫</div>
+                        <div><button class="remove-btn">Xóa</button></div>
+                    </div>
+                </div>
+
+                <div class="cart-detail-footer">
+                    <p>Tổng tiền: <span id="cartTotal">4.590.000₫</span></p>
+                    <button id="checkoutBtn">THANH TOÁN</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
 
     <!-- Thông tin khách hàng -->
     <div class="login-register" id="customer-info">
@@ -291,9 +363,9 @@
             </div>
             <!-- container right -->
             <div class="container-right">
-                <div class="no-product">
+                <!-- <div class="no-product">
                     <p>Không có sản phẩm phù hợp với yêu cầu</p>
-                </div>
+                </div> -->
                 <div class="product">
                     <!-- Giày chạy bộ -->
                     <div class="product-list" data-category="giay-chay-bo giay-nam">
@@ -657,7 +729,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -677,17 +748,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -710,17 +781,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -743,17 +814,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -776,17 +847,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -809,17 +880,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -842,17 +913,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -875,17 +946,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -908,17 +979,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -941,17 +1012,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -974,17 +1045,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1007,17 +1078,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1040,17 +1111,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1073,17 +1144,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1106,17 +1177,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1139,17 +1210,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1172,17 +1243,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1205,17 +1276,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1238,17 +1309,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1271,17 +1342,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1304,17 +1375,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1337,17 +1408,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1370,17 +1441,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1403,17 +1474,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1436,17 +1507,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1469,17 +1540,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1502,17 +1573,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1535,17 +1606,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1568,17 +1639,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1601,17 +1672,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1634,17 +1705,17 @@
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
-                    <select id="size">
-                        <option value="">38</option>
-                        <option value="">39</option>
-                        <option value="">40</option>
-                        <option value="">41</option>
-                        <option value="">42</option>
+                    <select class="size">
+                        <option value="38">38</option>
+                        <option value="39">39</option>
+                        <option value="40">40</option>
+                        <option value="41">41</option>
+                        <option value="42">42</option>
                     </select>
                 </div>
                 <div class="product-quantity">
                     <label for="quantity">Số lượng:</label>
-                    <input type="number" id="quantity" value="1" min="1">
+                    <input type="number" class="quantity" value="1" min="1">
                 </div>
                 <div class="product-buttons">
                     <button class="buy-now">MUA NGAY</button>
@@ -1654,6 +1725,8 @@
         </div>
     </div>
 
+    
+
     <!-- === footer === -->
     <footer class="footer">
         <div class="footer-list">
@@ -1661,7 +1734,12 @@
         </div>
     </footer>
 
-    <!-- java script -->
+    <!-- main js -->
     <script src="./js/main.js"></script>
+    <!-- cart js -->
+    <script src="./js/cart.js"></script>
+    <!-- product js -->
+    <!-- <script src="./js/product.js"></script> -->
+    
 </body>
 </html>
