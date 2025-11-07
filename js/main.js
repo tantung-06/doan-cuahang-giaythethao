@@ -218,82 +218,33 @@ document.querySelector('.slider-container').onmouseleave = startInterval;
 showSlide(index);
 startInterval();
 
-// === CHI TIẾT SẢN PHẨM ===
-document.querySelectorAll('.product-item').forEach(item => {
-    item.onclick = () => {
-        const id = item.dataset.id;
-        document.querySelectorAll('.product-detail').forEach(d => d.style.display = 'none');
-        const target = document.querySelector(`.product-detail[data-id="${id}"]`);
-        if (target) target.style.display = 'flex';
-    };
-});
-document.querySelectorAll('.product-detail').forEach(detail => {
-    const container = detail.querySelector('.product-detail-container');
-    detail.onclick = e => { if (!container.contains(e.target)) detail.style.display = 'none'; };
-});
-document.querySelectorAll('.close').forEach(btn => {
-    btn.onclick = () => {
-        const pd = btn.closest('.product-detail');
-        const lr = btn.closest('.login-register');
-        if (pd) pd.style.display = 'none';
-        if (lr) lr.style.display = 'none';
-    };
-});
-
 // === TÌM KIẾM SẢN PHẨM ===
 const searchInput = document.getElementById('basic-search');
 const searchBtn = document.querySelector('.basic-btn');
-const productLists = document.querySelectorAll('.product-list');
 
 function removeVietnameseTones(str) {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/đ/g, "d").replace(/Đ/g, "D");
 }
+
 function searchProducts() {
     const keyword = removeVietnameseTones(searchInput.value.trim().toLowerCase());
+    const productLists = document.querySelectorAll('.product-list'); // Lấy mới mỗi lần search
+    let visibleCount = 0; // đếm sản phẩm hiển thị
+
     productLists.forEach(p => {
         const name = removeVietnameseTones(p.querySelector('.product-name').textContent.toLowerCase());
         const company = removeVietnameseTones(p.querySelector('.product-company').textContent.toLowerCase());
-        p.style.display = (name.includes(keyword) || company.includes(keyword)) ? 'block' : 'none';
+        const show = name.includes(keyword) || company.includes(keyword);
+        p.style.display = show ? 'block' : 'none';
+        if (show) visibleCount++;
     });
+
+    // Hiển thị dòng "Không có sản phẩm" nếu không có sản phẩm nào
+    const noProductDiv = document.querySelector('.container-right .no-product');
+    if (noProductDiv) {
+        noProductDiv.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
 }
+
 searchBtn.onclick = searchProducts;
 searchInput.onkeypress = e => { if (e.key === 'Enter') searchProducts(); };
-
-// === LỌC SẢN PHẨM ===
-document.addEventListener("DOMContentLoaded", () => {
-    const checkboxes = document.querySelectorAll('.search-filter-item input[type="checkbox"]');
-    const products = document.querySelectorAll('.product-list');
-
-    checkboxes.forEach(cb => cb.addEventListener('change', filterProducts));
-
-    function filterProducts() {
-        const selectedCategories = [...document.querySelectorAll('.category:nth-child(1) input:checked')].map(cb => cb.id);
-        const selectedBrands = [...document.querySelectorAll('.category:nth-child(2) input:checked')].map(cb => cb.id);
-        const selectedPrices = [...document.querySelectorAll('.category:nth-child(3) input:checked')].map(cb => cb.labels[0].innerText);
-
-        products.forEach(product => {
-            const categories = product.dataset.category.split(' ');
-            const brand = product.querySelector('.product-company')
-                .innerText.trim().toLowerCase().replace(/\s+/g, '-');
-            const price = parseInt(product.querySelector('.price-current').innerText.replace(/[^\d]/g, ''));
-            let show = true;
-
-            if (selectedCategories.length && !selectedCategories.some(cat => categories.includes(cat))) show = false;
-            if (selectedBrands.length && !selectedBrands.includes(brand)) show = false;
-
-            if (selectedPrices.length) {
-                const match = selectedPrices.some(range => {
-                    if (range.includes('Dưới')) return price < 500000;
-                    if (range.includes('500.000₫ - 1.000.000₫')) return price >= 500000 && price <= 1000000;
-                    if (range.includes('1.000.000₫ - 2.000.000₫')) return price >= 1000000 && price <= 2000000;
-                    if (range.includes('2.000.000₫ - 3.000.000₫')) return price >= 2000000 && price <= 3000000;
-                    if (range.includes('3.000.000₫ - 4.000.000₫')) return price >= 3000000 && price <= 4000000;
-                    if (range.includes('4.000.000₫ - 5.000.000₫')) return price >= 4000000 && price <= 5000000;
-                    if (range.includes('Trên')) return price > 5000000;
-                });
-                if (!match) show = false;
-            }
-            product.style.display = show ? 'block' : 'none';
-        });
-    }
-});

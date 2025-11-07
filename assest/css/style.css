@@ -198,12 +198,12 @@ header {
 
 .cart-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin: 15px 20px;
 }
 
 .cart-buttons button {
-    width: 48%;
+    width: 30%;
     padding: 8px 0;
     border: 1px solid var(--gray-d);
     border-radius: 0;
@@ -227,6 +227,7 @@ header {
 .btn-pay:hover {
     background: var(--gray-l);
 }
+
 /* có sản phẩm */
 .header-cart-list-item {
     display: flex;
@@ -655,6 +656,7 @@ header {
 .product-size select,
 .product-quantity input {
     padding: 5px;
+    border-radius: 0;
 }
 
 
@@ -664,7 +666,13 @@ header {
 }
 
 .product-quantity input {
-    width: 100px;
+    height: 25px;
+    width: 25px;
+    background-color: #fff;
+    border: 1px solid var(--gray-d);
+    padding: 3px;
+    font-size: 1.3rem;
+    text-align: center;
 }
 
 .product-buttons {
