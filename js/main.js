@@ -155,15 +155,31 @@ function showHome(e) {
     homeLink.classList.add('active');
     productLink.classList.remove('active');
 
-    // --- Reset lọc sản phẩm khi về trang Giới thiệu ---
+    // --- Reset lọc sản phẩm ---
     const productLists = document.querySelectorAll('.product-list');
-    productLists.forEach(p => p.style.display = 'block');
+    productLists.forEach(p => {
+        p.style.display = 'block';
+        p.setAttribute('data-filtered', 'visible');
+    });
+    
     const noProductDiv = document.querySelector('.container-right .no-product');
     if (noProductDiv) noProductDiv.style.display = 'none';
+    
+    // Reset tất cả checkbox
     document.querySelectorAll('.category input[type="checkbox"], .category input[type="radio"]').forEach(i => i.checked = false);
+    
+    // Reset search input
     const searchInput = document.getElementById('basic-search');
     if (searchInput) searchInput.value = '';
+
+    // Reset phân trang
+    if (typeof window.resetPagination === 'function') {
+        setTimeout(() => {
+            window.resetPagination();
+        }, 50);
+    }
 }
+
 function showProduct(e) {
     if (e) e.preventDefault();
     containerLeft.style.display = 'block';
@@ -172,7 +188,32 @@ function showProduct(e) {
     title.style.height = '0';
     productLink.classList.add('active');
     homeLink.classList.remove('active');
+
+    // Reset lọc sản phẩm 
+    const productLists = document.querySelectorAll('.product-list');
+    productLists.forEach(p => {
+        p.style.display = 'block';
+        p.setAttribute('data-filtered', 'visible');
+    });
+    
+    const noProductDiv = document.querySelector('.container-right .no-product');
+    if (noProductDiv) noProductDiv.style.display = 'none';
+    
+    // Reset tất cả checkbox
+    document.querySelectorAll('.category input[type="checkbox"], .category input[type="radio"]').forEach(i => i.checked = false);
+    
+    // Reset search input
+    const searchInput = document.getElementById('basic-search');
+    if (searchInput) searchInput.value = '';
+
+    // Reset phân trang
+    if (typeof window.resetPagination === 'function') {
+        setTimeout(() => {
+            window.resetPagination();
+        }, 50);
+    }
 }
+
 homeLink.onclick = showHome;
 productLink.onclick = showProduct;
 window.addEventListener('load', showHome);
@@ -231,11 +272,19 @@ function searchProducts() {
         const company = removeVietnameseTones(p.querySelector('.product-company').textContent.toLowerCase());
         const show = name.includes(keyword) || company.includes(keyword);
         p.style.display = show ? 'block' : 'none';
+        p.setAttribute('data-filtered', show ? 'visible' : 'hidden');
         if (show) visibleCount++;
     });
 
     const noProductDiv = document.querySelector('.container-right .no-product');
     if (noProductDiv) noProductDiv.style.display = visibleCount === 0 ? 'block' : 'none';
+
+    // Reset phân trang sau khi tìm kiếm
+    if (typeof window.resetPagination === 'function') {
+        setTimeout(() => {
+            window.resetPagination();
+        }, 50);
+    }
 }
 
 searchBtn.onclick = searchProducts;

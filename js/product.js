@@ -12,6 +12,7 @@ fetch('./json/product.json')
       const item = document.createElement('div');
       item.className = 'product-list';
       item.dataset.category = product.category.join(' ');
+      item.setAttribute('data-filtered', 'visible');
       item.innerHTML = `
         <div class="product-item" data-id="${product.id}">
           <img class="product-img" src="${product.img}" alt="${product.name}">
@@ -65,7 +66,7 @@ fetch('./json/product.json')
     initProductDetail();
     filterProducts();
   })
-  .catch(err => console.error('Lỗi load sản phẩm:', err));
+  .catch(err => { /* Xử lý lỗi nếu cần */ });
 
 // === HÀM KHỞI TẠO CHI TIẾT SẢN PHẨM ===
 function initProductDetail() {
@@ -127,14 +128,23 @@ function filterProducts() {
     }
 
     product.style.display = show ? 'block' : 'none';
+    product.setAttribute('data-filtered', show ? 'visible' : 'hidden');
     if (show) visibleCount++;
   });
 
   const noProductDiv = document.querySelector('.container-right .no-product');
   if (noProductDiv) noProductDiv.style.display = visibleCount === 0 ? 'block' : 'none';
+
+  // Reset phân trang
+  if (typeof window.resetPagination === 'function') {
+    setTimeout(() => { window.resetPagination(); }, 50);
+  }
 }
 
 // === GẮN SỰ KIỆN LỌC ===
 document.querySelectorAll('.search-filter-item input[type="checkbox"]').forEach(cb => {
   cb.addEventListener('change', filterProducts);
 });
+
+// Export để dùng ở file khác
+window.filterProducts = filterProducts;

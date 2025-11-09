@@ -15,8 +15,7 @@ html {
     --bright-green-l: #f0fff0;
     --gray-d: #333333;
     --gray-l: #e3e3e3;
-    --ivory: var(--white)FF0;
-    --white: #f8f8f8;
+    --white: #ffffff;
 }
 
 body {
@@ -75,7 +74,7 @@ header {
 
 .nav ul, .action ul {
     display: flex;
-    white-space: nowrap; /*không cho text xuống dòng*/
+    white-space: nowrap;
 }
 
 .nav a {
@@ -349,7 +348,7 @@ header {
 /* === container === */
 .container {
     margin-top: 80px;
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: var(--white);
 }
 
 .container-main {
@@ -472,9 +471,9 @@ header {
 /* category */
 .category {
     background-color: var(--white);
-    border-radius: 2px;
     display: block;
     padding: 0 5px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
 }
 
 .category h3{
@@ -550,7 +549,7 @@ header {
     background-color: var(--white);
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
     margin-bottom: 10px;
-    border-radius: 2px;
+    border-radius: 1px;
     cursor: pointer;
 }
 
@@ -725,11 +724,6 @@ header {
 .footer-list a {
     color: var(--white);
     text-decoration: underline;
-}
-
-/* Mobile and Tablet: width < 1024px */
-@media only screen and (max-width: 1023px) {
-
 }
 
 /* Mobile: width < 740px */

@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- reset css -->
-    <link rel="stylesheet" href="./assest/css/reset.css">
-
     <!-- embed fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,6 +14,7 @@
     <link rel="stylesheet" href="./assest/css/register_login_customer.css">
     <link rel="stylesheet" href="./assest/css/payment.css">
     <link rel="stylesheet" href="./assest/css/cart.css">
+    <link rel="stylesheet" href="./assest/css/pagination.css">
 
     <!-- fonts icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
@@ -206,37 +204,146 @@
         </div>
     </div>
     <!-- Thanh toán -->
-    <div class="payment" style="display: none;">
-        <div class="payment-left">
-            <div class="payment-left-container">
-                    <div class="payment-left-form">
-                        <h3>Giao hàng</h3>
-                        <div class="payment-left-input">
-                            <input type="text" id="first-name" placeholder="Tên">
-                            <input type="text" id="last-name" placeholder="Họ">
-                        </div>
-                        <input type="text" id="address" placeholder="Địa chỉ">
-                        <div class="payment-left-input">
-                            <input type="text" id="city" placeholder="Thành phố">
-                            <input type="text" id="ward" placeholder="Phường Xã, Quận Huyện">
-                        </div>
-                        <input type="tel" id="phone" placeholder="Điện thoại">
-                        <h3>Phương thức thanh toán</h3>
-                        <label class="checkbox-label">
-                            <input type="radio">
-                            Thanh toán khi giao hàng (COD)
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="radio">
-                            Chuyển khoản qua ngân hàng
-                        </label>
-                    </div>
-                    <button class="submit-btn">Thanh toán</button>
-            </div>
+    <div class="payment">
+        <div class="payment-header">
+            <button class="back-btn"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2 class="payment-header-title">Thanh Toán</h2>
         </div>
-        <div class="payment-right">
-            <div class="payment-right-container">
-                2
+        <div class="payment-container">
+            <div class="payment-container-left">
+                <h3 class="payment-title">Giỏ hàng của bạn:</h3>
+                
+                <div class="payment-table">
+                    <div class="payment-table-header">
+                        <div>Hình ảnh</div>
+                        <div>Tên sản phẩm</div>
+                        <div>Số lượng</div>
+                        <div>Thành tiền</div>
+                        <div>Thao tác</div>
+                    </div>
+
+                    <div class="payment-item">
+                        <div class="item-image">
+                            <img src="./assest/img/Adidas_F50_Elite.jpg" alt="Vans Old Skool">
+                        </div>
+                        <div class="item-info">
+                            <h3>Vans Old Skool 507698</h3>
+                            <p class="item-size">Kích thước: <strong>27</strong></p>
+                        </div>
+                        <div class="quantity-control">
+                            <input type="text" class="qty-input" value="1" min="1">
+                        </div>
+                        <div class="item-price">450.000₫</div>
+                        <div class="item-close">
+                            <button class="close-btn">Xóa</button>
+                        </div>
+                    </div>
+
+                    <div class="payment-total">
+                        <span>Tổng tiền:</span>
+                        <span class="total-amount">450.000₫</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="payment-container-right">
+                <h3 class="payment-title">Hình thức thanh toán:</h3>
+                <div class="payment-methods">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="payment" id="cod" checked>
+                            <label for="cod">Thanh toán khi nhận hàng (COD)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="payment" id="transfer">
+                            <label for="transfer">Thanh toán bằng chuyển khoản</label>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="payment-title">Thông tin giao hàng:</h3>
+                <div class="shipping-info">
+                    <div class="form-row full-width">
+                        <div class="form-group full-width">
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="address-type" id="saved-address" checked onclick="toggleAddressForm()">
+                                    <label for="saved-address">Sử dụng địa chỉ từ tài khoản</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="address-type" id="new-address" onclick="toggleAddressForm()">
+                                    <label for="new-address">Địa chỉ mới</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="saved-address-info" class="saved-address-display">
+                        <div class="saved-info-box">
+                            <p><strong>Tan Tung</strong></p>
+                            <p>Số điện thoại: 0123456789</p>
+                            <p>Email: tantung@gmail.com</p>
+                            <p>Địa chỉ: 123 Đường ABC, Phường 1, Quận 1, TP. Hồ Chí Minh</p>
+                        </div>
+                    </div>
+
+                    <div id="new-address-form" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" placeholder="Họ tên">
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" placeholder="Số điện thoại">
+                            </div>
+                        </div>
+
+                        <div class="form-row full-width">
+                            <div class="form-group full-width">
+                                <input type="email" placeholder="Email">
+                            </div>
+                        </div>
+
+                        <div class="address-row">
+                            <select>
+                                <option>Tỉnh/thành phố</option>
+                                <option>Hồ Chí Minh</option>
+                                <option>Hà Nội</option>
+                                <option>Đà Nẵng</option>
+                            </select>
+                            <select>
+                                <option>Quận/huyện</option>
+                                <option>Quận 1</option>
+                                <option>Quận 2</option>
+                                <option>Quận 3</option>
+                            </select>
+                            <select>
+                                <option>Phường/xã</option>
+                                <option>Phường 1</option>
+                                <option>Phường 2</option>
+                                <option>Phường 3</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row full-width">
+                            <div class="form-group full-width">
+                                <input type="text" placeholder="Địa chỉ">
+                            </div>
+                        </div>
+
+                        <div class="form-row full-width">
+                            <div class="form-group full-width">
+                                <textarea placeholder="Yêu cầu khác (Không bắt buộc)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms">
+                        <label for="terms">Tôi đã đọc và đồng ý với Điều kiện giao dịch chung của StepLab</label>
+                    </div>
+
+                    <button class="submit-btn">Thanh toán</button>
+                </div>
             </div>
         </div>
     </div>
@@ -418,6 +525,12 @@
                         </div>
                     </div> -->
                 </div>
+
+                <!-- Phân trang -->
+                <div class="pagination" id="pagination">
+                    
+                </div>
+
             </div>
         </div>
     </div>
@@ -470,6 +583,8 @@
     <script src="./js/product.js"></script>
     <!-- payment js -->
     <script src="./js/payment.js"></script>
+    <!-- pagination -->
+    <script src="./js/pagination.js"></script>
 
 </body>
 </html>
