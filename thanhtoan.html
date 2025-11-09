@@ -3,410 +3,650 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABC-MART Checkout</title>
+    <title>Thanh toán Đơn hàng</title>
+    <link rel="stylesheet" href="./assest/css/style.css">
+    <link rel="stylesheet" href="./assest/css/register_login_customer.css">
+    <link rel="stylesheet" href="./assest/css/payment.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+.cart-payment {
+    max-width: 1400px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f9fafb;
-            color: #1f2937;
-        }
+.cart-payment-container {
+    display: flex;
+    gap: 10px;
+}
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            padding: 1rem;
-        }
+.cart-container-left {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
-        @media (min-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr 1fr;
-                padding: 2rem;
-            }
-        }
+.cart-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #222;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 15px;
+}
 
-        .form-section {
-            background: white;
-            padding: 2rem;
-            border-radius: 8px;
-        }
 
-        .header {
-            margin-bottom: 2rem;
-        }
+.cart-table {
+    width: 100%;
+}
 
-        .header h1 {
-            font-size: 2rem;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
-        }
+.cart-table-header {
+    display: grid;
+    grid-template-columns: 100px 2fr 1fr 1fr 100px;
+    gap: 15px;
+    padding: 15px 10px;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
 
-        .header p {
-            font-size: 0.875rem;
-            color: #6b7280;
-        }
+.cart-item {
+    display: grid;
+    grid-template-columns: 100px 2fr 1fr 1fr 100px;
+    gap: 15px;
+    align-items: center;
+    padding: 20px 10px;
+    border-bottom: 1px solid #e0e0e0;
+    transition: background-color 0.2s;
+}
 
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
+.cart-item:hover {
+    background-color: #fafafa;
+}
 
-        .section-header h2 {
-            font-size: 1.125rem;
-            font-weight: 600;
-        }
+/* ==================== CART ITEM ELEMENTS ==================== */
 
-        .section-header a {
-            color: #16a34a;
-            text-decoration: none;
-            font-size: 0.875rem;
-        }
+.item-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
 
-        .section-header a:hover {
-            text-decoration: underline;
-        }
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-        .form-group {
-            margin-bottom: 2rem;
-        }
+.item-info h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #222;
+    margin-bottom: 8px;
+}
 
-        .form-note {
-            font-size: 0.875rem;
-            color: #6b7280;
-            margin-bottom: 1rem;
-        }
+.item-size {
+    font-size: 14px;
+    color: #666;
+}
 
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        select {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
+.item-size strong {
+    color: #222;
+}
 
-        input:focus,
-        select:focus {
-            outline: none;
-            border-color: #16a34a;
-            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
-        }
+/* ==================== QUANTITY CONTROL ==================== */
 
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
+.quantity-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
 
-        .input-full {
-            margin-bottom: 1rem;
-        }
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
 
-        .checkbox-label {
-            display: flex;
-            align-items: flex-start;
-            font-size: 0.875rem;
-            color: #374151;
-            cursor: pointer;
-        }
+.qty-btn:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
 
-        .checkbox-label input[type="checkbox"] {
-            width: 1rem;
-            height: 1rem;
-            margin-right: 0.5rem;
-            margin-top: 0.125rem;
-            cursor: pointer;
-            accent-color: #16a34a;
-        }
+.qty-btn:active {
+    transform: scale(0.95);
+}
 
-        .submit-btn {
-            width: 100%;
-            padding: 1rem;
-            background-color: #16a34a;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
+.qty-input {
+    width: 50px;
+    height: 32px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+}
 
-        .submit-btn:hover {
-            background-color: #15803d;
-        }
+/* ==================== PRICE & ACTIONS ==================== */
 
-        /* Order Summary */
-        .summary-section {
-            background-color: #f3f4f6;
-            padding: 2rem;
-            border-radius: 8px;
-            height: fit-content;
-        }
+.item-price {
+    font-size: 16px;
+    font-weight: 600;
+    color: #d32f2f;
+    text-align: center;
+}
 
-        @media (min-width: 1024px) {
-            .summary-section {
-                position: sticky;
-                top: 2rem;
-            }
-        }
+.item-close {
+    text-align: center;
+}
 
-        .cart-items {
-            margin-bottom: 1.5rem;
-        }
+.close-btn {
+    padding: 8px 16px;
+    background-color: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
 
-        .cart-item {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
+.close-btn:hover {
+    background-color: #cc0000;
+}
 
-        .item-image {
-            position: relative;
-            flex-shrink: 0;
-        }
+/* ==================== CART TOTAL ==================== */
 
-        .item-image-box {
-            width: 4rem;
-            height: 4rem;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 10px;
+    margin-top: 20px;
+    border-top: 2px solid #e0e0e0;
+    font-size: 18px;
+    font-weight: 600;
+}
 
-        .item-badge {
-            position: absolute;
-            top: -0.5rem;
-            right: -0.5rem;
-            width: 1.5rem;
-            height: 1.5rem;
-            background-color: #4b5563;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.75rem;
-        }
+.total-amount {
+    font-size: 24px;
+    color: #d32f2f;
+}
 
-        .item-details {
-            flex: 1;
-        }
+/* ==================== RIGHT SIDE - PAYMENT ==================== */
 
-        .item-name {
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
+.payment-container-right {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+}
 
-        .item-size {
-            font-size: 0.75rem;
-            color: #6b7280;
-        }
+.payment-title,
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #222;
+}
 
-        .item-price {
-            font-weight: 600;
-            white-space: nowrap;
-        }
+.section-title {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #e0e0e0;
+}
 
-        .discount-section {
-            margin-bottom: 1.5rem;
-        }
+/* ==================== PAYMENT METHODS ==================== */
 
-        .discount-input-group {
-            display: flex;
-            gap: 0.5rem;
-        }
+.payment-methods {
+    margin-bottom: 20px;
+}
 
-        .discount-input {
-            flex: 1;
-        }
+.radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 
-        .discount-btn {
-            padding: 0.75rem 1.5rem;
-            background-color: #e5e7eb;
-            color: #374151;
-            border: none;
-            border-radius: 6px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
+.radio-option {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
 
-        .discount-btn:hover {
-            background-color: #d1d5db;
-        }
+.radio-option:hover {
+    border-color: #999;
+    background-color: #fafafa;
+}
 
-        .summary-totals {
-            border-top: 1px solid #d1d5db;
-            padding-top: 1rem;
-        }
+.radio-option input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    cursor: pointer;
+    accent-color: #d32f2f;
+}
 
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-            font-size: 0.875rem;
-        }
+.radio-option label {
+    cursor: pointer;
+    font-size: 15px;
+    flex: 1;
+}
 
-        .summary-row.total {
-            font-size: 1.125rem;
-            font-weight: bold;
-            border-top: 1px solid #d1d5db;
-            padding-top: 0.75rem;
-            margin-top: 0.75rem;
-        }
+.radio-option input[type="radio"]:checked + label {
+    font-weight: 600;
+    color: #d32f2f;
+}
 
-        .currency-label {
-            font-size: 0.75rem;
-            color: #6b7280;
-            font-weight: normal;
-            margin-right: 0.5rem;
-        }
+/* ==================== SHIPPING INFO ==================== */
+
+.shipping-info {
+    margin-top: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group input,
+.form-group textarea,
+.address-row select {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.address-row select:focus {
+    outline: none;
+    border-color: #d32f2f;
+    box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
+}
+
+.form-group textarea {
+    min-height: 80px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+/* ==================== ADDRESS ROW ==================== */
+
+.address-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.address-row select {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: white;
+    cursor: pointer;
+}
+
+/* ==================== SAVED ADDRESS ==================== */
+
+.saved-address-display {
+    margin: 20px 0;
+}
+
+.saved-info-box {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    line-height: 1.8;
+}
+
+.saved-info-box p {
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+}
+
+.saved-info-box p:last-child {
+    margin-bottom: 0;
+}
+
+.saved-info-box strong {
+    color: #222;
+    font-size: 16px;
+}
+
+/* ==================== CHECKBOX ==================== */
+
+.checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 25px 0;
+    padding: 15px;
+    background-color: #fff8e1;
+    border-radius: 6px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-top: 2px;
+    accent-color: #d32f2f;
+}
+
+.checkbox-group label {
+    cursor: pointer;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+}
+
+/* ==================== SUBMIT BUTTON ==================== */
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: #d32f2f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.submit-btn:hover {
+    background-color: #b71c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(211, 47, 47, 0.3);
+}
+
+.submit-btn:active {
+    transform: translateY(0);
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+
+@media (max-width: 1024px) {
+    .cart-payment-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .cart-table-header {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cart-payment {
+        padding: 0 15px;
+        margin: 20px auto;
+    }
+    
+    .cart-container-left,
+    .payment-container-right {
+        padding: 20px;
+    }
+    
+    .cart-table-header {
+        display: none;
+    }
+    
+    .cart-item {
+        grid-template-columns: 80px 1fr;
+        gap: 10px;
+    }
+    
+    .item-image {
+        width: 80px;
+        height: 80px;
+        grid-row: 1 / 3;
+    }
+    
+    .item-info {
+        grid-column: 2;
+    }
+    
+    .quantity-control {
+        grid-column: 1 / 3;
+        justify-content: flex-start;
+        margin-top: 10px;
+    }
+    
+    .item-price {
+        grid-column: 1 / 3;
+        text-align: left;
+        margin-top: 10px;
+    }
+    
+    .item-close {
+        grid-column: 1 / 3;
+        text-align: left;
+        margin-top: 10px;
+    }
+    
+    .address-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-title,
+    .payment-title {
+        font-size: 20px;
+    }
+    
+    .submit-btn {
+        font-size: 14px;
+        padding: 12px;
+    }
+}
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Left Column - Form -->
-        <div class="form-section">
-            <div class="header">
-                <h1>ABC-MART</h1>
-            </div>
+    <div class="cart-payment">
+        <div class="cart-payment-container">
+            <!-- Header -->
 
-            <!-- Delivery Section -->
-            <div class="form-group">
-                <h2>Giao hàng</h2>
-                <div class="input-row">
-                    <input type="text" id="firstName" placeholder="Tên">
-                    <input type="text" id="lastName" placeholder="Họ">
-                </div>
-                <input type="text" id="address" placeholder="Địa chỉ" class="input-full">
-                <div class="input-row">
-                    <input type="text" id="city" placeholder="Thành phố">
-                    <input type="text" id="ward" placeholder="Phường Xã, Quận Huyện">
-                </div>
-                <input type="tel" id="phone" placeholder="Điện thoại" class="input-full">
-                <label class="checkbox-label">
-                    <input type="checkbox" id="saveInfo">
-                    Lưu lại thông tin này cho lần sau
-                </label>
-                <h2>Phương thức thanh toán</h2>
-                <label class="checkbox-label">
-                    <input type="radio" id="saveInfo">
-                    Thanh toán khi giao hàng (COD)
-                </label>
-                <label class="checkbox-label">
-                    <input type="radio" id="saveInfo">
-                    Chuyển khoản qua ngân hàng
-                </label>
-            </div>
+            <!-- GIỎ HÀNG CỦA BẠN -->
+            <div class="cart-container-left">
+                <h3 class="cart-title">Giỏ hàng của bạn:</h3>
+                
+                <div class="cart-table">
+                    <div class="cart-table-header">
+                        <div>Hình Ảnh</div>
+                        <div>Tên Sản Phẩm</div>
+                        <div>Số Lượng</div>
+                        <div>Thành Tiền</div>
+                        <div>Thao tác</div>
+                    </div>
 
-            <button class="submit-btn" onclick="handleSubmit()">
-                Thanh toán
-            </button>
-        </div>
+                    <div class="cart-item">
+                        <div class="item-image">
+                            <img src="./assest/img/Adidas_F50_Elite.jpg" alt="Vans Old Skool">
+                        </div>
+                        <div class="item-info">
+                            <h3>Vans Old Skool 507698</h3>
+                            <p class="item-size">Kích thước: <strong>27</strong></p>
+                        </div>
+                        <div class="quantity-control">
+                            <button class="qty-btn">−</button>
+                            <input type="text" class="qty-input" value="1" readonly>
+                            <button class="qty-btn">+</button>
+                        </div>
+                        <div class="item-price">450.000VNĐ</div>
+                        <div class="item-close">
+                            <button class="close-btn">Xóa</button>
+                        </div>
+                    </div>
 
-        <!-- Right Column - Order Summary -->
-        <div class="summary-section">
-            <div class="cart-items">
-                <div class="cart-item">
-                    <div class="item-image">
-                        <div class="item-image-box">🤍</div>
-                        <div class="item-badge">1</div>
+                    <div class="cart-total">
+                        <span>Tổng tiền:</span>
+                        <span class="total-amount">450.000VNĐ</span>
                     </div>
-                    <div class="item-details">
-                        <div class="item-name">ÁO THUN WHAT IT ISNT X ABC-MART 'ĐA MẸ' - OFF WHITE</div>
-                        <div class="item-size">XS</div>
-                    </div>
-                    <div class="item-price">590.000 ₫</div>
-                </div>
-
-                <div class="cart-item">
-                    <div class="item-image">
-                        <div class="item-image-box">💙</div>
-                        <div class="item-badge">2</div>
-                    </div>
-                    <div class="item-details">
-                        <div class="item-name">ÁO THUN WHAT IT ISNT X ABC-MART 'ĐA MẸ' - FADE BLUE</div>
-                        <div class="item-size">XS</div>
-                    </div>
-                    <div class="item-price">1.180.000 ₫</div>
                 </div>
             </div>
 
-            <div class="discount-section">
-                <div class="discount-input-group">
-                    <input type="text" id="discountCode" placeholder="Mã giảm giá" class="discount-input">
-                    <button class="discount-btn" onclick="applyDiscount()">Áp dụng</button>
-                </div>
-            </div>
-
-            <div class="summary-totals">
-                <div class="summary-row">
-                    <span>Tổng tiền 3 mặt hàng</span>
-                    <span style="font-weight: 500;">1.770.000 ₫</span>
-                </div>
-                <div class="summary-row">
-                    <span>Vận chuyển</span>
-                    <span style="font-weight: 500;">50.000 ₫</span>
-                </div>
-                <div class="summary-row total">
-                    <span>Tổng</span>
-                    <div>
-                        <span class="currency-label">VND</span>
-                        <span>1.820.000 ₫</span>
+            <!-- HÌNH THỨC THANH TOÁN & THÔNG TIN -->
+            <div class="payment-container-right">
+                <h3 class="payment-title">Hình thức thanh toán:</h3>
+                <div class="payment-methods">
+                    <div class="radio-group">
+                        <div class="radio-option">
+                            <input type="radio" name="payment" id="cod" checked>
+                            <label for="cod">Thanh toán khi nhận hàng (COD)</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" name="payment" id="transfer">
+                            <label for="transfer">Thanh toán bằng chuyển khoản</label>
+                        </div>
                     </div>
+                </div>
+
+                <h3 class="section-title">Thông tin giao hàng:</h3>
+                <div class="shipping-info">
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" name="address-type" id="saved-address" checked onclick="toggleAddressForm()">
+                                    <label for="saved-address">Sử dụng địa chỉ từ tài khoản</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="address-type" id="new-address" onclick="toggleAddressForm()">
+                                    <label for="new-address">Địa chỉ mới</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin địa chỉ đã lưu -->
+                    <div id="saved-address-info" class="saved-address-display">
+                        <div class="saved-info-box">
+                            <p><strong>Tan Tung</strong></p>
+                            <p>Số điện thoại: 0123456789</p>
+                            <p>Email: tantung@gamil.com</p>
+                            <p>Địa chỉ: 123 Đường ABC, Phường 1, Quận 1, TP. Hồ Chí Minh</p>
+                        </div>
+                    </div>
+
+                    <!-- Form nhập địa chỉ mới -->
+                    <div id="new-address-form" style="display: none;">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <input type="text" placeholder="Họ tên">
+                            </div>
+                            <div class="form-group">
+                                <input type="tel" placeholder="Số điện thoại">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <input type="email" placeholder="Email">
+                            </div>
+                        </div>
+
+                        <div class="address-row">
+                            <select>
+                                <option>Tỉnh/thành phố</option>
+                                <option>Hồ Chí Minh</option>
+                                <option>Hà Nội</option>
+                                <option>Đà Nẵng</option>
+                            </select>
+                            <select>
+                                <option>Quận/huyện</option>
+                                <option>Quận 1</option>
+                                <option>Quận 2</option>
+                                <option>Quận 3</option>
+                            </select>
+                            <select>
+                                <option>Phường/xã</option>
+                                <option>Phường 1</option>
+                                <option>Phường 2</option>
+                                <option>Phường 3</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <input type="text" placeholder="Địa chỉ">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group full-width">
+                                <textarea placeholder="Yêu cầu khác (Không bắt buộc)"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="terms">
+                        <label for="terms">Tôi đã đọc và đồng ý với Điều kiện giao dịch chung của StepLab</label>
+                    </div>
+
+                    <button class="submit-btn">Thanh toán</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        function handleSubmit() {
-            const formData = {
-                email: document.getElementById('email').value,
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                address: document.getElementById('address').value,
-                ward: document.getElementById('ward').value,
-                city: document.getElementById('city').value,
-                postalCode: document.getElementById('postalCode').value,
-                phone: document.getElementById('phone').value
-            };
+        function toggleAddressForm() {
+            const savedAddress = document.getElementById('saved-address');
+            const savedAddressInfo = document.getElementById('saved-address-info');
+            const newAddressForm = document.getElementById('new-address-form');
 
-            if (!formData.email || !formData.firstName || !formData.lastName || !formData.address || !formData.ward || !formData.city || !formData.phone) {
-                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
-                return;
-            }
-
-            console.log('Form Data:', formData);
-            alert('Đơn hàng đã được gửi thành công!');
-        }
-
-        function applyDiscount() {
-            const code = document.getElementById('discountCode').value;
-            if (code) {
-                alert('Mã giảm giá "' + code + '" đã được áp dụng!');
+            if (savedAddress.checked) {
+                savedAddressInfo.style.display = 'block';
+                newAddressForm.style.display = 'none';
             } else {
-                alert('Vui lòng nhập mã giảm giá!');
+                savedAddressInfo.style.display = 'none';
+                newAddressForm.style.display = 'block';
             }
         }
     </script>

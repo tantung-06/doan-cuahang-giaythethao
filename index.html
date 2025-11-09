@@ -15,8 +15,8 @@
     <!-- css -->
     <link rel="stylesheet" href="./assest/css/style.css">
     <link rel="stylesheet" href="./assest/css/register_login_customer.css">
-    <link rel="stylesheet" href="./assest/css/cart_detail.css">
     <link rel="stylesheet" href="./assest/css/payment.css">
+    <link rel="stylesheet" href="./assest/css/cart.css">
 
     <!-- fonts icon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
@@ -91,7 +91,7 @@
                                         <label>0₫</label>
                                     </div>
                                     <div class="cart-buttons">
-                                        <!-- <button class="btn-view">XEM GIỎ HÀNG</button> -->
+                                        <button class="btn-view">XEM GIỎ HÀNG</button>
                                         <button class="btn-pay">THANH TOÁN</button>
                                     </div>
                                 </div>                                
@@ -103,11 +103,11 @@
         </div>
     </header>
 
-    <!-- form login/register -->
+    <!-- Đăng nhập -->
     <div class="login-register" id="login">
         <div class="container-login-register">
             <div class="form-box" id="login-form">
-                <div class="close" id="close"><i class="fa-solid fa-xmark"></i></div>
+                <div class="close"><i class="fa-solid fa-xmark"></i></div>
                 <form action="" id="form-1">
                     <h2>Đăng nhập</h2>
                     <input type="email" id="email" name="email" placeholder="Email" required>
@@ -118,11 +118,11 @@
             </div>
         </div>
     </div>
-
+    <!-- Đăng kí -->
     <div class="login-register" id="register">
         <div class="container-login-register">
             <div class="form-box" id="register-form">
-                <div class="close" id="close"><i class="fa-solid fa-xmark"></i></div>
+                <div class="close"><i class="fa-solid fa-xmark"></i></div>
                 <form action="" id="form-2">
                     <h2>Đăng ký</h2>
                     <input type="text" name="username" placeholder="Họ và tên" required>
@@ -134,12 +134,11 @@
             </div>
         </div>
     </div>
-
     <!-- Thông tin khách hàng -->
     <div class="login-register" id="customer-info">
         <div class="container-login-register">
             <div class="form-box">
-                <div class="close" id="close"><i class="fa-solid fa-xmark"></i></div>
+                <div class="close"><i class="fa-solid fa-xmark"></i></div>
                 <h2>Thông tin khách hàng</h2>
                 <label>Họ và tên:</label>
                 <input type="text" id="info-name" disabled>
@@ -161,7 +160,51 @@
             </div>
         </div>
     </div>
+    <!-- Giỏ hàng -->
+    <div class="cart-detail">
+        <div class="cart-detail-header">
+            <button class="back-btn"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2 class="cart-detail-header-title">Giỏ Hàng</h2>
+        </div>
+        <div class="cart-detail-container">
+            <table class="cart-detail-table">
+                <thead>
+                    <tr>
+                        <th style="width: 70px;"></th>
+                        <th style="width: 130px;">Hình ảnh</th>
+                        <th style="width: 530px">Sản phẩm</th>
+                        <th style="width: 165px;">Giá</th>
+                        <th style="width: 120px;">Số lượng</th>
+                        <th style="width: 165px;">Tạm tính</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- <tr>
+                        <td><button class="cart-detail-remove-btn">×</button></td>
+                        <td>
+                            <img src="./assest/img/Adidas_F50_Elite.jpg" alt="Giày" class="cart-detail-product-img">
+                        </td>
+                        <td>
+                            <div class="cart-detail-product-name">Giày Chạy Bộ Nam Nike Pegasus Plus - Đen</div>
+                        </td>
+                        <td class="cart-detail-price">3.485.400đ</td>
+                        <td class="cart-detail-quantity">
+                            <input type="text" min="1" value="1">
+                        </td>
+                        <td class="cart-detail-price">3.485.400đ</td>
+                    </tr> -->
+                </tbody>
+            </table>
 
+            <div class="cart-detail-total">
+                <div>Tổng:<span class="cart-detail-total-price">3.485.400đ</span></div>
+            </div>
+
+            <div class="cart-detail-bottom">
+                <button class="checkout-btn">Thanh Toán</button>
+            </div>
+        </div>
+    </div>
     <!-- Thanh toán -->
     <div class="payment" style="display: none;">
         <div class="payment-left">
@@ -221,7 +264,6 @@
                 </div>
             </div>
         </div>
-
         <!-- Slider -->
         <section class="slider">
             <div class="slider-container">
@@ -242,14 +284,13 @@
                 </div>
             </div>
         </section>
-
         <!-- container-title -->
         <div class="container-title">
             <div class="container-title-content">
                 <p>TẤT CẢ SẢN PHẨM</p>
             </div>
         </div>
-
+        <!-- container main -->
         <div class="container-main">
             <!-- container left -->
             <div class="container-left">
@@ -365,7 +406,6 @@
                     <p>Không có sản phẩm phù hợp với yêu cầu</p>
                 </div>
                 <div class="product" id="product-container">
-                    <!-- Giày chạy bộ -->
                     <!-- <div class="product-list" data-category="giay-chay-bo giay-nam">
                         <div class="product-item" data-id="sp-gcb-1">
                             <img class="product-img" src="./assest/img/Nike_Pegasus_Plus.jpg" alt="Giày Chạy Bộ Nam Nike Pegasus Plus - Đen">
@@ -377,41 +417,14 @@
                             </div>
                         </div>
                     </div> -->
-
-                    <!-- Giày đá bóng -->
-                    <!-- <div class="product-list" data-category="giay-da-bong giay-nam">
-                        <div class="product-item" data-id="sp-gbd-1">
-                            <img class="product-img" src="./assest/img/Nike_Legend_10_Academy.jpg" alt="Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương">
-                            <h4 class="product-name">Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương</h4>
-                            <p class="product-company">NIKE</p>
-                            <div class="price">
-                                <span class="price-old">5.000.000₫</span>
-                                <span class="price-current">4.000.000₫</span>
-                            </div>
-                        </div>
-                    </div> -->
-
-                    <!-- Giày sneaker -->
-                    <!-- <div class="product-list" data-category="giay-sneaker giay-nu">
-                        <div class="product-item" data-id="sp-gsnk-1">
-                            <img class="product-img" src="./assest/img/On_Running_Cloudtilt.jpg" alt="Giày Sneaker Nữ On Running Cloudtilt - Xám">
-                            <h4 class="product-name">Giày Sneaker Nữ On Running Cloudtilt - Xám</h4>
-                            <p class="product-company">ON RUNNING</p>
-                            <div class="price">
-                                <span class="price-old">5.000.000₫</span>   
-                                <span class="price-current">4.000.000₫</span>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
         </div>
     </div>
     <!-- == Chi tiết sản phẩm == -->
-    <!-- Giày chạy bộ -->
     <!-- <div class="product-detail" data-id="sp-gcb-1">
         <div class="product-detail-container">
-            <div class="close" id="close"><i class="fa-solid fa-xmark"></i></div>
+            <div class="close"><i class="fa-solid fa-xmark"></i></div>
             <img src="./assest/img/Nike_Pegasus_Plus.jpg" alt="Giày Chạy Bộ Nam Nike Pegasus Plus - Đen">
             <div class="product-info">
                 <p class="product-company">NIKE</p>
@@ -419,74 +432,6 @@
                 <div class="price">
                     <span class="price-current">3.485.400₫</span>
                     <span class="price-old">5.890.000₫</span>
-                </div>
-                <div class="product-size">
-                    <label for="size">Kích thước:</label>
-                    <select class="size">
-                        <option value="38">38</option>
-                        <option value="39">39</option>
-                        <option value="40">40</option>
-                        <option value="41">41</option>
-                        <option value="42">42</option>
-                    </select>
-                </div>
-                <div class="product-quantity">
-                    <label for="quantity">Số lượng:</label>
-                    <input type="number" class="quantity" value="1" min="1">
-                </div>
-                <div class="product-buttons">
-                    <button class="buy-now">MUA NGAY</button>
-                    <button class="add-cart">THÊM VÀO GIỎ HÀNG</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- Giày bóng đá -->
-    <!-- <div class="product-detail" data-id="sp-gbd-1">
-        <div class="product-detail-container">
-            <div class="close" id="close"><i class="fa-solid fa-xmark"></i></div>
-            <img src="./assest/img/Nike_Legend_10_Academy.jpg" alt="Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương">
-            <div class="product-info">
-                <p class="product-company">NIKE</p>
-                <h4 class="product-name">Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương</h4>
-                <div class="price">
-                    <span class="price-current">4.000.000₫</span>
-                    <span class="price-old">5.000.000₫</span>
-                </div>
-                <div class="product-size">
-                    <label for="size">Kích thước:</label>
-                    <select class="size">
-                        <option value="38">38</option>
-                        <option value="39">39</option>
-                        <option value="40">40</option>
-                        <option value="41">41</option>
-                        <option value="42">42</option>
-                    </select>
-                </div>
-                <div class="product-quantity">
-                    <label for="quantity">Số lượng:</label>
-                    <input type="number" class="quantity" value="1" min="1">
-                </div>
-                <div class="product-buttons">
-                    <button class="buy-now">MUA NGAY</button>
-                    <button class="add-cart">THÊM VÀO GIỎ HÀNG</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-    <!-- Giày sneaker -->
-    <!-- <div class="product-detail" data-id="sp-gsnk-1">
-        <div class="product-detail-container">
-            <div class="close" id="close"><i class="fa-solid fa-xmark"></i></div>
-            <img src="./assest/img/On_Running_Cloudtilt.jpg" alt="Giày Sneaker Nữ On Running Cloudtilt - Xám">
-            <div class="product-info">
-                <p class="product-company">ON RUNNING</p>
-                <h4 class="product-name">Giày Sneaker Nữ On Running Cloudtilt - Xám</h4>
-                <div class="price">
-                    <span class="price-current">4.000.000₫</span>
-                    <span class="price-old">5.000.000₫</span>
                 </div>
                 <div class="product-size">
                     <label for="size">Kích thước:</label>
@@ -523,6 +468,8 @@
     <script src="./js/cart.js"></script>
     <!-- product js -->
     <script src="./js/product.js"></script>
-    
+    <!-- payment js -->
+    <script src="./js/payment.js"></script>
+
 </body>
 </html>
