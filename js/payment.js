@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const closePayment = () => {
-  paymentPage.style.display = 'none';
-  document.body.style.overflow = 'auto';
-  
-  if (typeof updateMiniCart === 'function') updateMiniCart();
-  if (typeof updateCartDetail === 'function') updateCartDetail();
+    paymentPage.style.display = 'none';
+    document.body.style.overflow = 'auto';
+    
+    if (typeof updateMiniCart === 'function') updateMiniCart();
+    if (typeof updateCartDetail === 'function') updateCartDetail();
   };
 
   paymentBackBtn?.addEventListener('click', closePayment);
@@ -106,23 +106,30 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   bindPaymentButtons();
 
-  // ===== MUA NGAY =====
-  document.querySelectorAll('.buy-now').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const product = btn.closest('.product-detail');
-      if (!product) return;
-      const item = [{
-        id: Date.now(),
-        name: product.querySelector('.product-name')?.textContent || '',
-        price: parseInt(product.querySelector('.price-current')?.textContent.replace(/[^\d]/g,'') || '0'),
-        img: product.querySelector('img')?.src || '',
-        qty: parseInt(product.querySelector('.quantity')?.value) || 1,
-        size: product.querySelector('.size')?.value || ''
-      }];
-      displayPaymentItems(item);
-      toggleAddressForm();
-      openPayment();
-    });
+  // ===== MUA NGAY - SỬ DỤNG EVENT DELEGATION =====
+  document.addEventListener('click', (e) => {
+    if (!e.target.classList.contains('buy-now')) return;
+    
+    const product = e.target.closest('.product-detail');
+    if (!product) return;
+    
+    const priceText = product.querySelector('.price-current')?.textContent || '0';
+    const item = [{
+      id: Date.now(),
+      name: product.querySelector('.product-name')?.textContent || '',
+      price: priceText,
+      img: product.querySelector('img')?.src || '',
+      qty: parseInt(product.querySelector('.quantity')?.value) || 1,
+      size: product.querySelector('.size')?.value || ''
+    }];
+    
+    displayPaymentItems(item);
+    toggleAddressForm();
+    
+    // Đóng popup chi tiết sản phẩm
+    product.style.display = 'none';
+    
+    openPayment();
   });
 
   // ===== XOÁ SẢN PHẨM =====
@@ -148,6 +155,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const items = document.querySelectorAll('.payment-item');
     if (!items.length) return alert('Không có sản phẩm để thanh toán.');
     
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) return alert('Vui lòng đăng nhập để thanh toán!');
+
+    // Nếu chọn địa chỉ mới, lưu vào localStorage
+    const newRadio = document.getElementById('new-address');
+    if (newRadio && newRadio.checked) {
+      const address = {};
+      const addressInputs = newForm?.querySelectorAll('input, textarea, select');
+      addressInputs.forEach(input => {
+        if (input.name) address[input.name] = input.value.trim();
+      });
+      if (!address.name || !address.phone) {
+        return alert('Vui lòng điền đầy đủ thông tin địa chỉ!');
+      }
+      saveAddress(address);
+    }
+    
     saveCart([]); // xóa giỏ hàng user hiện tại
     if (typeof updateMiniCart === 'function') updateMiniCart();
     if (typeof updateCartDetail === 'function') updateCartDetail();
@@ -168,11 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ===== QUẢN LÝ ĐỊA CHỈ =====
-const savedRadio = document.getElementById('saved-address');
-const newRadio = document.getElementById('new-address');
-const saveAddressBtn = document.getElementById('save-address-btn'); // nút lưu nếu có
-const addressInputs = newForm?.querySelectorAll('input, textarea');
-
 const loadSavedAddress = () => {
   const user = JSON.parse(localStorage.getItem('user'));
   if (!user) return null;
@@ -187,59 +206,40 @@ const saveAddress = address => {
 
 // Toggle hiển thị form địa chỉ
 function toggleAddressForm() {
-  if (savedRadio.checked) {
+  const savedRadio = document.getElementById('saved-address');
+  const newRadio = document.getElementById('new-address');
+  const savedInfo = document.getElementById('saved-address-info');
+  const newForm = document.getElementById('new-address-form');
+  
+  if (savedRadio && savedRadio.checked) {
     const address = loadSavedAddress();
-    if (address) {
-      savedInfo.querySelector('.name').textContent = address.name;
-      savedInfo.querySelector('.phone').textContent = address.phone;
-      savedInfo.querySelector('.address').textContent = address.address;
+    if (address && savedInfo) {
+      const nameEl = savedInfo.querySelector('.saved-info-box p:nth-child(1) strong');
+      const phoneEl = savedInfo.querySelector('.saved-info-box p:nth-child(2)');
+      const addressEl = savedInfo.querySelector('.saved-info-box p:nth-child(4)');
+      
+      if (nameEl) nameEl.textContent = address.name || 'Chưa cập nhật';
+      if (phoneEl) phoneEl.textContent = 'Số điện thoại: ' + (address.phone || 'Chưa cập nhật');
+      if (addressEl) addressEl.textContent = 'Địa chỉ: ' + (address.address || address.detail || 'Chưa cập nhật');
     }
-    savedInfo.style.display = 'block';
-    newForm.style.display = 'none';
+    if (savedInfo) savedInfo.style.display = 'block';
+    if (newForm) newForm.style.display = 'none';
   } else {
-    savedInfo.style.display = 'none';
-    newForm.style.display = 'block';
+    if (savedInfo) savedInfo.style.display = 'none';
+    if (newForm) newForm.style.display = 'block';
   }
 }
 
 // Event radio
-savedRadio?.addEventListener('change', toggleAddressForm);
-newRadio?.addEventListener('change', toggleAddressForm);
-
-// Lưu địa chỉ khi thanh toán
-payBtn?.addEventListener('click', () => {
-  if (!termsCheckbox.checked) return alert('Vui lòng đồng ý điều kiện giao dịch.');
-
-  const user = JSON.parse(localStorage.getItem('user'));
-  if (!user) return;
-
-  // Nếu chọn địa chỉ mới, lưu vào localStorage
-  if (newRadio.checked) {
-    const address = {};
-    addressInputs.forEach(input => address[input.name] = input.value.trim());
-    if (!address.name || !address.phone || !address.address) {
-      return alert('Vui lòng điền đầy đủ thông tin địa chỉ!');
-    }
-    saveAddress(address);
-  }
-
-  // Thanh toán bình thường...
-  const items = document.querySelectorAll('.payment-item');
-  if (!items.length) return alert('Không có sản phẩm để thanh toán.');
-  
-  saveCart([]); // xóa giỏ hàng user hiện tại
-  if (typeof updateMiniCart === 'function') updateMiniCart();
-  if (typeof updateCartDetail === 'function') updateCartDetail();
-
-  alert('Thanh toán thành công! Cảm ơn bạn đã mua hàng tại StepLab');
-  closePayment();
-  updateTotal();
-});
-
-// Khi load thanh toán, set radio và form
 window.addEventListener('load', () => {
+  const savedRadio = document.getElementById('saved-address');
+  const newRadio = document.getElementById('new-address');
+  
+  savedRadio?.addEventListener('change', toggleAddressForm);
+  newRadio?.addEventListener('change', toggleAddressForm);
+  
   const address = loadSavedAddress();
-  if (address) savedRadio.checked = true;
-  else newRadio.checked = true;
+  if (address && savedRadio) savedRadio.checked = true;
+  else if (newRadio) newRadio.checked = true;
   toggleAddressForm();
 });
