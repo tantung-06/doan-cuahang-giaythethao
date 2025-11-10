@@ -173,7 +173,7 @@
                         <th style="width: 530px">Sản phẩm</th>
                         <th style="width: 165px;">Giá</th>
                         <th style="width: 120px;">Số lượng</th>
-                        <th style="width: 165px;">Tạm tính</th>
+                        <th style="width: 165px;">Thành tiền</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -218,17 +218,16 @@
                         <div>Hình ảnh</div>
                         <div>Tên sản phẩm</div>
                         <div>Số lượng</div>
-                        <div>Thành tiền</div>
+                        <div>Giá</div>
                         <div>Thao tác</div>
                     </div>
-
-                    <div class="payment-item">
+                    <!-- <div class="payment-item">
                         <div class="item-image">
                             <img src="./assest/img/Adidas_F50_Elite.jpg" alt="Vans Old Skool">
                         </div>
                         <div class="item-info">
                             <h3>Vans Old Skool 507698</h3>
-                            <p class="item-size">Kích thước: <strong>27</strong></p>
+                            <p class="item-size"><strong>27</strong></p>
                         </div>
                         <div class="quantity-control">
                             <input type="text" class="qty-input" value="1" min="1">
@@ -237,8 +236,7 @@
                         <div class="item-close">
                             <button class="close-btn">Xóa</button>
                         </div>
-                    </div>
-
+                    </div> -->
                     <div class="payment-total">
                         <span>Tổng tiền:</span>
                         <span class="total-amount">450.000₫</span>
@@ -281,52 +279,52 @@
                     <div id="saved-address-info" class="saved-address-display">
                         <div class="saved-info-box">
                             <p><strong>Tan Tung</strong></p>
-                            <p>Số điện thoại: 0123456789</p>
+                            <p>Số điện thoại: Chưa cập nhật</p>
                             <p>Email: tantung@gmail.com</p>
-                            <p>Địa chỉ: 123 Đường ABC, Phường 1, Quận 1, TP. Hồ Chí Minh</p>
+                            <p>Địa chỉ: Chưa cập nhật</p>
                         </div>
                     </div>
 
                     <div id="new-address-form" style="display: none;">
                         <div class="form-row">
                             <div class="form-group">
-                                <input type="text" placeholder="Họ tên">
+                                <input type="text" name="name" placeholder="Họ tên">
                             </div>
                             <div class="form-group">
-                                <input type="tel" placeholder="Số điện thoại">
+                                <input type="tel" name="phone" placeholder="Số điện thoại">
                             </div>
                         </div>
 
                         <div class="form-row full-width">
                             <div class="form-group full-width">
-                                <input type="email" placeholder="Email">
+                                <input type="email" name="email" placeholder="Email">
                             </div>
                         </div>
 
                         <div class="address-row">
-                            <select>
-                                <option>Tỉnh/thành phố</option>
-                                <option>Hồ Chí Minh</option>
-                                <option>Hà Nội</option>
-                                <option>Đà Nẵng</option>
+                            <select name="city">
+                                <option value="">Tỉnh/thành phố</option>
+                                <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                                <option value="Hà Nội">Hà Nội</option>
+                                <option value="Đà Nẵng">Đà Nẵng</option>
                             </select>
-                            <select>
-                                <option>Quận/huyện</option>
-                                <option>Quận 1</option>
-                                <option>Quận 2</option>
-                                <option>Quận 3</option>
+                            <select name="district">
+                                <option value="">Quận/huyện</option>
+                                <option value="Quận 1">Quận 1</option>
+                                <option value="Quận 2">Quận 2</option>
+                                <option value="Quận 3">Quận 3</option>
                             </select>
-                            <select>
-                                <option>Phường/xã</option>
-                                <option>Phường 1</option>
-                                <option>Phường 2</option>
-                                <option>Phường 3</option>
+                            <select name="ward">
+                                <option value="">Phường/xã</option>
+                                <option value="Phường 1">Phường 1</option>
+                                <option value="Phường 2">Phường 2</option>
+                                <option value="Phường 3">Phường 3</option>
                             </select>
                         </div>
 
                         <div class="form-row full-width">
                             <div class="form-group full-width">
-                                <input type="text" placeholder="Địa chỉ">
+                                <input type="text" name="detail" placeholder="Địa chỉ">
                             </div>
                         </div>
 
@@ -339,10 +337,10 @@
 
                     <div class="checkbox-group">
                         <input type="checkbox" id="terms">
-                        <label for="terms">Tôi đã đọc và đồng ý với Điều kiện giao dịch chung của StepLab</label>
+                        <label for="terms">Tôi đã đọc và đồng ý với điều kiện giao dịch chung của StepLab</label>
                     </div>
 
-                    <button class="submit-btn">Thanh toán</button>
+                    <button class="submit-btn">Thanh Toán</button>
                 </div>
             </div>
         </div>
@@ -569,7 +567,7 @@
     </div> -->
 
     <!-- === footer === -->
-    <footer class="footer">
+    <footer class="footer" id="contact">
         <div class="footer-list">
             <p>© 2025 StepLab</p>
         </div>
@@ -585,6 +583,5 @@
     <script src="./js/payment.js"></script>
     <!-- pagination -->
     <script src="./js/pagination.js"></script>
-
 </body>
 </html>

@@ -125,11 +125,8 @@
 }
 .item-size {
     font-size: 1.4rem;
-    color: #666;
-    margin-left: 10px;
-}
-.item-size strong {
     color: #333;
+    margin-left: 10px;
 }
 
 .quantity-control {

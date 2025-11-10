@@ -13,8 +13,8 @@
     "category": ["giay-chay-bo", "giay-nam"],
     "name": "Giày Chạy Bộ Nam Nike React Infinity Run 4 - Đen",
     "company": "NIKE",
-    "priceOld": "5.000.000₫",
-    "priceCurrent": "4.000.000₫",
+    "priceOld": "4.000.000₫",
+    "priceCurrent": "3.000.000₫",
     "img": "./assest/img/Nike_Reactx_Infinity_Run4.jpg"
   },
   {
@@ -22,8 +22,8 @@
     "category": ["giay-chay-bo", "giay-nu"],
     "name": "Giày Chạy Bộ Nữ Under Armour Halo Runner",
     "company": "UNDER ARMOUR",
-    "priceOld": "5.000.000₫",
-    "priceCurrent": "4.000.000₫",
+    "priceOld": "3.000.000₫",
+    "priceCurrent": "2.000.000₫",
     "img": "./assest/img/Under_Armour_Halo_Runner.jpg"
   },
   {
@@ -31,8 +31,8 @@
     "category": ["giay-chay-bo", "giay-nam"],
     "name": "Giày Chạy Bộ Nam Puma Deviate Nitro 3 - Xanh Lá",
     "company": "PUMA",
-    "priceOld": "5.000.000₫",
-    "priceCurrent": "4.000.000₫",
+    "priceOld": "6.000.000₫",
+    "priceCurrent": "5.000.000₫",
     "img": "./assest/img/Puma_Deviate_Nitro3.jpg"
   },
   {

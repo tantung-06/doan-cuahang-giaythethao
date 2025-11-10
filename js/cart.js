@@ -13,9 +13,18 @@ const cartDetailTotalPrice = document.querySelector('.cart-detail-total-price');
 const btnViewCart = document.querySelector('.btn-view');
 const btnBackCart = document.querySelector('.back-btn');
 
-// Lấy và lưu giỏ
-const getCart = () => JSON.parse(localStorage.getItem('cart')) || [];
-const saveCart = (cart) => localStorage.setItem('cart', JSON.stringify(cart));
+// --- LẤY / LƯU GIỎ HÀNG THEO USER ---
+function getCart() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) return [];
+    return JSON.parse(localStorage.getItem('cart_' + user.email)) || [];
+}
+
+function saveCart(cart) {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) return;
+    localStorage.setItem('cart_' + user.email, JSON.stringify(cart));
+}
 
 // ================== CẬP NHẬT MINI CART ==================
 function updateMiniCart() {
@@ -144,6 +153,9 @@ function bindCartDetailEvents() {
 // ================== THÊM SẢN PHẨM VÀO GIỎ ==================
 document.addEventListener('click', e => {
     if(e.target.classList.contains('add-cart')){
+        const user = JSON.parse(localStorage.getItem('user'));
+        if(!user) return alert('Vui lòng đăng nhập trước khi thêm sản phẩm!');
+
         const container = e.target.closest('.product-detail');
         const name = container.querySelector('.product-name').textContent.trim();
         const img = container.querySelector('img').src;
@@ -172,8 +184,14 @@ document.addEventListener('click', e => {
 });
 
 // ================== HIỂN THỊ / ẨN CART DETAIL ==================
-btnViewCart.addEventListener('click', () => cartDetail.style.display='block');
-btnBackCart.addEventListener('click', () => cartDetail.style.display='none');
+btnViewCart.addEventListener('click', () => {
+    cartDetail.style.display='block';
+    document.body.classList.add('no-scroll');
+});
+btnBackCart.addEventListener('click', () => {
+    cartDetail.style.display='none';
+    document.body.classList.remove('no-scroll');
+});
 
 // Ẩn mini cart khi click ra ngoài
 document.addEventListener('click', e => {
@@ -184,18 +202,6 @@ document.addEventListener('click', e => {
        !e.target.classList.contains('header-cart-remove')){
         cartBox.style.display='none';
     }
-});
-
-// HIỂN THỊ CART DETAIL
-btnViewCart.addEventListener('click', () => {
-    cartDetail.style.display = 'block';
-    document.body.classList.add('no-scroll'); // khóa scroll trang chính
-});
-
-// ẨN CART DETAIL
-btnBackCart.addEventListener('click', () => {
-    cartDetail.style.display = 'none';
-    document.body.classList.remove('no-scroll'); // mở lại scroll trang chính
 });
 
 // ================== LOAD TRANG ==================

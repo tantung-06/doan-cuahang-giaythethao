@@ -75,6 +75,10 @@ formLogin.onsubmit = e => {
     hideAllForms();
     showUserName(user.username);
     formLogin.reset();
+
+    // --- CẬP NHẬT GIỎ HÀNG NGAY SAU ĐĂNG NHẬP ---
+    if (typeof updateMiniCart === 'function') updateMiniCart();
+    if (typeof updateCartDetail === 'function') updateCartDetail();
 };
 
 // --- Hiển thị tên người dùng ---
@@ -111,19 +115,66 @@ document.getElementById('save-btn').onclick = () => {
         email: document.getElementById('info-email').value,
         password: document.getElementById('info-password').value
     };
+
+    // 1. Cập nhật user hiện tại
     localStorage.setItem('user', JSON.stringify(updatedUser));
+
+    // 2. Cập nhật luôn trong danh sách customers
+    let customers = JSON.parse(localStorage.getItem('customers')) || [];
+    const index = customers.findIndex(c => c.email === updatedUser.email);
+    if(index !== -1){
+        customers[index] = updatedUser;
+        localStorage.setItem('customers', JSON.stringify(customers));
+    }
+
+    // 3. Thông báo và disable input
     alert('Cập nhật thông tin thành công!');
     ['info-name', 'info-email', 'info-password'].forEach(id => document.getElementById(id).disabled = true);
+
+    // 4. Cập nhật hiển thị tên
     showUserName(updatedUser.username);
 };
 
 document.getElementById('logout-btn').onclick = () => {
+    // 1. Xóa user
     localStorage.removeItem('user');
+
+    // 2. Xóa giỏ hàng
+    localStorage.removeItem('cart');
+    if(typeof updateMiniCart === 'function') updateMiniCart();
+    if(typeof updateCartDetail === 'function') updateCartDetail();
+
+    // 3. Ẩn tất cả form
     hideAllForms();
+
+    // 4. Reset hiển thị login/register
     [loginBtn, registerBtn, userIcon].forEach(b => b.style.display = 'inline-block');
     userNameDisplay.style.display = 'none';
+
+    // 5. Reset về trang chủ
+    showHome();
+
+    // 6. Reset tìm kiếm
+    const searchInput = document.getElementById('basic-search');
+    if(searchInput) searchInput.value = '';
+
+    // 7. Reset tất cả checkbox / radio
+    document.querySelectorAll('.category input[type="checkbox"], .category input[type="radio"]').forEach(i => i.checked = false);
+
+    // 8. Reset phân trang
+    if(typeof window.resetPagination === 'function') {
+        setTimeout(() => {
+            window.resetPagination();
+        }, 50);
+    }
+
+    // 9. Reset slider về slide đầu
+    index = 0;
+    showSlide(index);
+
     alert('Bạn đã đăng xuất!');
 };
+
 
 // --- Giữ trạng thái khi reload ---
 window.onload = () => {
@@ -289,3 +340,12 @@ function searchProducts() {
 
 searchBtn.onclick = searchProducts;
 searchInput.onkeypress = e => { if (e.key === 'Enter') searchProducts(); };
+
+// Liên Hệ
+const aboutLink = document.getElementById('about-link');
+
+aboutLink.addEventListener('click', e => {
+    e.preventDefault(); // tránh reload
+    const footer = document.getElementById('contact');
+    footer.scrollIntoView({ behavior: 'smooth' });
+});
