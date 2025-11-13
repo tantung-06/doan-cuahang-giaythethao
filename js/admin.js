@@ -441,7 +441,6 @@ ensureSampleCategories();
 renderProducts('', '', true);
 // =======================================================================================================
 // ===== QUẢN LÝ PHIẾU NHẬP HÀNG =====
-
 // Hiển thị danh sách phiếu nhập
 function renderImports(){
     const tbody = document.getElementById('imports-table');
@@ -462,6 +461,7 @@ function renderImports(){
             <td>${formatVND(totalCost)}</td>
             <td>${imp.status}</td>
             <td>
+                <button class="btn" onclick="viewImport('${imp.id}')">Xem</button>
                 ${imp.status === 'pending' ? `<button class="btn" onclick="completeImport('${imp.id}')">Hoàn thành</button>` : ''}
             </td>
         `;
@@ -469,30 +469,58 @@ function renderImports(){
     });
 }
 
-// Hoàn thành phiếu nhập (cộng số lượng vào kho)
+// Xem chi tiết phiếu nhập
+window.viewImport = function(id){
+    const imports = read('imports') || [];
+    const imp = imports.find(x => x.id === id);
+    if(!imp) return alert('Không tìm thấy phiếu nhập!');
+
+    let content = `Phiếu nhập: ${imp.id}\nNgày: ${imp.date}\nTrạng thái: ${imp.status}\n\nSản phẩm:\n`;
+    imp.items.forEach((item, i) => {
+        const product = read('products').find(p => p.id === item.productId);
+        content += `${i+1}. ${product?.name || item.productId} | Số lượng: ${item.qty} | Giá nhập: ${formatVND(item.cost)} | Thành tiền: ${formatVND(item.qty * item.cost)}\n`;
+    });
+    const totalCost = imp.items.reduce((s, it) => s + it.qty * it.cost, 0);
+    content += `\nTổng tiền nhập: ${formatVND(totalCost)}`;
+
+    alert(content);
+}
+
+// --- Hoàn thành phiếu nhập (cộng số lượng vào kho) ---
 window.completeImport = function(id){
     const imports = read('imports') || [];
     const imp = imports.find(x => x.id === id);
     if(!imp || imp.status === 'completed') return;
 
-    // Cập nhật số lượng sản phẩm
     const products = read('products') || [];
+
+    // Cộng số lượng vào stock
     imp.items.forEach(it => {
         const p = products.find(pr => pr.id === it.productId);
-        if(p) p.qty = (p.qty || 0) + it.qty;
+        if(p) p.stock = (p.stock || 0) + it.qty;
     });
+
+    // Lưu lại sản phẩm
     write('products', products);
 
-    // Cập nhật trạng thái phiếu nhập
+    // Đồng bộ lại cache để render đúng
+    productsCache = products.map(p => ({...p, hidden: p.hidden || false}));
+
+    // Render lại danh sách sản phẩm
+    renderProducts(searchInput.value.trim(), categorySelect.value, true);
+    renderStats();
+
+    // Đánh dấu phiếu hoàn thành
     imp.status = 'completed';
     write('imports', imports);
 
+    // Render lại tất cả
     renderImports();
-    renderProducts();
+    renderProducts(searchInput.value.trim(), categorySelect.value, true);
     renderStats();
 }
 
-// Tạo phiếu nhập mới
+// Tạo phiếu nhập mới (có thể nhập nhiều sản phẩm)
 document.getElementById('add-import').addEventListener('click', () => {
     const products = read('products') || [];
     if(!products.length){
@@ -500,27 +528,36 @@ document.getElementById('add-import').addEventListener('click', () => {
         return;
     }
 
-    const pid = prompt('Nhập ID sản phẩm (để trống sẽ dùng sản phẩm đầu tiên)') || products[0].id;
-    const qty = Number(prompt('Nhập số lượng', 10));
-    const cost = Number(prompt('Nhập giá nhập (VND) cho 1 đơn vị', 100000));
+    let items = [];
+    while(true){
+        const pid = prompt('Nhập ID sản phẩm (để trống sẽ dùng sản phẩm đầu tiên, nhập "x" để kết thúc)') || products[0].id;
+        if(pid.toLowerCase() === 'x') break;
 
-    if(!pid || !qty || !cost){
-        alert('Thông tin phiếu nhập không hợp lệ!');
-        return;
+        const qty = Number(prompt('Nhập số lượng', 10));
+        const cost = Number(prompt('Nhập giá nhập (VND) cho 1 đơn vị', 100000));
+
+        if(!pid || !qty || !cost){
+            alert('Thông tin sản phẩm không hợp lệ, thử lại');
+            continue;
+        }
+
+        items.push({ productId: pid, qty, cost });
+        const more = confirm('Thêm sản phẩm khác vào phiếu nhập?');
+        if(!more) break;
     }
+
+    if(!items.length) return alert('Không có sản phẩm nào được thêm vào phiếu nhập!');
 
     const imports = read('imports') || [];
     imports.push({
         id: uid('imp'),
         date: new Date().toLocaleDateString(),
-        items: [{ productId: pid, qty, cost }],
+        items,
         status: 'pending'
     });
-
     write('imports', imports);
     renderImports();
 });
-
 // =============================================================================================================
 
 // ===== QUẢN LÝ ĐƠN HÀNG =====
@@ -640,36 +677,45 @@ document.getElementById('save-product-price').addEventListener('click',()=>{
   alert('Đã lưu giá')
 })
 // ==============================================================================================
-
 // ===== QUẢN LÝ TỒN KHO =====
-// Kiểm tra sản phẩm sắp hết hàng
-document.getElementById('check-stock').addEventListener('click',()=>{
-  const th=Number(document.getElementById('stock-threshold').value)||5; // Ngưỡng cảnh báo
-  const low=read('products').filter(p=>p.qty<=th) // Lọc sản phẩm tồn kho thấp
-  const wrap=document.getElementById('inventory-result'); 
-  wrap.innerHTML=''
-  
-  if(!low.length) {
-    wrap.innerHTML='<div class="small">Không có sản phẩm sắp hết</div>'
-  } else { 
-    const ul=document.createElement('ul'); 
-    low.forEach(p=>{
-      const li=document.createElement('li');
-      li.innerHTML=`${p.name} - Tồn: ${p.qty} 
-        <button class="btn" onclick="goToProduct('${p.id}')">Mở</button>`; 
-      ul.appendChild(li)
-    }); 
-    wrap.appendChild(ul)
-  }
-})
+document.getElementById('check-stock').addEventListener('click', () => {
+    const th = Number(document.getElementById('stock-threshold').value) || 5; // Ngưỡng cảnh báo
+    const products = read('products');
+    const low = products.filter(p => (p.stock || 0) <= th); // Dùng stock
 
-// Chuyển đến sản phẩm trong bảng
-window.goToProduct=function(id){
-  alert('Chức năng demo: tìm sản phẩm trong bảng');
-  document.querySelector('[data-section="products"]').click(); 
-  setTimeout(()=>{
-    document.querySelector('#products-table tr td button')?.focus()
-  },200)
+    const wrap = document.getElementById('inventory-result');
+    wrap.innerHTML = '';
+
+    if (!low.length) {
+        wrap.innerHTML = '<div class="small">Không có sản phẩm sắp hết</div>';
+    } else {
+        const ul = document.createElement('ul');
+        low.forEach(p => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                ${p.name} - Tồn: ${p.stock || 0} 
+                <button class="btn" onclick="goToProduct('${p.id}')">Mở</button>
+            `;
+            ul.appendChild(li);
+        });
+        wrap.appendChild(ul);
+    }
+});
+
+// Chuyển đến sản phẩm trong bảng và highlight
+window.goToProduct = function(id){
+    // Chuyển sang tab sản phẩm
+    document.querySelector('[data-section="products"]').click();
+
+    setTimeout(() => {
+        const tr = Array.from(document.querySelectorAll('#products-table tr'))
+                        .find(row => row.querySelector(`button[onclick*="${id}"]`));
+        if(tr){
+            tr.scrollIntoView({behavior:'smooth', block:'center'});
+            tr.style.backgroundColor = '#fffae6';
+            setTimeout(()=>tr.style.backgroundColor = '', 2000);
+        }
+    }, 200);
 }
 // =================================================================================================
 
