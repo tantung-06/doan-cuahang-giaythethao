@@ -1,33 +1,191 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="./assest/css/admin.css" />
-  <script src="./js/admin.js" defer></script>
- 
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>StepLab Admin</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"/>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./assest/css/admin.css">
+
 </head>
 <body>
-  <div class="admin-container">
-    <aside class="sidebar">
-      <h2>Quản trị cửa hàng</h2>
-      <ul>
-        <li data-section="users"> Người dùng</li>
-        <li data-section="categories"> Loại sản phẩm</li>
-        <li data-section="products">Sản phẩm</li>
-        <li data-section="import"> Nhập hàng</li>
-        <li data-section="price"> Giá bán</li>
-        <li data-section="orders"> Đơn hàng</li>
-        <li data-section="stock"> Tồn kho</li>
-        <li id="logout"> Đăng xuất</li>
-      </ul>
-    </aside>
-    <main class="content">
-      <h2>Chào mừng Admin</h2>
-      <div id="content-area">
-        <p>Chọn chức năng trong menu để quản lý.</p>
+
+  <!-- Màn hình đăng nhập -->
+  <div id="login-screen" class="login-screen">
+    <div class="login-card card">
+      <h2>Đăng nhập Admin</h2>
+      <input id="admin-user" placeholder="Tên đăng nhập" autocomplete="off">
+      <input id="admin-pass" placeholder="Mật khẩu" type="password" autocomplete="off">
+      <div class="small" id="login-msg" style="color:red;height:18px"></div>
+      <div class="actions" style="margin-top:10px">
+        <button id="login-btn" class="btn primary">Đăng nhập</button>
       </div>
+    </div>
+  </div>
+
+  <!-- Giao diện chính Admin -->
+  <div class="wrap" id="admin-app" style="display:none">
+    <aside class="sidebar">
+      <div class="brand">
+        <img src="./assest/img/StepLab_Logo.svg" alt="logo">
+        <h1>StepLab Admin</h1>
+      </div>
+      <div class="small">Admin: <strong id="admin-name">Quản trị</strong></div>
+
+      <nav class="nav-admin">
+        <button data-section="dashboard" class="active">Tổng quan</button>
+        <button data-section="users">Người dùng</button>
+        <button data-section="products">Sản phẩm</button>
+        <button data-section="categories">Loại / Danh mục</button>
+        <button data-section="imports">Phiếu nhập</button>
+        <button data-section="orders">Đơn hàng</button>
+        <button data-section="pricing">Giá & Lợi nhuận</button>
+        <button data-section="inventory">Tồn kho</button>
+        <button data-section="settings">Cài đặt</button>
+      </nav>
+
+      <div style="margin-top:18px">
+        <button id="logout" class="btn ghost" style="color: #fff;">Đăng xuất</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <h2 id="section-title">Tổng quan</h2>
+      </div>
+
+      <!-- ====== CÁC PHẦN CHÍNH ====== -->
+
+      <section id="dashboard" class="card section">
+        <h3>Tổng quan</h3>
+        <div style="display:flex;gap:12px;margin-top:12px">
+          <div class="card" style="flex:1">Số khách hàng: <strong id="stat-users">0</strong></div>
+          <div class="card" style="flex:1">Số sản phẩm: <strong id="stat-products">0</strong></div>
+          <div class="card" style="flex:1">Tổng đơn hàng: <strong id="stat-orders">0</strong></div>
+        </div>
+      </section>
+
+      <section id="users" class="card section hidden">
+        <div class="controls">
+          <input id="user-search" placeholder="Tìm theo email hoặc tên">
+          <button id="add-user" class="btn primary">Thêm người dùng</button>
+        </div>
+        <div id="users-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Tên</th><th>Email</th><th>Trạng thái</th><th>Hành động</th></tr>
+            </thead>
+            <tbody id="users-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="products" class="card section hidden">
+        <div class="controls">
+          <input id="product-search" placeholder="Tìm theo tên hoặc mã">
+          <select id="filter-category"><option value="">Tất cả danh mục</option></select>
+          <button id="import-sample" class="btn">Import mẫu</button>
+          <button id="add-product" class="btn primary">Thêm sản phẩm</button>
+        </div>
+        <div id="products-wrap">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Ảnh</th><th>Tên</th><th>Mã</th><th>Loại</th><th>Giá bán</th><th>Tồn</th><th>Hành động</th></tr>
+            </thead>
+            <tbody id="products-table"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="categories" class="card section hidden">
+        <div class="controls">
+          <input id="category-name" placeholder="Tên danh mục">
+          <button id="add-category" class="btn primary">Thêm</button>
+        </div>
+        <ul id="category-list"></ul>
+      </section>
+
+      <section id="imports" class="card section hidden">
+        <h3>Phiếu nhập</h3>
+        <div class="controls">
+          <button id="add-import" class="btn primary">Tạo phiếu nhập mới</button>
+        </div>
+        <table>
+          <thead>
+            <tr><th>#</th><th>Ngày</th><th>Sản phẩm</th><th>Tổng SL</th><th>Trạng thái</th><th>Hành động</th></tr>
+          </thead>
+          <tbody id="imports-table"></tbody>
+        </table>
+      </section>
+
+      <section id="orders" class="card section hidden">
+        <h3>Đơn hàng</h3>
+        <div class="controls">
+          <select id="order-filter">
+            <option value="">Tất cả</option>
+            <option value="new">Mới</option>
+            <option value="processing">Đang xử lý</option>
+            <option value="shipped">Đã giao</option>
+            <option value="cancelled">Hủy</option>
+          </select>
+        </div>
+        <table>
+          <thead>
+            <tr><th>#</th><th>Ngày</th><th>Khách hàng</th><th>TT</th><th>Tổng</th><th>Hành động</th></tr>
+          </thead>
+          <tbody id="orders-table"></tbody>
+        </table>
+      </section>
+
+      <section id="pricing" class="card section hidden">
+        <h3>Quản lý giá & tỉ lệ lợi nhuận</h3>
+        <div class="small">Bạn có thể nhập tỉ lệ lợi nhuận (%) theo loại sản phẩm hoặc sửa giá từng sản phẩm.</div>
+        <div style="margin-top:12px" class="form-grid">
+          <div>
+            <label>Tỉ lệ lợi nhuận (theo danh mục)</label>
+            <select id="profit-category"><option value="">Chọn danh mục</option></select>
+            <input id="profit-percent" placeholder="% lợi nhuận (vd: 20)">
+            <button id="apply-profit" class="btn primary">Áp dụng</button>
+          </div>
+          <div>
+            <label>Chỉnh giá sản phẩm trực tiếp</label>
+            <select id="product-price-select"><option value="">Chọn sản phẩm</option></select>
+            <input id="product-price-input" placeholder="Giá bán (VND)">
+            <button id="save-product-price" class="btn primary">Lưu</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="inventory" class="card section hidden">
+        <h3>Tồn kho & cảnh báo</h3>
+        <div class="controls">
+          <input id="stock-threshold" placeholder="Ngưỡng cảnh báo (ví dụ 5)">
+          <button id="check-stock" class="btn">Kiểm tra</button>
+        </div>
+        <div id="inventory-result"></div>
+      </section>
+
+      <section id="settings" class="card section hidden">
+        <h3>Cài đặt</h3>
+        <div class="small">Một số tùy chọn: đồng bộ dữ liệu khách hàng, reset dữ liệu mẫu.</div>
+        <div style="margin-top:12px" class="controls">
+          <button id="sync-to-customer" class="btn primary">Đồng bộ với phần khách hàng</button>
+          <button id="reset-sample" class="btn">Reset dữ liệu mẫu</button>
+        </div>
+      </section>
     </main>
   </div>
+
+  <!-- Script xử lý -->
+  <script src="./js/admin.js"></script>
 </body>
 </html>

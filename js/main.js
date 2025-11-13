@@ -8,6 +8,9 @@ const userIcon = document.querySelector('.action .icon');
 const userNameDisplay = document.getElementById('user-name');
 const containerLoginRegister = document.querySelectorAll('.container-login-register');
 
+// --- Hàm tạo ID ngẫu nhiên (giống admin) ---
+function uid(prefix='id'){return prefix+Math.random().toString(36).slice(2,9)}
+
 // --- Hiển thị / Ẩn form ---
 function showLoginForm() {
     loginForm.style.display = 'block';
@@ -30,7 +33,7 @@ registerBtn.onclick = e => { e.preventDefault(); showRegisterForm(); };
 userIcon.onclick = e => {
     e.preventDefault();
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.username) showCustomerInfo(user);
+    if (user && user.name) showCustomerInfo(user);
     else showLoginForm();
 };
 
@@ -49,12 +52,29 @@ formRegister.onsubmit = e => {
     if (!username.value.trim() || !email.value.trim() || !password.value.trim())
         return alert('Vui lòng điền đầy đủ thông tin!');
 
-    let customers = JSON.parse(localStorage.getItem('customers')) || [];
-    if (customers.some(c => c.email === email.value.trim()))
+    // ĐỌC TỪ 'users' (dùng chung với admin)
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    
+    // Kiểm tra email đã tồn tại
+    if (users.some(c => c.email === email.value.trim()))
         return alert('Email này đã được sử dụng!');
 
-    customers.push({ username: username.value.trim(), email: email.value.trim(), password: password.value.trim() });
-    localStorage.setItem('customers', JSON.stringify(customers));
+    // Thêm user mới với cấu trúc giống admin
+    const newUser = {
+        id: uid('u'),
+        name: username.value.trim(),
+        email: email.value.trim(),
+        password: password.value.trim(),
+        locked: false
+    };
+    users.push(newUser);
+    
+    // LƯU VÀO 'users' (dùng chung với admin)
+    localStorage.setItem('users', JSON.stringify(users));
+    
+    // XÓA 'customers' cũ nếu còn tồn tại (để tránh xung đột)
+    localStorage.removeItem('customers');
+    
     alert('Đăng ký thành công!');
     formRegister.reset();
     showLoginForm();
@@ -65,15 +85,20 @@ const formLogin = document.getElementById('form-1');
 formLogin.onsubmit = e => {
     e.preventDefault();
     const { email, password } = formLogin;
-    const customers = JSON.parse(localStorage.getItem('customers')) || [];
-    const user = customers.find(c => c.email === email.value.trim() && c.password === password.value.trim());
+    
+    // ĐỌC TỪ 'users' (dùng chung với admin)
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const user = users.find(c => c.email === email.value.trim() && c.password === password.value.trim());
 
     if (!user) return alert('Email hoặc mật khẩu không chính xác!');
+    
+    // Kiểm tra tài khoản bị khóa
+    if (user.locked) return alert('Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên!');
 
     localStorage.setItem('user', JSON.stringify(user));
     alert('Đăng nhập thành công!');
     hideAllForms();
-    showUserName(user.username);
+    showUserName(user.name);
     formLogin.reset();
 
     // --- CẬP NHẬT GIỎ HÀNG NGAY SAU ĐĂNG NHẬP ---
@@ -97,7 +122,7 @@ userNameDisplay.onclick = () => {
 };
 function showCustomerInfo(user) {
     ['info-name', 'info-email', 'info-password'].forEach((id, i) => {
-        const fields = [user.username, user.email, user.password];
+        const fields = [user.name, user.email, user.password];
         document.getElementById(id).value = fields[i];
     });
     customerInfo.style.display = 'block';
@@ -110,64 +135,60 @@ document.getElementById('edit-btn').onclick = () => {
 };
 
 document.getElementById('save-btn').onclick = () => {
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+    const oldEmail = currentUser.email;
     const updatedUser = {
-        username: document.getElementById('info-name').value,
+        id: currentUser.id, // Giữ nguyên ID
+        name: document.getElementById('info-name').value,
         email: document.getElementById('info-email').value,
-        password: document.getElementById('info-password').value
+        password: document.getElementById('info-password').value,
+        locked: currentUser.locked || false // Giữ nguyên trạng thái locked
     };
-
     // 1. Cập nhật user hiện tại
     localStorage.setItem('user', JSON.stringify(updatedUser));
-
-    // 2. Cập nhật luôn trong danh sách customers
-    let customers = JSON.parse(localStorage.getItem('customers')) || [];
-    const index = customers.findIndex(c => c.email === updatedUser.email);
+    // 2. Cập nhật luôn trong danh sách users (dùng chung với admin)
+    let users = JSON.parse(localStorage.getItem('users')) || [];
+    const index = users.findIndex(c => c.id === updatedUser.id || c.email === oldEmail);
     if(index !== -1){
-        customers[index] = updatedUser;
-        localStorage.setItem('customers', JSON.stringify(customers));
+        users[index] = updatedUser;
+        localStorage.setItem('users', JSON.stringify(users));
     }
-
     // 3. Thông báo và disable input
     alert('Cập nhật thông tin thành công!');
     ['info-name', 'info-email', 'info-password'].forEach(id => document.getElementById(id).disabled = true);
-
     // 4. Cập nhật hiển thị tên
-    showUserName(updatedUser.username);
+    showUserName(updatedUser.name);
 };
 
 document.getElementById('logout-btn').onclick = () => {
+    const user = JSON.parse(localStorage.getItem('user'));
     // 1. Xóa user
     localStorage.removeItem('user');
-
-    // 2. Xóa giỏ hàng
-    localStorage.removeItem('cart');
+    // 2. Xóa giỏ hàng của user này
+    if(user && user.email){
+        localStorage.removeItem('cart_' + user.email);
+    }
+    localStorage.removeItem('cart'); // Xóa cả cart cũ nếu có
     if(typeof updateMiniCart === 'function') updateMiniCart();
     if(typeof updateCartDetail === 'function') updateCartDetail();
-
     // 3. Ẩn tất cả form
     hideAllForms();
-
     // 4. Reset hiển thị login/register
     [loginBtn, registerBtn, userIcon].forEach(b => b.style.display = 'inline-block');
     userNameDisplay.style.display = 'none';
-
     // 5. Reset về trang chủ
     showHome();
-
     // 6. Reset tìm kiếm
     const searchInput = document.getElementById('basic-search');
     if(searchInput) searchInput.value = '';
-
     // 7. Reset tất cả checkbox / radio
     document.querySelectorAll('.category input[type="checkbox"], .category input[type="radio"]').forEach(i => i.checked = false);
-
     // 8. Reset phân trang
     if(typeof window.resetPagination === 'function') {
         setTimeout(() => {
             window.resetPagination();
         }, 50);
     }
-
     // 9. Reset slider về slide đầu
     index = 0;
     showSlide(index);
@@ -179,16 +200,28 @@ document.getElementById('logout-btn').onclick = () => {
 // --- Giữ trạng thái khi reload ---
 window.onload = () => {
     const user = JSON.parse(localStorage.getItem('user'));
-    if (user) showUserName(user.username);
+    if (user) {
+        // Kiểm tra xem tài khoản có bị khóa không
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        const currentUser = users.find(u => u.id === user.id || u.email === user.email);
+        if(currentUser && currentUser.locked){
+            // Nếu bị khóa, tự động đăng xuất
+            localStorage.removeItem('user');
+            alert('Tài khoản của bạn đã bị khóa!');
+            showLoginForm();
+        } else {
+            showUserName(user.name);
+        }
+    }
 };
 
-// ================== MENU MOBILE ==================
-const navBars = document.querySelector('.nav_bars a');
-const nav = document.querySelector('.nav');
-navBars.onclick = e => {
-    e.preventDefault();
-    nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
-};
+// // ================== MENU MOBILE ==================
+// const navBars = document.querySelector('.nav_bars a');
+// const nav = document.querySelector('.nav');
+// navBars.onclick = e => {
+//     e.preventDefault();
+//     nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
+// };
 
 // ================== HEADER NAV ==================
 const homeLink = document.getElementById('home-link');
