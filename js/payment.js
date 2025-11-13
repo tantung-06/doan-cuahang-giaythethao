@@ -198,6 +198,46 @@ document.addEventListener('DOMContentLoaded', () => {
       saveAddress(newAddress); // Lưu vào localStorage
     }
 
+    // ===== TẠO ĐƠN HÀNG CHO ADMIN =====
+    const orderId = 'o' + Date.now();
+    const orderItems = Array.from(document.querySelectorAll('.payment-item')).map(item => ({
+      id: item.dataset.id,
+      name: item.querySelector('.item-info h3').textContent,
+      size: item.querySelector('.item-size strong')?.textContent || '',
+      qty: parseInt(item.querySelector('.qty-input')?.value) || 1,
+      price: parseInt(item.querySelector('.item-price').dataset.price || '0')
+    }));
+    const totalAmount = orderItems.reduce((sum, item) => sum + item.qty * item.price, 0);
+
+    // Lấy địa chỉ từ saved hoặc mới
+    let addressData;
+    if (document.getElementById('saved-address').checked) {
+      addressData = JSON.parse(localStorage.getItem('address_' + user.email)) || {};
+    } else {
+      const name = document.querySelector('#new-address-form input[name="name"]').value.trim();
+      const phone = document.querySelector('#new-address-form input[name="phone"]').value.trim();
+      const emailInput = document.querySelector('#new-address-form input[name="email"]').value.trim();
+      const detail = document.querySelector('#new-address-form input[name="detail"]').value.trim();
+      const note = document.querySelector('#new-address-form textarea')?.value.trim() || '';
+      addressData = { name, phone, email: emailInput, address: detail, note };
+      localStorage.setItem('address_' + user.email, JSON.stringify(addressData));
+    }
+
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    orders.push({
+      id: orderId,
+      customerName: user.name,
+      email: user.email,
+      date: new Date().toLocaleString(),
+      items: orderItems,
+      total: totalAmount,
+      status: 'new',
+      address: addressData  // Lưu địa chỉ vào đơn hàng
+    });
+    localStorage.setItem('orders', JSON.stringify(orders));
+
+    // ===============================================
+
     saveCart([]); // Xóa giỏ hàng
     if (typeof updateMiniCart === 'function') updateMiniCart();
     if (typeof updateCartDetail === 'function') updateCartDetail();

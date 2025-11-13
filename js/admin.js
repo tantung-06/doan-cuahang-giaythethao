@@ -33,50 +33,28 @@ document.getElementById('logout').addEventListener('click', ()=>{
   adminApp.style.display='none';
   loginScreen.style.display='flex';
 })
+
 // === Hàm hỗ trợ LocalStorage & dữ liệu mẫu ===
-// Tạo ID ngẫu nhiên
-function uid(prefix='id'){return prefix+Math.random().toString(36).slice(2,9)}
+function uid(prefix='id'){return prefix+Math.random().toString(36).slice(2,9);}
+function read(key){try{return JSON.parse(localStorage.getItem(key))||[]}catch(e){return[]}}
+function write(key,val){localStorage.setItem(key,JSON.stringify(val))}
 
-// Đọc dữ liệu từ localStorage
-function read(key){
-  try{
-    return JSON.parse(localStorage.getItem(key))||[]
-  }catch(e){
-    return[]
-  }
-}
-
-// Ghi dữ liệu vào localStorage
-function write(key,val){
-  localStorage.setItem(key,JSON.stringify(val))
-}
-
-// Đảm bảo có dữ liệu mẫu khi khởi động
+// --- Dữ liệu mẫu admin
 function ensureSample(){
-  if(!read('products').length){
-    // Tạo danh mục mẫu
-    const sampleCats=[
-      {id:'cat-run',name:'Giày Chạy Bộ',profitPercent:30},
-      {id:'cat-sneak',name:'Sneaker',profitPercent:25}
-    ]
-    write('categories',sampleCats)
-    
-    // Tạo sản phẩm mẫu
-    const sampleProds=[
-      {id:uid('p'),sku:'SP001',name:'Nike Pegasus',category:'cat-run',price:3485400,cost:2000000,qty:12,image:'./assest/img/Nike_Pegasus_Plus.jpg',hidden:false}
-    ]
-    write('products',sampleProds)
-    
-    // Tạo người dùng mẫu
-    const sampleUsers=[
-      {id:uid('u'),name:'Tan Tung',email:'tantung@gmail.com',password:'admin123',locked:false}
-    ]
-    write('users',sampleUsers)
-    
-    // Khởi tạo đơn hàng và phiếu nhập rỗng
-    write('orders',[])
-    write('imports',[])
-  }
+    // Mẫu người dùng
+    if(!read('users').length){
+        write('users',[
+            {id:uid('u'),name:'Tan Tung',email:'tantung@gmail.com',password:'123',locked:false}
+        ]);
+    }
+
+    // Mẫu danh mục & sản phẩm
+    ensureSampleProducts();
+    ensureSampleCategories();
+
+    // Mẫu đơn hàng / phiếu nhập
+    if(!read('orders').length) write('orders',[]);
+    if(!read('imports').length) write('imports',[]);
 }
 
 // === Điều hướng (Navigation) ===
@@ -199,33 +177,33 @@ document.getElementById('add-user').addEventListener('click',()=>{
 
 // Tìm kiếm người dùng
 document.getElementById('user-search').addEventListener('input',e=>renderUsers(e.target.value.toLowerCase()))
+// =======================================================================================================
 
 // ===== QUẢN LÝ DANH MỤC =====
 // Hiển thị danh sách danh mục
 function renderCategories(){
-  const list=document.getElementById('category-list');
-  list.innerHTML='';
-  const cats=read('categories');
-  
-  cats.forEach(c=>{
-    const li=document.createElement('li');
-    li.style.marginBottom='8px';
-    li.innerHTML=`${c.name} 
-      <button class="btn" onclick="editCategory('${c.id}')">Sửa</button> 
-      <button class="btn" onclick="deleteCategory('${c.id}')">Xóa</button>`;
-    list.appendChild(li)
-  })
-  
-  // Cập nhật dropdown chọn danh mục
-  const filter=document.getElementById('filter-category');
-  filter.innerHTML='<option value="">Tất cả danh mục</option>'
-  const profit=document.getElementById('profit-category');
-  profit.innerHTML='<option value="">Chọn danh mục</option>'
-  
-  read('categories').forEach(c=>{
-    filter.innerHTML+=`<option value="${c.id}">${c.name}</option>`;
-    profit.innerHTML+=`<option value="${c.id}">${c.name}</option>`
-  })
+    const list=document.getElementById('category-list');
+    list.innerHTML='';
+    const cats=read('categories');
+
+    cats.forEach(c=>{
+        const li=document.createElement('li');
+        li.style.marginBottom='8px';
+        li.innerHTML=`${c.name} 
+            <button class="btn" onclick="editCategory('${c.id}')">Sửa</button> 
+            <button class="btn" onclick="deleteCategory('${c.id}')">Xóa</button>`;
+        list.appendChild(li);
+    });
+
+    // Dropdown lọc
+    const filter=document.getElementById('filter-category');
+    const profit=document.getElementById('profit-category');
+    if(filter){filter.innerHTML='<option value="">Tất cả danh mục</option>'}
+    if(profit){profit.innerHTML='<option value="">Chọn danh mục</option>'}
+    cats.forEach(c=>{
+        if(filter) filter.innerHTML+=`<option value="${c.name}">${c.name}</option>`;
+        if(profit) profit.innerHTML+=`<option value="${c.id}">${c.name}</option>`;
+    });
 }
 
 // Sửa danh mục
@@ -262,185 +240,301 @@ document.getElementById('add-category').addEventListener('click',()=>{
   document.getElementById('category-name').value='';
   renderCategories()
 })
+// ==============================================================================================
 
 // ===== QUẢN LÝ SẢN PHẨM =====
-// Hiển thị danh sách sản phẩm
-function renderProducts(filter='',catFilter=''){
-  const tbody=document.getElementById('products-table');
-  tbody.innerHTML=''
-  const prods=read('products')
-  
-  // Lọc sản phẩm theo tên/SKU và danh mục
-  prods.filter(p=>
-    (!filter||p.name.toLowerCase().includes(filter)||p.sku.toLowerCase().includes(filter))&&
-    (!catFilter||p.category===catFilter)
-  ).forEach((p,i)=>{
-    const cat=read('categories').find(c=>c.id===p.category)
-    const tr=document.createElement('tr')
-    tr.innerHTML=`
-      <td>${i+1}</td>
-      <td><img src="${p.image}" style="width:60px;height:40px;object-fit:cover;border-radius:6px"></td>
-      <td>${p.name}</td>
-      <td>${p.sku}</td>
-      <td>${cat?cat.name:''}</td>
-      <td>${formatVND(p.price)}</td>
-      <td>${p.qty}</td>
-      <td>
-        <button class="btn" onclick="editProduct('${p.id}')">Sửa</button> 
-        <button class="btn" onclick="toggleHideProduct('${p.id}')">${p.hidden?'Hiện':'Ẩn'}</button> 
-        <button class="btn" onclick="deleteProduct('${p.id}')">Xóa</button>
-      </td>`
-    tbody.appendChild(tr)
-  })
+let productsCache = [];
 
-  // Cập nhật dropdown chọn sản phẩm
-  const ps=document.getElementById('product-price-select');
-  ps.innerHTML='<option value="">Chọn sản phẩm</option>'
-  read('products').forEach(p=>ps.innerHTML+=`<option value="${p.id}">${p.name} (${p.sku})</option>`)
+// --- Đọc / Ghi localStorage ---
+function read(key){ return JSON.parse(localStorage.getItem(key)||'[]'); }
+function write(key,data){ localStorage.setItem(key, JSON.stringify(data)); }
+
+// --- Tạo UID ngẫu nhiên ---
+function uid(prefix='id'){ return prefix+Math.random().toString(36).substr(2,6); }
+
+// --- Khởi tạo sản phẩm mẫu ---
+function ensureSampleProducts() {
+    let prods = read('products');
+    if(prods.length===0){
+      const sampleProducts = [
+        {id:"sp-gcb-1",sku:'SP001',name:'Giày Chạy Bộ Nam Nike Pegasus Plus - Đen',category:['Giày Chạy Bộ', 'Giày Nam'],priceCurrent:3485400,priceOld:5890000,company:'NIKE',img:'./assest/img/Nike_Pegasus_Plus.jpg',stock:12,hidden:false},
+        {id:"sp-gcb-2",sku:'SP002',name:'Giày Chạy Bộ Nam Nike React Infinity Run 4 - Đen',category:['Giày Chạy Bộ'],priceCurrent:3000000,priceOld:4000000,company:'NIKE',img:'./assest/img/Nike_Reactx_Infinity_Run4.jpg',stock:8,hidden:false},
+        {id:"sp-gcb-3",sku:'SP003',name:'Giày Chạy Bộ Nữ Under Armour Halo Runner',category:['Giày Chạy Bộ'],priceCurrent:2000000,priceOld:3000000,company:'UNDER ARMOUR',img:'./assest/img/Under_Armour_Halo_Runner.jpg',stock:10,hidden:false},
+        {id:"sp-gcb-4",sku:'SP004',name:'Giày Chạy Bộ Nam Puma Deviate Nitro 3 - Xanh Lá',category:['Giày Chạy Bộ'],priceCurrent:5000000,priceOld:6000000,company:'PUMA',img:'./assest/img/Puma_Deviate_Nitro3.jpg',stock:7,hidden:false},
+        {id:"sp-gcb-5",sku:'SP005',name:'Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu',category:['Giày Chạy Bộ'],priceCurrent:4000000,priceOld:5000000,company:'HOKA',img:'./assest/img/Hoka_Bondi_9_Wide.jpg',stock:5,hidden:false},
+        {id:"sp-gcb-6",sku:'SP006',name:'Giày Chạy Bộ Nữ Asics Gel-Kayano 32 Lite-Show - Xanh Lá', category:['Giày Chạy Bộ','Giày Nữ'],priceCurrent:1000000,priceOld:2000000,company:'ASICS', img:'./assest/img/Asics_Gel-Kayano_32_Lite-Show.jpg', stock:6,hidden:false},
+        {id:"sp-gcb-7",sku:'SP007',name:'Giày Chạy Bộ Nữ On Running Cloudsurfer Max - Xanh Dương', category:['Giày Chạy Bộ','Giày Nữ'],  priceCurrent:2000000,priceOld:3000000, company:'ON RUNNING', img:'./assest/img/On_Running_Cloudsurfer_Max.jpg', stock:8,hidden:false},
+        {id:"sp-gcb-8",sku:'SP008',name:'Giày Chạy Bộ Nữ Nike Journey Run - Trắng', category:['Giày Chạy Bộ','Giày Nữ'],  priceCurrent:400000,priceOld:1000000, company:'NIKE', img:'./assest/img/Nike_Journey_Run.jpg', stock:9,hidden:false},
+        {id:"sp-gcb-9",sku:'SP009',name:'Giày Chạy Bộ Nữ Nike Structure 26 - Xanh Lá', category:['Giày Chạy Bộ','Giày Nữ'],  priceCurrent:4000000,priceOld:5000000,company:'NIKE',  img:'./assest/img/Nike_Structure_26.jpg', stock:4,hidden:false},
+        {id:"sp-gcb-10",sku:'SP010',name:'Giày Chạy Bộ Nam Nike Zoom Fly 6 - Cam', category:['Giày Chạy Bộ','Giày Nam'], priceCurrent:3000000, priceOld:4000000, company:'NIKE', img:'./assest/img/Nike_Zoom_Fly_6.jpg', stock:7,hidden:false},
+        {id:"sp-gbd-1",sku:'SP011',name:'Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:3000000, priceOld:4000000,  company:'NIKE',img:'./assest/img/Nike_Legend_10_Academy.jpg', stock:10,hidden:false},
+        {id:"sp-gbd-2",sku:'SP012',name:'Giày Đá Bóng Nam Nike Phantom Luna li Academy - Xanh Dương', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:3000000, priceOld:4000000, company:'NIKE',img:'./assest/img/Nike_Phantom_Lunali_Academy.jpg', stock:9,hidden:false},
+        {id:"sp-gbd-3",sku:'SP013',name:'Giày Đá Bóng Nam Adidas Samba Messi - Trắng', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:4000000,   priceOld:5000000,company:'ADIDAS',img:'./assest/img/Adidas_Samba_Messi.jpg', stock:8,hidden:false},
+        {id:"sp-gbd-4",sku:'SP014',name:'Giày Đá Bóng Nam Adidas F50 Elite - Tím', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:4000000,priceOld:5000000,  company:'ADIDAS',img:'./assest/img/Adidas_F50_Elite.jpg', stock:6,hidden:false},
+        {id:"sp-gbd-5",sku:'SP015',name:'Giày Đá Bóng Nam Puma King Match Tt - Trắng', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:4000000, priceOld:5000000, company:'PUMA', img:'./assest/img/Puma_King_Match_Tt.jpg', stock:7,hidden:false},
+        {id:"sp-gbd-6",sku:'SP016',name:'Giày Đá Bóng Nam Adidas Predator Club - Đen', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:1000000,priceOld:2000000, company:'ADIDAS', img:'./assest/img/Adidas_Predator_Club.jpg', stock:6,hidden:false},
+        {id:"sp-gbd-7",sku:'SP017',name:'Giày Đá Bóng Nam Adidas Samba Inter Milan - Trắng', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:1000000, priceOld:2000000, company:'ADIDAS', img:'./assest/img/Adidas_Samba_Inter_Milan.jpg', stock:5,hidden:false},
+        {id:"sp-gbd-8",sku:'SP018',name:'Giày Đá Bóng Nam Nike Mercurial Vapor 16 Academy Kylian Mbappé - Vàng', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:1000000,priceOld:'2000000', company:'NIKE', img:'./assest/img/Nike_Mercurial_Vapol_16_Academy.jpg', stock:8,hidden:false},
+        {id:"sp-gbd-9",sku:'SP019',name:'Giày Đá Bóng Nam Nike Zoom Vapor 16 Academy Tf - Đỏ', category:['Giày Đá Bóng','Giày Nam'],priceCurrent:1000000, priceOld:2000000, company:'NIKE',  img:'./assest/img/Nike_Zoom_Vapor_16_Academy_Tf.jpg', stock:9,hidden:false},
+        {id:"sp-gbd-10",sku:'SP020',name:'Giày Đá Bóng Nam Puma Ultra 6 Play Tt - Cam', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:4000000, priceOld:5000000,company:'PUMA', img:'./assest/img/Puma_Ultra_6_Play_Tt.jpg', stock:7,hidden:false},
+        {id:"sp-gsnk-1",sku:'SP021',name:'Giày Sneaker Nữ On Running Cloudtilt - Xám', category:['Giày Sneaker','Giày Nữ'], priceCurrent:4000000,priceOld:5000000, company:'ON RUNNING',  img:'./assest/img/On_Running_Cloudtilt.jpg', stock:8,hidden:false},
+        {id:"sp-gsnk-2",sku:'SP022',name:'Giày Sneaker Nữ Adidas Tekwen - Đen', category:['Giày Sneaker','Giày Nữ'],priceCurrent:500000, priceOld:1000000,  company:'ADIDAS', img:'./assest/img/Adidas_Tekwen.jpg', stock:6,hidden:false},
+        {id:"sp-gsnk-3",sku:'SP023',name:'Giày Sneaker Nữ Under Armour Shift', category:['Giày Sneaker','Giày Nữ'], priceCurrent:500000, priceOld:1000000,  company:'UNDER ARMOUR',img:'./assest/img/Under_Armour_Shift.jpg', stock:5,hidden:false},
+        {id:"sp-gsnk-4",sku:'SP024',name:'Giày Sneaker Nữ Asics Gel-1130 - Be', category:['Giày Sneaker','Giày Nữ'], priceCurrent:500000, priceOld:1000000, company:'ASICS', img:'./assest/img/Asics_Gel-1130.jpg', stock:7,hidden:false},
+        {id:"sp-gsnk-5",sku:'SP025',name:'Giày Sneaker Nữ Nike Air Force 1 07 - Trắng', category:['Giày Sneaker','Giày Nữ'],  priceCurrent:500000, priceOld:1000000,company:'NIKE', img:'./assest/img/Nike_Air_Force.jpg', stock:8,hidden:false},
+        {id:"sp-gsnk-6",sku:'SP026',name:'Giày Sneaker Nam Asics Jog 100S - Đen', category:['Giày Sneaker','Giày Nam'], priceCurrent:6000000, priceOld:7000000, company:'ASICS', img:'./assest/img/Asics_Jog_100S.jpg', stock:6,hidden:false},
+        {id:"sp-gsnk-7",sku:'SP027',name:'Giày Sneaker Nam Asics Japan S - Trắng', category:['Giày Sneaker','Giày Nam'],priceCurrent:4000000,  priceOld:5000000, company:'ASICS', img:'./assest/img/Asics_Japan_S.jpg', stock:5,hidden:false},
+        {id:"sp-gsnk-8",sku:'SP028',name:'Giày Sneaker Nam Nike V2K Run - Đen', category:['Giày Sneaker','Giày Nam'], priceCurrent:3400000, priceOld:4200000, company:'NIKE', img:'./assest/img/Nike_V2K_Run.jpg', stock:7,hidden:false},
+        {id:"sp-gsnk-9",sku:'SP029',name:'Giày Sneaker Nam Nike Big Low - Trắng', category:['Giày Sneaker','Giày Nam'],priceCurrent:3400000, priceOld:4200000,  company:'NIKE', img:'./assest/img/Nike_Big_Low.jpg', stock:8,hidden:false},
+        {id:"sp-gsnk-10",sku:'SP030',name:'Giày Sneaker Nam Adidas Grand Court 2.0 - Be', category:['Giày Sneaker','Giày Nam'], priceCurrent:3400000, priceOld:4200000,  company:'ADIDAS',img:'./assest/img/Adidas_Grand_Court_2.jpg', stock:6,hidden:false}
+      ];
+
+      write('products', sampleProducts);
+      productsCache = sampleProducts;
+    } else {
+        productsCache = prods.map(p=>({...p, hidden: p.hidden || false})); // đảm bảo có hidden
+    }
 }
 
-// Định dạng số thành tiền Việt
-function formatVND(n){
-  return new Intl.NumberFormat('vi-VN').format(n)+'₫'
+// --- Khởi tạo danh mục ---
+function ensureSampleCategories() {
+    const cats = new Set();
+    productsCache.forEach(p => {
+        if(Array.isArray(p.category)) p.category.forEach(c => cats.add(c));
+        else cats.add(p.category);
+    });
+    const sampleCats = Array.from(cats).map(name => ({id:uid('cat'),name, profitPercent:0}));
+    write('categories', sampleCats);
+
+    // Render option filter
+    const categorySelect = document.getElementById('filter-category');
+    if(categorySelect){
+        categorySelect.innerHTML = '<option value="">--Tất cả danh mục--</option>';
+        sampleCats.forEach(c=>{
+            const opt = document.createElement('option');
+            opt.value = c.name;
+            opt.textContent = c.name;
+            categorySelect.appendChild(opt);
+        });
+    }
 }
 
-// Sửa thông tin sản phẩm
-window.editProduct=function(id){
-  const prods=read('products');
-  const p=prods.find(x=>x.id===id);
-  const name=prompt('Tên sản phẩm',p.name); 
-  if(name==null) return; 
-  p.name=name;
-  const sku=prompt('Mã (SKU)',p.sku); 
-  if(sku!=null) p.sku=sku;
-  const price=prompt('Giá bán (VND)',p.price); 
-  if(price!=null) p.price=Number(price);
-  const qty=prompt('Số lượng',p.qty); 
-  if(qty!=null) p.qty=Number(qty);
-  write('products',prods); 
-  renderProducts(document.getElementById('product-search').value.toLowerCase(),document.getElementById('filter-category').value); 
-  renderStats()
+// --- Định dạng tiền ---
+function formatVND(n){ return new Intl.NumberFormat('vi-VN').format(n)+'₫'; }
+
+// --- Hiển thị sản phẩm ---
+function renderProducts(filter='', catFilter='', showHidden=true){
+    const tbody = document.getElementById('products-table');
+    if(!tbody) return;
+    tbody.innerHTML = '';
+
+    const filtered = productsCache.filter(p =>
+        (showHidden || !p.hidden) &&
+        (!filter || p.name.toLowerCase().includes(filter.toLowerCase()) || p.sku.toLowerCase().includes(filter.toLowerCase())) &&
+        (!catFilter || (Array.isArray(p.category)?p.category.includes(catFilter):p.category===catFilter))
+    );
+
+    if(filtered.length===0){
+        tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#888;">Không có sản phẩm nào</td></tr>';
+        return;
+    }
+
+    filtered.forEach((p,i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML=`
+            <td>${i+1}</td>
+            <td><img src="${p.img}" width="60" height="60" style="object-fit:cover;border-radius:6px"></td>
+            <td>${p.name}</td>
+            <td>${p.sku}</td>
+            <td>${Array.isArray(p.category)?p.category.join(', '):p.category}</td>
+            <td>
+                <div style="color:#e53935;font-weight:bold;">${formatVND(p.priceCurrent)}</div>
+                ${p.priceOld?`<div style="text-decoration:line-through;color:#888;font-size:0.9em;">${formatVND(p.priceOld)}</div>`:''}
+            </td>
+            <td>${p.stock||0}</td>
+            <td>${p.company||''}</td>
+            <td>
+                <button class="btn small" onclick="editProduct('${p.id}')">Sửa</button>
+                <button class="btn small" onclick="toggleHiddenProduct('${p.id}')">${p.hidden?'Hiện':'Ẩn'}</button>
+                <button class="btn small danger" onclick="deleteProduct('${p.id}')">Xóa</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
-// Ẩn/Hiện sản phẩm
-window.toggleHideProduct=function(id){
-  const prods=read('products');
-  const p=prods.find(x=>x.id===id);
-  p.hidden=!p.hidden;
-  write('products',prods);
-  renderProducts();
-}
+// --- Thêm sản phẩm ---
+document.getElementById('add-product')?.addEventListener('click', ()=>{
+    const sku = prompt('Mã SKU:'); if(!sku) return;
+    const name = prompt('Tên sản phẩm:'); if(!name) return;
+    const priceCurrent = prompt('Giá hiện tại:'); 
+    const priceOld = prompt('Giá cũ:'); 
+    const company = prompt('Thương hiệu:'); 
+    const img = prompt('Link ảnh:'); 
+    const category = prompt('Danh mục (ngăn cách dấu ,):');
 
-// Xóa sản phẩm
-window.deleteProduct=function(id){
-  if(!confirm('Xóa sản phẩm?'))return;
-  let prods=read('products');
-  prods=prods.filter(x=>x.id!==id);
-  write('products',prods);
-  renderProducts();
-  renderStats()
-}
+    const newProduct = {
+        id: uid('p'),
+        sku,
+        name,
+        priceCurrent: priceCurrent||'0',
+        priceOld: priceOld||'',
+        company,
+        img,
+        category: category ? category.split(',').map(x=>x.trim()) : [],
+        stock: 0,
+        hidden: false
+    };
 
-// Thêm sản phẩm mới
-document.getElementById('add-product').addEventListener('click',()=>{
-  // Mở chuỗi prompt để nhập thông tin sản phẩm
-  const name=prompt('Tên sản phẩm'); 
-  if(!name) return; 
-  const sku=prompt('Mã (SKU)', 'SP'+Math.floor(Math.random()*900+100)); 
-  const cats=read('categories'); 
-  const cat=cats.length?cats[0].id:''; 
-  const price=Number(prompt('Giá bán (VND)',100000)); 
-  const cost=Number(prompt('Giá vốn (VND)',Math.floor(price*0.6))); 
-  const qty=Number(prompt('Số lượng',1)); 
-  const img=prompt('Đường dẫn ảnh', './assest/img/Nike_Pegasus_Plus.jpg');
-  
-  const prods=read('products'); 
-  prods.push({id:uid('p'),sku,name,category:cat,price,cost,qty,image:img,hidden:false}); 
-  write('products',prods); 
-  renderProducts(); 
-  renderStats()
-})
+    productsCache.push(newProduct);
+    write('products', productsCache);
+    ensureSampleCategories();
+    renderProducts(searchInput.value.trim(), categorySelect.value, true);
+});
 
-// Tìm kiếm sản phẩm
-document.getElementById('product-search').addEventListener('input',e=>renderProducts(e.target.value.toLowerCase(),document.getElementById('filter-category').value))
+// --- Sửa sản phẩm ---
+window.editProduct = function(id){
+    const p = productsCache.find(x => x.id===id);
+    if(!p) return alert('Không tìm thấy sản phẩm.');
 
-// Lọc theo danh mục
-document.getElementById('filter-category').addEventListener('change',e=>renderProducts(document.getElementById('product-search').value.toLowerCase(),e.target.value))
+    const sku = prompt('Mã SKU:', p.sku); if(sku!=null) p.sku = sku;
+    const name = prompt('Tên sản phẩm:', p.name); if(name!=null) p.name = name;
+    const priceCurrent = prompt('Giá hiện tại:', p.priceCurrent); if(priceCurrent!=null) p.priceCurrent = priceCurrent;
+    const priceOld = prompt('Giá cũ:', p.priceOld); if(priceOld!=null) p.priceOld = priceOld;
+    const company = prompt('Thương hiệu:', p.company); if(company!=null) p.company = company;
+    const img = prompt('Link ảnh:', p.img); if(img!=null) p.img = img;
+    const category = prompt('Danh mục (ngăn cách dấu ,):', Array.isArray(p.category)?p.category.join(', '):p.category);
+    if(category!=null) p.category = category.split(',').map(x=>x.trim());
 
-// Import dữ liệu mẫu
-document.getElementById('import-sample').addEventListener('click',()=>{
-  ensureSample();
-  alert('Đã import mẫu (nếu chưa có)');
-  renderAll()
-})
+    write('products', productsCache);
+    ensureSampleCategories();
+    renderProducts(searchInput.value.trim(), categorySelect.value, true);
+};
 
+// --- Ẩn/Hiện sản phẩm ---
+window.toggleHiddenProduct = function(id){
+    const p = productsCache.find(x => x.id===id);
+    if(!p) return;
+    p.hidden = !p.hidden;
+    write('products', productsCache);
+    renderProducts(searchInput.value.trim(), categorySelect.value, true);
+};
+
+// --- Xóa sản phẩm ---
+window.deleteProduct = function(id){
+    if(!confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) return;
+    productsCache = productsCache.filter(p => p.id!==id);
+    write('products', productsCache);
+    ensureSampleCategories();
+    renderProducts(searchInput.value.trim(), categorySelect.value, true);
+};
+
+// --- Tìm kiếm & lọc danh mục ---
+const searchInput = document.getElementById('product-search');
+const categorySelect = document.getElementById('filter-category');
+searchInput?.addEventListener('input', ()=>renderProducts(searchInput.value.trim(), categorySelect.value, true));
+categorySelect?.addEventListener('change', ()=>renderProducts(searchInput.value.trim(), categorySelect.value, true));
+
+// --- Khởi tạo ---
+ensureSampleProducts();
+ensureSampleCategories();
+renderProducts('', '', true);
+// =======================================================================================================
 // ===== QUẢN LÝ PHIẾU NHẬP HÀNG =====
+
 // Hiển thị danh sách phiếu nhập
 function renderImports(){
-  const tbody=document.getElementById('imports-table');
-  tbody.innerHTML=''
-  
-  read('imports').forEach((imp,i)=>{
-    const totalQty=imp.items.reduce((s,it)=>s+it.qty,0); // Tổng số lượng
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
-      <td>${i+1}</td>
-      <td>${imp.date}</td>
-      <td>${imp.items.length} sp</td>
-      <td>${totalQty}</td>
-      <td>${imp.status}</td>
-      <td><button class="btn" onclick="completeImport('${imp.id}')">Hoàn thành</button></td>`;
-    tbody.appendChild(tr)
-  })
+    const tbody = document.getElementById('imports-table');
+    tbody.innerHTML = '';
+
+    const imports = read('imports') || [];
+
+    imports.forEach((imp, i) => {
+        const totalQty = imp.items.reduce((s, it) => s + it.qty, 0);
+        const totalCost = imp.items.reduce((s, it) => s + it.qty * it.cost, 0);
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${i + 1}</td>
+            <td>${imp.date}</td>
+            <td>${imp.items.length} sp</td>
+            <td>${totalQty}</td>
+            <td>${formatVND(totalCost)}</td>
+            <td>${imp.status}</td>
+            <td>
+                ${imp.status === 'pending' ? `<button class="btn" onclick="completeImport('${imp.id}')">Hoàn thành</button>` : ''}
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
 }
 
 // Hoàn thành phiếu nhập (cộng số lượng vào kho)
-window.completeImport=function(id){
-  const imps=read('imports');
-  const imp=imps.find(x=>x.id===id);
-  imp.status='completed'; 
-  
-  // Cộng số lượng vào sản phẩm
-  imp.items.forEach(it=>{
-    const prods=read('products');
-    const p=prods.find(x=>x.id===it.productId); 
-    if(p) p.qty += it.qty; 
-    write('products',prods)
-  })
-  
-  write('imports',imps); 
-  renderImports(); 
-  renderProducts(); 
-  renderStats();
+window.completeImport = function(id){
+    const imports = read('imports') || [];
+    const imp = imports.find(x => x.id === id);
+    if(!imp || imp.status === 'completed') return;
+
+    // Cập nhật số lượng sản phẩm
+    const products = read('products') || [];
+    imp.items.forEach(it => {
+        const p = products.find(pr => pr.id === it.productId);
+        if(p) p.qty = (p.qty || 0) + it.qty;
+    });
+    write('products', products);
+
+    // Cập nhật trạng thái phiếu nhập
+    imp.status = 'completed';
+    write('imports', imports);
+
+    renderImports();
+    renderProducts();
+    renderStats();
 }
 
 // Tạo phiếu nhập mới
-document.getElementById('add-import').addEventListener('click',()=>{
-  const prods=read('products'); 
-  if(!prods.length){
-    alert('Chưa có sản phẩm');
-    return
-  }
-  
-  const pid=prompt('Nhập id sản phẩm (sao chép id từ bảng hoặc leave blank để dùng đầu tiên)') || prods[0].id; 
-  const qty=Number(prompt('Số lượng nhập',10))
-  const cost=Number(prompt('Giá nhập (VND) cho đơn vị',100000)); 
-  const imps=read('imports'); 
-  imps.push({id:uid('imp'),date:new Date().toLocaleDateString(),items:[{productId:pid,qty:qty,cost}],status:'pending'}); 
-  write('imports',imps); 
-  renderImports()
-})
+document.getElementById('add-import').addEventListener('click', () => {
+    const products = read('products') || [];
+    if(!products.length){
+        alert('Chưa có sản phẩm nào trong kho');
+        return;
+    }
 
-// ===== QUẢN LÝ ĐỚN HÀNG =====
-// Hiển thị danh sách đơn hàng
-function renderOrders(filter=''){
-  const tbody=document.getElementById('orders-table');
-  tbody.innerHTML=''
-  
-  // Lọc đơn hàng theo trạng thái
-  read('orders').filter(o=>!filter||o.status===filter).forEach((o,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`
+    const pid = prompt('Nhập ID sản phẩm (để trống sẽ dùng sản phẩm đầu tiên)') || products[0].id;
+    const qty = Number(prompt('Nhập số lượng', 10));
+    const cost = Number(prompt('Nhập giá nhập (VND) cho 1 đơn vị', 100000));
+
+    if(!pid || !qty || !cost){
+        alert('Thông tin phiếu nhập không hợp lệ!');
+        return;
+    }
+
+    const imports = read('imports') || [];
+    imports.push({
+        id: uid('imp'),
+        date: new Date().toLocaleDateString(),
+        items: [{ productId: pid, qty, cost }],
+        status: 'pending'
+    });
+
+    write('imports', imports);
+    renderImports();
+});
+
+// =============================================================================================================
+
+// ===== QUẢN LÝ ĐƠN HÀNG =====
+// Hiển thị danh sách đơn hàng trong bảng
+function renderOrders(filter='') {
+  const tbody = document.getElementById('orders-table');
+  tbody.innerHTML = '';
+
+  const orders = read('orders') || [];
+
+  // Lọc đơn hàng theo trạng thái nếu có
+  orders.filter(o => !filter || o.status === filter).forEach((o, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
       <td>${i+1}</td>
       <td>${o.date}</td>
       <td>${o.customerName}</td>
@@ -449,30 +543,60 @@ function renderOrders(filter=''){
       <td>
         <button class="btn" onclick="viewOrder('${o.id}')">Xem</button> 
         <button class="btn" onclick="updateOrderStatus('${o.id}')">Cập nhật</button>
-      </td>`;
-    tbody.appendChild(tr)
-  })
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 // Xem chi tiết đơn hàng
-window.viewOrder=function(id){
-  const o=read('orders').find(x=>x.id===id);
-  alert(JSON.stringify(o,null,2))
+window.viewOrder = function(id) {
+  const orders = read('orders') || [];
+  const order = orders.find(o => o.id === id);
+  if(!order) return alert('Không tìm thấy đơn hàng!');
+
+  const address = order.address || {};
+  let content = `Đơn hàng: ${order.id}
+Khách hàng: ${order.customerName}
+Email: ${order.email}
+Số điện thoại: ${address.phone || 'Chưa cập nhật'}
+Ngày: ${order.date}
+Địa chỉ: ${address.address || 'Chưa cập nhật'}
+Ghi chú: ${address.note || 'Không có'}
+Trạng thái: ${order.status}
+
+Sản phẩm:\n`;
+
+  order.items.forEach((item, i) => {
+    content += `${i+1}. ${item.name} | Size: ${item.size} | Số lượng: ${item.qty} | Giá: ${formatVND(item.price)} | Thành tiền: ${formatVND(item.qty * item.price)}\n`;
+  });
+
+  content += `\nTổng tiền: ${formatVND(order.total)}`;
+
+  alert(content);
 }
 
 // Cập nhật trạng thái đơn hàng
-window.updateOrderStatus=function(id){
-  const os=['new','processing','shipped','cancelled'];
-  const o=read('orders').find(x=>x.id===id);
-  const s=prompt('Trạng thái mới: new, processing, shipped, cancelled',o.status); 
-  if(!s) return; 
-  o.status=s; 
-  write('orders',read('orders')); 
+window.updateOrderStatus = function(id) {
+  const statuses = ['new', 'processing', 'shipped', 'cancelled'];
+  const orders = read('orders') || [];
+  const order = orders.find(x => x.id === id);
+  if(!order) return alert('Không tìm thấy đơn hàng!');
+
+  const s = prompt('Trạng thái mới (new, processing, shipped, cancelled):', order.status);
+  if(!s || !statuses.includes(s)) return alert('Trạng thái không hợp lệ!');
+
+  order.status = s;
+  write('orders', orders);
   renderOrders();
 }
 
 // Lọc đơn hàng theo trạng thái
-document.getElementById('order-filter').addEventListener('change',e=>renderOrders(e.target.value))
+document.getElementById('order-filter').addEventListener('change', e => renderOrders(e.target.value));
+
+// Hiển thị lần đầu
+renderOrders();
+// ========================================================================================
 
 // ===== ĐỊNH GIÁ =====
 // Áp dụng tỉ lệ lợi nhuận cho danh mục
@@ -515,6 +639,7 @@ document.getElementById('save-product-price').addEventListener('click',()=>{
   renderProducts();
   alert('Đã lưu giá')
 })
+// ==============================================================================================
 
 // ===== QUẢN LÝ TỒN KHO =====
 // Kiểm tra sản phẩm sắp hết hàng
@@ -546,6 +671,7 @@ window.goToProduct=function(id){
     document.querySelector('#products-table tr td button')?.focus()
   },200)
 }
+// =================================================================================================
 
 // ===== ĐỒNG BỘ & RESET =====
 // Đồng bộ dữ liệu cho phần khách hàng
