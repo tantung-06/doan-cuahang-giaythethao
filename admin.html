@@ -148,7 +148,6 @@
 
       <section id="pricing" class="card section hidden">
         <h3>Quản lý giá & tỉ lệ lợi nhuận</h3>
-        <div class="small">Bạn có thể nhập tỉ lệ lợi nhuận (%) theo loại sản phẩm hoặc sửa giá từng sản phẩm.</div>
         <div style="margin-top:12px" class="form-grid">
           <div>
             <label>Tỉ lệ lợi nhuận (theo danh mục)</label>
@@ -167,11 +166,38 @@
 
       <section id="inventory" class="card section hidden">
         <h3>Tồn kho & cảnh báo</h3>
-        <div class="controls">
-          <input id="stock-threshold" placeholder="Ngưỡng cảnh báo (ví dụ 5)">
-          <button id="check-stock" class="btn">Kiểm tra</button>
+        <div class="controls" style="display:flex;gap:12px;flex-wrap:wrap">
+          <!-- Chọn sản phẩm -->
+          <div>
+            <label>Sản phẩm:</label>
+            <select id="inventory-product">
+              <option value="">Tất cả sản phẩm</option>
+            </select>
+          </div>
+
+          <!-- Chọn thời gian -->
+          <div>
+            <label>Từ ngày:</label>
+            <input type="date" id="inventory-date-from">
+          </div>
+          <div>
+            <label>Đến ngày:</label>
+            <input type="date" id="inventory-date-to">
+          </div>
+
+          <!-- Ngưỡng cảnh báo -->
+          <div>
+            <label>Ngưỡng cảnh báo:</label>
+            <input type="number" id="stock-threshold" placeholder="Ví dụ 5" min="0">
+          </div>
+
+          <div style="align-self:end">
+            <button id="check-stock" class="btn primary">Kiểm tra</button>
+          </div>
         </div>
-        <div id="inventory-result"></div>
+
+        <!-- Kết quả tồn kho -->
+        <div id="inventory-result" style="margin-top:12px"></div>
       </section>
 
       <section id="settings" class="card section hidden">

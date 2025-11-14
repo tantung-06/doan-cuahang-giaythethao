@@ -559,7 +559,6 @@ document.getElementById('add-import').addEventListener('click', () => {
     renderImports();
 });
 // =============================================================================================================
-
 // ===== QUẢN LÝ ĐƠN HÀNG =====
 // Hiển thị danh sách đơn hàng trong bảng
 function renderOrders(filter='') {
@@ -615,12 +614,12 @@ Sản phẩm:\n`;
 
 // Cập nhật trạng thái đơn hàng
 window.updateOrderStatus = function(id) {
-  const statuses = ['new', 'processing', 'shipped', 'cancelled'];
+  const statuses = ['Mới', 'Đang xử lý', 'Đã giao', 'Hủy'];
   const orders = read('orders') || [];
   const order = orders.find(x => x.id === id);
   if(!order) return alert('Không tìm thấy đơn hàng!');
 
-  const s = prompt('Trạng thái mới (new, processing, shipped, cancelled):', order.status);
+  const s = prompt('Trạng thái mới (Mới, Đang xử lý, Đã giao, Hủy):', order.status);
   if(!s || !statuses.includes(s)) return alert('Trạng thái không hợp lệ!');
 
   order.status = s;
@@ -634,48 +633,252 @@ document.getElementById('order-filter').addEventListener('change', e => renderOr
 // Hiển thị lần đầu
 renderOrders();
 // ========================================================================================
+// ==== QUẢN LÝ GIÁ BÁN VÀ LỢI NHUẬN ====
+function getCategoryProfitList(){ return read('categoryProfit') || []; }
+function saveCategoryProfitList(list){ write('categoryProfit', list); }
+function getProductProfitList(){ return read('productProfit') || []; }
+function saveProductProfitList(list){ write('productProfit', list); }
 
-// ===== ĐỊNH GIÁ =====
-// Áp dụng tỉ lệ lợi nhuận cho danh mục
-document.getElementById('apply-profit').addEventListener('click',()=>{
-  const catId=document.getElementById('profit-category').value; 
-  const pct=Number(document.getElementById('profit-percent').value)
-  
-  if(!catId||!pct){
-    alert('Chọn danh mục và nhập %');
-    return
-  }
-  
-  const cats=read('categories');
-  const c=cats.find(x=>x.id===catId);
-  c.profitPercent=pct;
-  write('categories',cats)
-  
-  // Áp dụng cho tất cả sản phẩm trong danh mục: giá bán = giá vốn*(1+%/100)
-  const prods=read('products');
-  prods.filter(p=>p.category===catId).forEach(p=>p.price=Math.round(p.cost*(1+pct/100)))
-  write('products',prods);
-  renderProducts();
-  alert('Đã áp dụng tỉ lệ lợi nhuận')
-})
+function getProductProfit(product){
+  const productProfit = getProductProfitList();
+  const found = productProfit.find(x => x.id === product.id);
+  if(found) return Number(found.profit) || 0;
 
-// Lưu giá cho sản phẩm cụ thể
-document.getElementById('save-product-price').addEventListener('click',()=>{
-  const pid=document.getElementById('product-price-select').value; 
-  const price=Number(document.getElementById('product-price-input').value); 
-  
-  if(!pid||!price){
-    alert('Chọn sản phẩm và nhập giá');
-    return
+  const categoryProfit = getCategoryProfitList();
+  let max = 0;
+  const cats = Array.isArray(product.category) ? product.category : (product.category ? [product.category] : []);
+  cats.forEach(cat => {
+    const cp = categoryProfit.find(c => c.category === cat);
+    if(cp && Number(cp.profit) > max) max = Number(cp.profit);
+  });
+  return max;
+}
+
+function calcSellingPrice(cost, profitPercent){
+  cost = Number(cost) || 0;
+  profitPercent = Number(profitPercent) || 0;
+  return Math.round(cost * (1 + profitPercent/100));
+}
+
+function getProductCostFallback(p){
+  if(p == null) return 0;
+  if(p.cost != null && p.cost !== '') return Number(p.cost);
+  if(p.priceOld != null && p.priceOld !== '') return Number(p.priceOld);
+  if(p.priceCurrent != null && p.priceCurrent !== '') return Number(p.priceCurrent);
+  return 0;
+}
+
+function populatePricingSelections(){
+  const profitCategory = document.getElementById('profit-category');
+  const productSelect = document.getElementById('product-price-select');
+  if(!profitCategory || !productSelect) return;
+
+  const products = read('products') || [];
+  const cats = new Set();
+  products.forEach(p => {
+    if(Array.isArray(p.category)) p.category.forEach(c => cats.add(c));
+    else if(p.category) cats.add(p.category);
+  });
+
+  profitCategory.innerHTML = '<option value="">Chọn danh mục</option>';
+  Array.from(cats).sort().forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    profitCategory.appendChild(opt);
+  });
+
+  productSelect.innerHTML = '<option value="">Chọn sản phẩm</option>';
+  products.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = `${p.name}${p.sku? ' — ' + p.sku : ''}`;
+    productSelect.appendChild(opt);
+  });
+}
+
+function applyCategoryProfit(){
+  const profitCategory = document.getElementById('profit-category');
+  const profitPercentInput = document.getElementById('profit-percent');
+  if(!profitCategory || !profitPercentInput) return alert('UI pricing chưa sẵn sàng');
+
+  const cat = profitCategory.value;
+  const profit = Number(profitPercentInput.value);
+  if(!cat) return alert('Chọn danh mục trước');
+  if(isNaN(profit)) return alert('Nhập % lợi nhuận hợp lệ');
+
+  const list = getCategoryProfitList();
+  const exist = list.find(x => x.category === cat);
+  if(exist) exist.profit = profit;
+  else list.push({category: cat, profit: profit});
+  saveCategoryProfitList(list);
+
+  let products = read('products') || [];
+  const productProfit = getProductProfitList();
+  products = products.map(p => {
+    const cats = Array.isArray(p.category) ? p.category : (p.category? [p.category] : []);
+    if(cats.includes(cat)){
+      const override = productProfit.find(pp => pp.id === p.id);
+      if(!override){
+        const cost = getProductCostFallback(p);
+        p.priceCurrent = calcSellingPrice(cost, profit);
+      }
+    }
+    return p;
+  });
+  write('products', products);
+
+  populatePricingSelections();
+  renderProductPricingTable();
+  if(typeof renderProducts === 'function') renderProducts('', '', true);
+  if(typeof renderProductsUser === 'function') renderProductsUser();
+
+  alert('Đã áp dụng % lợi nhuận cho danh mục: ' + cat);
+}
+
+function saveProductPriceDirect(){
+  const productSelect = document.getElementById('product-price-select');
+  const productPriceInput = document.getElementById('product-price-input');
+  if(!productSelect || !productPriceInput) return alert('UI pricing chưa sẵn sàng');
+
+  const id = productSelect.value;
+  let price = Number(productPriceInput.value);
+  if(!id) return alert('Chọn sản phẩm trước');
+  if(isNaN(price) || price < 0) return alert('Nhập giá hợp lệ');
+
+  const products = read('products') || [];
+  const p = products.find(x => x.id === id);
+  if(!p) return alert('Không tìm thấy sản phẩm');
+
+  p.priceCurrent = Math.round(price);
+  write('products', products);
+
+  renderProductPricingTable();
+  if(typeof renderProducts === 'function') renderProducts('', '', true);
+  if(typeof renderProductsUser === 'function') renderProductsUser();
+
+  alert('Đã lưu giá cho sản phẩm.');
+}
+
+function saveProductProfitOverride(id, profitValue){
+  const list = getProductProfitList();
+  const exist = list.find(x => x.id === id);
+  if(exist) exist.profit = Number(profitValue);
+  else list.push({id: id, profit: Number(profitValue)});
+  saveProductProfitList(list);
+
+  const products = read('products') || [];
+  const p = products.find(x => x.id === id);
+  if(p){
+    const cost = getProductCostFallback(p);
+    p.priceCurrent = calcSellingPrice(cost, profitValue);
+    write('products', products);
   }
-  
-  const prods=read('products');
-  const p=prods.find(x=>x.id===pid);
-  p.price=price;
-  write('products',prods);
-  renderProducts();
-  alert('Đã lưu giá')
-})
+}
+
+function renderProductPricingTable(){
+  const pricingSection = document.getElementById('pricing');
+  if(!pricingSection) return;
+
+  const old = document.getElementById('pricing-product-table');
+  if(old) old.remove();
+
+  const wrapper = document.createElement('div');
+  wrapper.id = 'pricing-product-table';
+  wrapper.style.marginTop = '12px';
+  wrapper.innerHTML = '<h4>Danh sách sản phẩm (tóm tắt)</h4>';
+
+  const table = document.createElement('table');
+  table.style.width = '100%';
+  table.style.borderCollapse = 'collapse';
+  table.innerHTML = `
+    <thead>
+      <tr style="text-align:left;background:#f5f5f5">
+        <th style="padding:6px">#</th>
+        <th style="padding:6px">Ảnh</th>
+        <th style="padding:6px">Tên</th>
+        <th style="padding:6px">Giá vốn</th>
+        <th style="padding:6px">% Lợi nhuận</th>
+        <th style="padding:6px">Giá bán</th>
+        <th style="padding:6px">Hành động</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  `;
+  wrapper.appendChild(table);
+  pricingSection.appendChild(wrapper);
+
+  const tbody = table.querySelector('tbody');
+  const products = read('products') || [];
+  const productProfit = getProductProfitList();
+
+  products.forEach((p, idx) => {
+    const cost = getProductCostFallback(p);
+    const appliedProfit = getProductProfit(p);
+    const selling = calcSellingPrice(cost, appliedProfit);
+
+    const tr = document.createElement('tr');
+    tr.style.borderTop = '1px solid #eee';
+    tr.innerHTML = `
+      <td style="padding:6px;vertical-align:middle">${idx+1}</td>
+      <td style="padding:6px;vertical-align:middle"><img src="${p.img||''}" width="48" style="object-fit:cover;border-radius:4px"></td>
+      <td style="padding:6px;vertical-align:middle">${p.name}</td>
+      <td style="padding:6px;vertical-align:middle">${formatVND(cost)}</td>
+      <td style="padding:6px;vertical-align:middle">
+        <input type="number" data-pid="${p.id}" class="pricing-profit-input" value="${appliedProfit}" style="width:80px">
+      </td>
+      <td style="padding:6px;vertical-align:middle">${formatVND(selling)}</td>
+      <td style="padding:6px;vertical-align:middle">
+        <button class="btn small apply-product-profit" data-id="${p.id}">Áp dụng</button>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  wrapper.querySelectorAll('.apply-product-profit').forEach(btn => {
+    btn.onclick = () => {
+      const id = btn.dataset.id;
+      const input = wrapper.querySelector(`input[data-pid="${id}"]`);
+      const v = Number(input.value);
+      if(isNaN(v)) return alert('Nhập % lợi nhuận hợp lệ');
+      saveProductProfitOverride(id, v);
+      renderProductPricingTable();
+      if(typeof renderProducts === 'function') renderProducts('', '', true);
+      if(typeof renderProductsUser === 'function') renderProductsUser();
+      alert('Đã lưu % lợi nhuận cho sản phẩm');
+    };
+  });
+}
+
+function initPricingModule(){
+  populatePricingSelections();
+  renderProductPricingTable();
+
+  const applyBtn = document.getElementById('apply-profit');
+  const savePriceBtn = document.getElementById('save-product-price');
+
+  applyBtn?.addEventListener('click', applyCategoryProfit);
+  savePriceBtn?.addEventListener('click', saveProductPriceDirect);
+
+  const productSelect = document.getElementById('product-price-select');
+  const productPriceInput = document.getElementById('product-price-input');
+  productSelect?.addEventListener('change', ()=> {
+    const id = productSelect.value;
+    if(!id){ productPriceInput.value = ''; return; }
+    const products = read('products') || [];
+    const p = products.find(x => x.id === id);
+    if(p) productPriceInput.value = p.priceCurrent || '';
+  });
+}
+
+window.initPricingModule = initPricingModule;
+window.renderProductPricingTable = renderProductPricingTable;
+window.populatePricingSelections = populatePricingSelections;
+
+window.addEventListener('load', ()=> {
+  setTimeout(()=> { try{ initPricingModule(); }catch(e){ /* ignore */ } }, 50);
+});
+
 // ==============================================================================================
 // ===== QUẢN LÝ TỒN KHO =====
 document.getElementById('check-stock').addEventListener('click', () => {

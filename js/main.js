@@ -52,6 +52,13 @@ formRegister.onsubmit = e => {
     if (!username.value.trim() || !email.value.trim() || !password.value.trim())
         return alert('Vui lòng điền đầy đủ thông tin!');
 
+    // --- Kiểm tra đuôi email ---
+    const validDomains = ['@gmail.com', '@sgu.edu.vn'];
+    const emailValue = email.value.trim();
+    if (!validDomains.some(domain => emailValue.endsWith(domain))) {
+        return alert('Email phải có đuôi @gmail.com hoặc @sgu.edu.vn!');
+    }
+
     // ĐỌC TỪ 'users' (dùng chung với admin)
     let users = JSON.parse(localStorage.getItem('users')) || [];
     
@@ -85,6 +92,13 @@ const formLogin = document.getElementById('form-1');
 formLogin.onsubmit = e => {
     e.preventDefault();
     const { email, password } = formLogin;
+
+    // --- Kiểm tra đuôi email ---
+    const validDomains = ['@gmail.com', '@sgu.edu.vn'];
+    const emailValue = email.value.trim();
+    if (!validDomains.some(domain => emailValue.endsWith(domain))) {
+        return alert('Email phải có đuôi @gmail.com hoặc @sgu.edu.vn!');
+    }
     
     // ĐỌC TỪ 'users' (dùng chung với admin)
     const users = JSON.parse(localStorage.getItem('users')) || [];
