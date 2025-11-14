@@ -30,6 +30,9 @@ function renderProductsUser() {
   }
 
   products.forEach(product => {
+
+    if (product.hidden === true) return;
+
     const item = document.createElement('div');
     item.className = 'product-list';
     item.dataset.category = JSON.stringify(product.category);
