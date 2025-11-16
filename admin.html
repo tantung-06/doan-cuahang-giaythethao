@@ -182,26 +182,48 @@
       </section>
 
       <section id="inventory" class="card section hidden">
-        <h3>Tồn kho</h3>
+        <h3>📦 Quản lý tồn kho & cảnh báo</h3>
 
-        <div class="controls" style="display:flex;gap:12px;flex-wrap:wrap">
-            <div>
-                <label for="inventory-product">Sản phẩm:</label>
-                <select id="inventory-product">
-                    <option value="">Tất cả sản phẩm</option>
-                </select>
-            </div>
-            <div>
-                <label for="inventory-date-from">Từ ngày:</label>
-                <input type="date" id="inventory-date-from">
-            </div>
-            <div>
-                <label for="inventory-date-to">Đến ngày:</label>
-                <input type="date" id="inventory-date-to">
-            </div>
+        <div class="controls">
+          <input id="inv-stock-threshold" type="number" placeholder="Nhập ngưỡng cảnh báo (ví dụ 10)">
+          <button id="inv-check-stock" class="btn">Kiểm tra tồn kho</button>
         </div>
-        <div id="inventory-result" style="margin-top:12px"></div>
+        <div id="inv-stock-result" style="margin-top:15px;"></div>
+
+        <hr>
+
+        <div class="controls">
+          <select id="inv-stock-category">
+            <option value="">-- Tất cả danh mục --</option>
+          </select>
+          <select id="inv-stock-product">
+            <option value="">-- Chọn sản phẩm --</option>
+          </select>
+          <button id="inv-btn-search-stock" class="btn">Tra cứu tồn</button>
+        </div>
+        <div id="inv-stock-search-result" class="mt-2"></div>
+
+        <hr>
+
+        <div class="controls">
+          <label>Từ ngày:</label>
+          <input type="date" id="inv-date-from">
+          <label>Đến ngày:</label>
+          <input type="date" id="inv-date-to">
+          <button id="inv-btn-stock-stats" class="btn">Thống kê</button>
+        </div>
+        <div id="inv-stock-stats" class="mt-2"></div>
       </section>
+
+      <section id="settings" class="card section hidden">
+        <h3>Cài đặt</h3>
+        <div class="small">Một số tùy chọn: đồng bộ dữ liệu khách hàng, reset dữ liệu mẫu.</div>
+        <div style="margin-top:12px" class="controls">
+          <button id="sync-to-customer" class="btn primary">Đồng bộ với phần khách hàng</button>
+          <button id="reset-sample" class="btn">Reset dữ liệu mẫu</button>
+        </div>
+      </section>
+      <section id="orders" class="card section hidden">
 
       <section id="settings" class="card section hidden">
         <h3>Cài đặt</h3>

@@ -936,79 +936,280 @@ window.addEventListener('load', ()=> {
 });
 
 // ================================= QUẢN LÝ TỒN KHO ====================================================
-function renderInventory() {
-    const products = read('products');
-    const selectedProduct = document.getElementById('inventory-product').value;
+(function inventoryModule(){
+  const ID_CHECK = "inv-check-stock";
+  const ID_THRESHOLD = "inv-stock-threshold";
+  const ID_RESULT = "inv-stock-result";
+  const ID_CAT = "inv-stock-category";
+  const ID_PROD = "inv-stock-product";
+  const ID_SEARCH_BTN = "inv-btn-search-stock";
+  const ID_SEARCH_RESULT = "inv-stock-search-result";
+  const ID_FROM = "inv-date-from";
+  const ID_TO = "inv-date-to";
+  const ID_STATS_BTN = "inv-btn-stock-stats";
+  const ID_STATS_RESULT = "inv-stock-stats";
 
-    // Lọc theo sản phẩm nếu chọn
-    let filtered = selectedProduct ? products.filter(p => p.id === selectedProduct) : products.slice();
+  function formatISO(d){
+    if(!d) return "";
+    const dt = new Date(d);
+    if(isNaN(dt)) return ""+d;
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth()+1).padStart(2,"0");
+    const day = String(dt.getDate()).padStart(2,"0");
+    return `${y}-${m}-${day}`;
+  }
 
-    // Sắp xếp: sản phẩm hết hàng (stock=0) lên đầu
-    filtered.sort((a, b) => (b.stock === 0 ? 1 : 0) - (a.stock === 0 ? 1 : 0));
+  function readLS(key, fallback){
+    try { return JSON.parse(localStorage.getItem(key)) || fallback; }
+    catch(e){ return fallback; }
+  }
 
-    const wrap = document.getElementById('inventory-result');
-    wrap.innerHTML = '';
+  function populateInventoryFilters(){
+    const catSelect = document.getElementById("inv-stock-category");
+    const prodSelect = document.getElementById("inv-stock-product");
+    if(!catSelect || !prodSelect) return;
 
-    if (!filtered.length) {
-        wrap.innerHTML = '<div class="small">Không có sản phẩm nào</div>';
-    } else {
-        const ul = document.createElement('ul');
-        ul.style.listStyle = 'none';
-        ul.style.padding = '0';
+    const cats = readLS("categories", []);
+    const prods = readLS("products", []);
 
-        filtered.forEach(p => {
-            const li = document.createElement('li');
-            li.style.marginBottom = '6px';
-            li.style.padding = '6px';
-            li.style.border = '1px solid #ddd';
-            li.style.borderRadius = '4px';
-            li.style.display = 'flex';
-            li.style.justifyContent = 'space-between';
-            li.style.alignItems = 'center';
+    const categoryIsId = prods.some(p => typeof p.category === "number");
 
-            // Nếu stock = 0 thì màu đỏ
-            if(p.stock === 0) li.style.backgroundColor = '#ffe6e6';
+    catSelect.innerHTML = `<option value="">-- Tất cả danh mục --</option>`;
+    cats.forEach(c => {
+      const val = categoryIsId ? c.id : c.name;
+      const label = c.name ?? c.id;
+      catSelect.innerHTML += `<option value="${val}">${label}</option>`;
+    });
 
-            li.innerHTML = `
-                <span>${p.name} - Tồn: ${p.stock}</span>
-                <button class="btn" onclick="goToProduct('${p.id}')">Mở</button>
-            `;
-            ul.appendChild(li);
+    prodSelect.innerHTML = `<option value="">-- Chọn sản phẩm --</option>`;
+    prods.forEach(p => {
+      const id = p.id ?? p.ma ?? p.code ?? "";
+      prodSelect.innerHTML += `<option value="${id}">${p.name || id} ${p.ma? '('+p.ma+')':''}</option>`;
+    });
+  }
+
+  function canhBaoTheoNguong(){
+    const res = document.getElementById(ID_RESULT);
+    if(!res) return;
+    const prods = readLS("products", []);
+    const raw = document.getElementById(ID_THRESHOLD)?.value;
+    const threshold = isNaN(Number(raw)) ? 20 : Number(raw);
+
+    if(prods.length === 0){
+      res.innerHTML = `<div>Chưa có sản phẩm nào!</div>`;
+      return;
+    }
+
+    let html = `<h4>⚠️ Kiểm tra tồn kho (ngưỡng ${threshold})</h4><ul>`;
+    prods.forEach(p=>{
+      const stock = Number(p.stock ?? p.quantity ?? 0);
+      let color="green", msg=`✅ Hàng đủ (Tồn ${stock})`;
+      if(stock < 5){ color="red"; msg=`🚨 Cần nhập gấp! (Tồn ${stock})`; }
+      else if(stock < threshold){ color="orange"; msg=`⚠️ Nên nhập thêm (Tồn ${stock})`; }
+      html += `<li style="color:${color}"><b>${p.name}</b> — ${msg}</li>`;
+    });
+    html += "</ul>";
+    res.innerHTML = html;
+  }
+
+  
+function traCuuTonKho(){
+  const res = document.getElementById("inv-stock-search-result");
+  if(!res) return;
+  const prods = readLS("products", []);
+  const prodId = document.getElementById("inv-stock-product")?.value;
+  const cat = document.getElementById("inv-stock-category")?.value;
+
+  let list = prods;
+
+  if(prodId){
+    list = list.filter(p => String(p.id) === String(prodId) || String(p.ma) === String(prodId));
+  } else if(cat){
+    const categoryIsId = prods.some(p => typeof p.category === "number");
+    list = list.filter(p => String(p.category) === String(cat));
+  }
+
+  if(!list || list.length === 0){
+    res.innerHTML = "<div>Không tìm thấy sản phẩm phù hợp</div>"; 
+    return;
+  }
+
+  res.innerHTML = list.map(p => {
+    const stock = Number(p.stock ?? p.quantity ?? 0);
+    return `<div><b>${p.name}</b> ${p.ma? '('+p.ma+')':''} — <b>${stock}</b> tồn</div>`;
+  }).join("");
+}
+
+  // Helper: build date array inclusive
+  function getDatesInRange(fromISO, toISO){
+    const a = new Date(fromISO); a.setHours(0,0,0,0);
+    const b = new Date(toISO); b.setHours(0,0,0,0);
+    const list = [];
+    for(let d = new Date(a); d <= b; d.setDate(d.getDate()+1)){
+      list.push(new Date(d));
+    }
+    return list;
+  }
+
+  function tinhTonDauKy(products, phieuNhap, phieuXuat, fromDateISO){
+    const from = new Date(fromDateISO); from.setHours(0,0,0,0);
+    const map = {};
+    (products||[]).forEach(p => map[p.id] = Number(p.stock ?? p.quantity ?? 0));
+
+    Object.keys(map).forEach(k => map[k] = 0);
+
+    (phieuNhap||[]).forEach(r => {
+      const d = new Date(r.importDate ?? r.date ?? r.dateStr ?? r.createdAt ?? "");
+      if(isNaN(d)) return;
+      if(d < from){
+        (r.items||[]).forEach(it => {
+          const id = it.productId ?? it.id ?? it.prodId ?? it.product;
+          map[id] = (map[id] || 0) + Number(it.qty || it.quantity || 0);
         });
-        wrap.appendChild(ul);
-    }
+      }
+    });
+
+    (phieuXuat||[]).forEach(r => {
+      const d = new Date(r.date ?? r.exportDate ?? r.createdAt ?? r.orderDate ?? "");
+      if(isNaN(d)) return;
+      if(d < from){
+        (r.items||[]).forEach(it => {
+          const id = it.productId ?? it.id ?? it.prodId ?? it.product;
+          map[id] = (map[id] || 0) - Number(it.qty || it.quantity || 0);
+        });
+      }
+    });
+
+    return map;
+  }
+
+function thongKeTheoNgay(products, phieuNhap, phieuXuat, stockPrevMap, fromISO, toISO){
+  const dates = getDatesInRange(fromISO, toISO);
+  let html = "";
+
+  dates.forEach(d => {
+    const dayStr = formatISO(d);
+    const hasImport = (phieuNhap || []).some(r => {
+      const d2 = formatISO(r.importDate ?? r.date ?? r.createdAt ?? "");
+      if (d2 !== dayStr) return false;
+      return (r.items || []).some(it => Number(it.qty || it.quantity || 0) > 0);
+    });
+
+    const hasExport = (phieuXuat || []).some(r => {
+      const d2 = formatISO(r.date ?? r.exportDate ?? r.createdAt ?? r.orderDate ?? "");
+      if (d2 !== dayStr) return false;
+      return (r.items || []).some(it => Number(it.qty || it.quantity || 0) > 0);
+    });
+
+    if (!hasImport && !hasExport) return;
+
+    const rows = [];
+    (products || []).forEach(p => {
+      const nhapQty = (phieuNhap || []).reduce((s, r) => {
+        const d2 = formatISO(r.importDate ?? r.date ?? r.createdAt ?? "");
+        if (d2 !== dayStr) return s;
+        const it = (r.items || []).find(it => String(it.productId ?? it.id ?? "") === String(p.id));
+        return s + (it ? Number(it.qty || it.quantity || 0) : 0);
+      }, 0);
+
+      const xuatQty = (phieuXuat || []).reduce((s, r) => {
+        const d2 = formatISO(r.date ?? r.exportDate ?? r.createdAt ?? "");
+        if (d2 !== dayStr) return s;
+        const it = (r.items || []).find(it => String(it.productId ?? it.id ?? "") === String(p.id));
+        return s + (it ? Number(it.qty || it.quantity || 0) : 0);
+      }, 0);
+
+      if (nhapQty > 0 || xuatQty > 0) {
+        rows.push({ product: p, nhapQty, xuatQty });
+      }
+    });
+
+    if (rows.length === 0) return;
+
+    html += `<h4>Ngày ${dayStr}</h4>`;
+    html += `<table border="1" cellpadding="5" cellspacing="0" style="width:100%;margin-bottom:12px">
+              <tr><th>Sản phẩm</th><th>Nhập</th><th>Xuất</th><th>Tồn cuối</th></tr>`;
+
+    rows.forEach(r => {
+      const prev = Number(stockPrevMap[r.product.id] || 0);
+      const stockCuoi = prev + r.nhapQty - r.xuatQty;
+      stockPrevMap[r.product.id] = stockCuoi;
+
+      html += `<tr>
+        <td>${r.product.name || r.product.ma || r.product.id}</td>
+        <td style="text-align:right">${r.nhapQty}</td>
+        <td style="text-align:right">${r.xuatQty}</td>
+        <td style="text-align:right">${stockCuoi}</td>
+      </tr>`;
+    });
+
+    html += `</table>`;
+  });
+
+  return html;
 }
+  function thongKeNhapXuatTheoNgay(fromISO, toISO){
+    const res = document.getElementById(ID_STATS_RESULT);
+    if(!res) return;
+    if(!fromISO || !toISO) { alert("Vui lòng chọn đầy đủ ngày"); return; }
 
-// Chuyển đến sản phẩm trong bảng và highlight
-window.goToProduct = function(id){
-    document.querySelector('[data-section="products"]').click();
-    setTimeout(() => {
-        const tr = Array.from(document.querySelectorAll('#products-table tr'))
-                        .find(row => row.querySelector(`button[onclick*="${id}"]`));
-        if(tr){
-            tr.scrollIntoView({behavior:'smooth', block:'center'});
-            tr.style.backgroundColor = '#fffae6';
-            setTimeout(()=>tr.style.backgroundColor = '', 2000);
-        }
-    }, 200);
-}
+    const products = readLS("products", []);
+    const phieuNhap = readLS("purchaseReceipts", readLS("phieuNhap", []));
+    const phieuXuat = readLS("phieuXuat", readLS("exports", readLS("orders", [])));
 
-// Khi load trang hoặc đổi sản phẩm trong select
-document.addEventListener('DOMContentLoaded', () => {
-    renderInventory();
-    
-    const inventorySelect = document.getElementById('inventory-product');
-    if(inventorySelect) {
-        inventorySelect.addEventListener('change', renderInventory);
+    const dateFrom = new Date(fromISO); const dateTo = new Date(toISO);
+    if(isNaN(dateFrom) || isNaN(dateTo) || dateFrom > dateTo) { alert("Khoảng ngày không hợp lệ"); return; }
+
+    const diffDays = Math.floor((dateTo - dateFrom) / (1000*60*60*24));
+    const groupByMonth = diffDays > 60;
+
+    const stockPrevMap = tinhTonDauKy(products, phieuNhap, phieuXuat, fromISO);
+
+    let html = `<h3>📦 Thống kê nhập–xuất từ ${formatISO(fromISO)} đến ${formatISO(toISO)}</h3>`;
+    html += groupByMonth ? thongKeTheoThang(products, phieuNhap, phieuXuat, stockPrevMap, fromISO, toISO)
+                        : thongKeTheoNgay(products, phieuNhap, phieuXuat, stockPrevMap, fromISO, toISO);
+
+    res.innerHTML = html;
+  }
+
+  function attachListeners(){
+    populateInventoryFilters();
+
+    const btnCheck = document.getElementById(ID_CHECK);
+    if(btnCheck){
+      btnCheck.removeEventListener("click", canhBaoTheoNguong);
+      btnCheck.addEventListener("click", canhBaoTheoNguong);
     }
-});
 
-setInterval(() => {
-    if(document.getElementById('inventory-result')) {
-        renderInventory();
+    const btnSearch = document.getElementById(ID_SEARCH_BTN);
+    if(btnSearch){
+      btnSearch.removeEventListener("click", traCuuTonKho);
+      btnSearch.addEventListener("click", traCuuTonKho);
     }
-}, 1000);
 
+    const btnStats = document.getElementById(ID_STATS_BTN);
+    if(btnStats){
+      btnStats.replaceWith(btnStats.cloneNode(true));
+      const newBtn = document.getElementById(ID_STATS_BTN);
+      if(newBtn){
+        newBtn.addEventListener("click", ()=>{
+          const from = document.getElementById(ID_FROM)?.value;
+          const to = document.getElementById(ID_TO)?.value;
+          if(!from || !to){ alert("Vui lòng chọn khoảng thời gian"); return; }
+          thongKeNhapXuatTheoNgay(from, to);
+        });
+      }
+    }
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    attachListeners();
+  }); 
+  window.populateInventoryFilters = populateInventoryFilters;
+  window.canhBaoTheoNguong = canhBaoTheoNguong;
+  window.traCuuTonKho = traCuuTonKho;
+  window.thongKeNhapXuatTheoNgay = thongKeNhapXuatTheoNgay;
+})();
+  
 // ===================================== ĐỒNG BỘ & RESET =============================================
 // Đồng bộ dữ liệu cho phần khách hàng
 document.getElementById('sync-to-customer').addEventListener('click',()=>{
