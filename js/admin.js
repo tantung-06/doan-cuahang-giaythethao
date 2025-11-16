@@ -243,14 +243,11 @@ document.getElementById('add-category').addEventListener('click',()=>{
 // ================================== QUẢN LÝ SẢN PHẨM ==========================================
 let productsCache = [];
 
-// --- Đọc / Ghi localStorage ---
 function read(key){ return JSON.parse(localStorage.getItem(key)||'[]'); }
 function write(key,data){ localStorage.setItem(key, JSON.stringify(data)); }
 
-// --- Tạo UID ngẫu nhiên ---
 function uid(prefix='id'){ return prefix+Math.random().toString(36).substr(2,6); }
 
-// --- Khởi tạo sản phẩm mẫu ---
 function ensureSampleProducts() {
     let prods = read('products');
     if(prods.length===0){
@@ -1031,7 +1028,6 @@ document.getElementById('reset-sample').addEventListener('click',()=>{
   alert('Đã reset')
 })
 
-// ===== Tiện ích nhỏ =====
 // Cập nhật input giá khi chọn sản phẩm
 document.getElementById('product-price-select').addEventListener('change',e=>{
   const p=read('products').find(x=>x.id===e.target.value);
