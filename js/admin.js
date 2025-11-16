@@ -255,36 +255,36 @@ function ensureSampleProducts() {
     let prods = read('products');
     if(prods.length===0){
       const sampleProducts = [
-        {id:"sp-gcb-1",sku:'SP001',name:'Giày Chạy Bộ Nam Nike Pegasus Plus - Đen',category:['Giày Chạy Bộ', 'Giày Nam'],priceCurrent:3485400,priceOld:5890000,company:'NIKE',img:'./assest/img/Nike_Pegasus_Plus.jpg',stock:12,hidden:false},
-        {id:"sp-gcb-2",sku:'SP002',name:'Giày Chạy Bộ Nam Nike React Infinity Run 4 - Đen',category:['Giày Chạy Bộ','Giày Nam'],priceCurrent:3000000,priceOld:4000000,company:'NIKE',img:'./assest/img/Nike_Reactx_Infinity_Run4.jpg',stock:8,hidden:false},
-        {id:"sp-gcb-3",sku:'SP003',name:'Giày Chạy Bộ Nữ Under Armour Halo Runner',category:['Giày Chạy Bộ','Giày Nữ'],priceCurrent:2000000,priceOld:3000000,company:'UNDER ARMOUR',img:'./assest/img/Under_Armour_Halo_Runner.jpg',stock:10,hidden:false},
-        {id:"sp-gcb-4",sku:'SP004',name:'Giày Chạy Bộ Nam Puma Deviate Nitro 3 - Xanh Lá',category:['Giày Chạy Bộ','Giày Nam'],priceCurrent:5000000,priceOld:6000000,company:'PUMA',img:'./assest/img/Puma_Deviate_Nitro3.jpg',stock:7,hidden:false},
-        {id:"sp-gcb-5",sku:'SP005',name:'Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu',category:['Giày Chạy Bộ','Giày Nam'],priceCurrent:4000000,priceOld:5000000,company:'HOKA',img:'./assest/img/Hoka_Bondi_9_Wide.jpg',stock:5,hidden:false},
-        {id:"sp-gcb-6",sku:'SP006',name:'Giày Chạy Bộ Nữ Asics Gel-Kayano 32 Lite-Show - Xanh Lá', category:['Giày Chạy Bộ','Giày Nữ'],priceCurrent:1000000,priceOld:2000000,company:'ASICS', img:'./assest/img/Asics_Gel-Kayano_32_Lite-Show.jpg', stock:6,hidden:false},
-        {id:"sp-gcb-7",sku:'SP007',name:'Giày Chạy Bộ Nữ On Running Cloudsurfer Max - Xanh Dương', category:['Giày Chạy Bộ','Giày Nữ'],  priceCurrent:2000000,priceOld:3000000, company:'ON RUNNING', img:'./assest/img/On_Running_Cloudsurfer_Max.jpg', stock:8,hidden:false},
-        {id:"sp-gcb-8",sku:'SP008',name:'Giày Chạy Bộ Nữ Nike Journey Run - Trắng', category:['Giày Chạy Bộ','Giày Nữ'],  priceCurrent:400000,priceOld:1000000, company:'NIKE', img:'./assest/img/Nike_Journey_Run.jpg', stock:9,hidden:false},
-        {id:"sp-gcb-9",sku:'SP009',name:'Giày Chạy Bộ Nữ Nike Structure 26 - Xanh Lá', category:['Giày Chạy Bộ','Giày Nữ'],  priceCurrent:4000000,priceOld:5000000,company:'NIKE',  img:'./assest/img/Nike_Structure_26.jpg', stock:4,hidden:false},
-        {id:"sp-gcb-10",sku:'SP010',name:'Giày Chạy Bộ Nam Nike Zoom Fly 6 - Cam', category:['Giày Chạy Bộ','Giày Nam'], priceCurrent:3000000, priceOld:4000000, company:'NIKE', img:'./assest/img/Nike_Zoom_Fly_6.jpg', stock:7,hidden:false},
-        {id:"sp-gbd-1",sku:'SP011',name:'Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:3000000, priceOld:4000000,  company:'NIKE',img:'./assest/img/Nike_Legend_10_Academy.jpg', stock:10,hidden:false},
-        {id:"sp-gbd-2",sku:'SP012',name:'Giày Đá Bóng Nam Nike Phantom Luna li Academy - Xanh Dương', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:3000000, priceOld:4000000, company:'NIKE',img:'./assest/img/Nike_Phantom_Lunali_Academy.jpg', stock:9,hidden:false},
-        {id:"sp-gbd-3",sku:'SP013',name:'Giày Đá Bóng Nam Adidas Samba Messi - Trắng', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:4000000,   priceOld:5000000,company:'ADIDAS',img:'./assest/img/Adidas_Samba_Messi.jpg', stock:8,hidden:false},
-        {id:"sp-gbd-4",sku:'SP014',name:'Giày Đá Bóng Nam Adidas F50 Elite - Tím', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:4000000,priceOld:5000000,  company:'ADIDAS',img:'./assest/img/Adidas_F50_Elite.jpg', stock:6,hidden:false},
-        {id:"sp-gbd-5",sku:'SP015',name:'Giày Đá Bóng Nam Puma King Match Tt - Trắng', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:4000000, priceOld:5000000, company:'PUMA', img:'./assest/img/Puma_King_Match_Tt.jpg', stock:7,hidden:false},
-        {id:"sp-gbd-6",sku:'SP016',name:'Giày Đá Bóng Nam Adidas Predator Club - Đen', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:1000000,priceOld:2000000, company:'ADIDAS', img:'./assest/img/Adidas_Predator_Club.jpg', stock:6,hidden:false},
-        {id:"sp-gbd-7",sku:'SP017',name:'Giày Đá Bóng Nam Adidas Samba Inter Milan - Trắng', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:1000000, priceOld:2000000, company:'ADIDAS', img:'./assest/img/Adidas_Samba_Inter_Milan.jpg', stock:5,hidden:false},
-        {id:"sp-gbd-8",sku:'SP018',name:'Giày Đá Bóng Nam Nike Mercurial Vapor 16 Academy Kylian Mbappé - Vàng', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:1000000,priceOld:'2000000', company:'NIKE', img:'./assest/img/Nike_Mercurial_Vapol_16_Academy.jpg', stock:8,hidden:false},
-        {id:"sp-gbd-9",sku:'SP019',name:'Giày Đá Bóng Nam Nike Zoom Vapor 16 Academy Tf - Đỏ', category:['Giày Đá Bóng','Giày Nam'],priceCurrent:1000000, priceOld:2000000, company:'NIKE',  img:'./assest/img/Nike_Zoom_Vapor_16_Academy_Tf.jpg', stock:9,hidden:false},
-        {id:"sp-gbd-10",sku:'SP020',name:'Giày Đá Bóng Nam Puma Ultra 6 Play Tt - Cam', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:4000000, priceOld:5000000,company:'PUMA', img:'./assest/img/Puma_Ultra_6_Play_Tt.jpg', stock:7,hidden:false},
-        {id:"sp-gsnk-1",sku:'SP021',name:'Giày Sneaker Nữ On Running Cloudtilt - Xám', category:['Giày Sneaker','Giày Nữ'], priceCurrent:4000000,priceOld:5000000, company:'ON RUNNING',  img:'./assest/img/On_Running_Cloudtilt.jpg', stock:8,hidden:false},
-        {id:"sp-gsnk-2",sku:'SP022',name:'Giày Sneaker Nữ Adidas Tekwen - Đen', category:['Giày Sneaker','Giày Nữ'],priceCurrent:500000, priceOld:1000000,  company:'ADIDAS', img:'./assest/img/Adidas_Tekwen.jpg', stock:6,hidden:false},
-        {id:"sp-gsnk-3",sku:'SP023',name:'Giày Sneaker Nữ Under Armour Shift', category:['Giày Sneaker','Giày Nữ'], priceCurrent:500000, priceOld:1000000,  company:'UNDER ARMOUR',img:'./assest/img/Under_Armour_Shift.jpg', stock:5,hidden:false},
-        {id:"sp-gsnk-4",sku:'SP024',name:'Giày Sneaker Nữ Asics Gel-1130 - Be', category:['Giày Sneaker','Giày Nữ'], priceCurrent:500000, priceOld:1000000, company:'ASICS', img:'./assest/img/Asics_Gel-1130.jpg', stock:7,hidden:false},
-        {id:"sp-gsnk-5",sku:'SP025',name:'Giày Sneaker Nữ Nike Air Force 1 07 - Trắng', category:['Giày Sneaker','Giày Nữ'],  priceCurrent:500000, priceOld:1000000,company:'NIKE', img:'./assest/img/Nike_Air_Force.jpg', stock:8,hidden:false},
-        {id:"sp-gsnk-6",sku:'SP026',name:'Giày Sneaker Nam Asics Jog 100S - Đen', category:['Giày Sneaker','Giày Nam'], priceCurrent:6000000, priceOld:7000000, company:'ASICS', img:'./assest/img/Asics_Jog_100S.jpg', stock:6,hidden:false},
-        {id:"sp-gsnk-7",sku:'SP027',name:'Giày Sneaker Nam Asics Japan S - Trắng', category:['Giày Sneaker','Giày Nam'],priceCurrent:4000000,  priceOld:5000000, company:'ASICS', img:'./assest/img/Asics_Japan_S.jpg', stock:5,hidden:false},
-        {id:"sp-gsnk-8",sku:'SP028',name:'Giày Sneaker Nam Nike V2K Run - Đen', category:['Giày Sneaker','Giày Nam'], priceCurrent:3400000, priceOld:4200000, company:'NIKE', img:'./assest/img/Nike_V2K_Run.jpg', stock:7,hidden:false},
-        {id:"sp-gsnk-9",sku:'SP029',name:'Giày Sneaker Nam Nike Big Low - Trắng', category:['Giày Sneaker','Giày Nam'],priceCurrent:3400000, priceOld:4200000,  company:'NIKE', img:'./assest/img/Nike_Big_Low.jpg', stock:8,hidden:false},
-        {id:"sp-gsnk-10",sku:'SP030',name:'Giày Sneaker Nam Adidas Grand Court 2.0 - Be', category:['Giày Sneaker','Giày Nam'], priceCurrent:3400000, priceOld:4200000,  company:'ADIDAS',img:'./assest/img/Adidas_Grand_Court_2.jpg', stock:6,hidden:false}
+        {id:"sp-gcb-1",sku:'SP001',name:'Giày Chạy Bộ Nam Nike Pegasus Plus - Đen',category:['Giày Chạy Bộ', 'Giày Nam'],priceCurrent:3485400,company:'NIKE',img:'./assest/img/Nike_Pegasus_Plus.jpg',stock:12,hidden:false},
+        {id:"sp-gcb-2",sku:'SP002',name:'Giày Chạy Bộ Nam Nike React Infinity Run 4 - Đen',category:['Giày Chạy Bộ','Giày Nam'],priceCurrent:3000000,company:'NIKE',img:'./assest/img/Nike_Reactx_Infinity_Run4.jpg',stock:8,hidden:false},
+        {id:"sp-gcb-3",sku:'SP003',name:'Giày Chạy Bộ Nữ Under Armour Halo Runner',category:['Giày Chạy Bộ','Giày Nữ'],priceCurrent:2000000,company:'UNDER ARMOUR',img:'./assest/img/Under_Armour_Halo_Runner.jpg',stock:10,hidden:false},
+        {id:"sp-gcb-4",sku:'SP004',name:'Giày Chạy Bộ Nam Puma Deviate Nitro 3 - Xanh Lá',category:['Giày Chạy Bộ','Giày Nam'],priceCurrent:5000000,company:'PUMA',img:'./assest/img/Puma_Deviate_Nitro3.jpg',stock:7,hidden:false},
+        {id:"sp-gcb-5",sku:'SP005',name:'Giày Chạy Bộ Nam HOKA Bondi 9 Wide - Nâu',category:['Giày Chạy Bộ','Giày Nam'],priceCurrent:4000000,company:'HOKA',img:'./assest/img/Hoka_Bondi_9_Wide.jpg',stock:5,hidden:false},
+        {id:"sp-gcb-6",sku:'SP006',name:'Giày Chạy Bộ Nữ Asics Gel-Kayano 32 Lite-Show - Xanh Lá', category:['Giày Chạy Bộ','Giày Nữ'],priceCurrent:1000000,company:'ASICS', img:'./assest/img/Asics_Gel-Kayano_32_Lite-Show.jpg', stock:6,hidden:false},
+        {id:"sp-gcb-7",sku:'SP007',name:'Giày Chạy Bộ Nữ On Running Cloudsurfer Max - Xanh Dương', category:['Giày Chạy Bộ','Giày Nữ'],  priceCurrent:2000000, company:'ON RUNNING', img:'./assest/img/On_Running_Cloudsurfer_Max.jpg', stock:8,hidden:false},
+        {id:"sp-gcb-8",sku:'SP008',name:'Giày Chạy Bộ Nữ Nike Journey Run - Trắng', category:['Giày Chạy Bộ','Giày Nữ'],  priceCurrent:400000, company:'NIKE', img:'./assest/img/Nike_Journey_Run.jpg', stock:9,hidden:false},
+        {id:"sp-gcb-9",sku:'SP009',name:'Giày Chạy Bộ Nữ Nike Structure 26 - Xanh Lá', category:['Giày Chạy Bộ','Giày Nữ'],  priceCurrent:4000000,company:'NIKE',  img:'./assest/img/Nike_Structure_26.jpg', stock:4,hidden:false},
+        {id:"sp-gcb-10",sku:'SP010',name:'Giày Chạy Bộ Nam Nike Zoom Fly 6 - Cam', category:['Giày Chạy Bộ','Giày Nam'], priceCurrent:3000000,  company:'NIKE', img:'./assest/img/Nike_Zoom_Fly_6.jpg', stock:7,hidden:false},
+        {id:"sp-gbd-1",sku:'SP011',name:'Giày Đá Bóng Nam Nike Legend 10 Academy - Xanh Dương', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:3000000,   company:'NIKE',img:'./assest/img/Nike_Legend_10_Academy.jpg', stock:10,hidden:false},
+        {id:"sp-gbd-2",sku:'SP012',name:'Giày Đá Bóng Nam Nike Phantom Luna li Academy - Xanh Dương', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:3000000,  company:'NIKE',img:'./assest/img/Nike_Phantom_Lunali_Academy.jpg', stock:9,hidden:false},
+        {id:"sp-gbd-3",sku:'SP013',name:'Giày Đá Bóng Nam Adidas Samba Messi - Trắng', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:4000000,   company:'ADIDAS',img:'./assest/img/Adidas_Samba_Messi.jpg', stock:8,hidden:false},
+        {id:"sp-gbd-4",sku:'SP014',name:'Giày Đá Bóng Nam Adidas F50 Elite - Tím', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:4000000,  company:'ADIDAS',img:'./assest/img/Adidas_F50_Elite.jpg', stock:6,hidden:false},
+        {id:"sp-gbd-5",sku:'SP015',name:'Giày Đá Bóng Nam Puma King Match Tt - Trắng', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:4000000,  company:'PUMA', img:'./assest/img/Puma_King_Match_Tt.jpg', stock:7,hidden:false},
+        {id:"sp-gbd-6",sku:'SP016',name:'Giày Đá Bóng Nam Adidas Predator Club - Đen', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:1000000, company:'ADIDAS', img:'./assest/img/Adidas_Predator_Club.jpg', stock:6,hidden:false},
+        {id:"sp-gbd-7",sku:'SP017',name:'Giày Đá Bóng Nam Adidas Samba Inter Milan - Trắng', category:['Giày Đá Bóng','Giày Nam'], priceCurrent:1000000,  company:'ADIDAS', img:'./assest/img/Adidas_Samba_Inter_Milan.jpg', stock:5,hidden:false},
+        {id:"sp-gbd-8",sku:'SP018',name:'Giày Đá Bóng Nam Nike Mercurial Vapor 16 Academy Kylian Mbappé - Vàng', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:1000000, company:'NIKE', img:'./assest/img/Nike_Mercurial_Vapol_16_Academy.jpg', stock:8,hidden:false},
+        {id:"sp-gbd-9",sku:'SP019',name:'Giày Đá Bóng Nam Nike Zoom Vapor 16 Academy Tf - Đỏ', category:['Giày Đá Bóng','Giày Nam'],priceCurrent:1000000,  company:'NIKE',  img:'./assest/img/Nike_Zoom_Vapor_16_Academy_Tf.jpg', stock:9,hidden:false},
+        {id:"sp-gbd-10",sku:'SP020',name:'Giày Đá Bóng Nam Puma Ultra 6 Play Tt - Cam', category:['Giày Đá Bóng','Giày Nam'],  priceCurrent:4000000, company:'PUMA', img:'./assest/img/Puma_Ultra_6_Play_Tt.jpg', stock:7,hidden:false},
+        {id:"sp-gsnk-1",sku:'SP021',name:'Giày Sneaker Nữ On Running Cloudtilt - Xám', category:['Giày Sneaker','Giày Nữ'], priceCurrent:4000000, company:'ON RUNNING',  img:'./assest/img/On_Running_Cloudtilt.jpg', stock:8,hidden:false},
+        {id:"sp-gsnk-2",sku:'SP022',name:'Giày Sneaker Nữ Adidas Tekwen - Đen', category:['Giày Sneaker','Giày Nữ'],priceCurrent:500000,   company:'ADIDAS', img:'./assest/img/Adidas_Tekwen.jpg', stock:6,hidden:false},
+        {id:"sp-gsnk-3",sku:'SP023',name:'Giày Sneaker Nữ Under Armour Shift', category:['Giày Sneaker','Giày Nữ'], priceCurrent:500000,   company:'UNDER ARMOUR',img:'./assest/img/Under_Armour_Shift.jpg', stock:5,hidden:false},
+        {id:"sp-gsnk-4",sku:'SP024',name:'Giày Sneaker Nữ Asics Gel-1130 - Be', category:['Giày Sneaker','Giày Nữ'], priceCurrent:500000,  company:'ASICS', img:'./assest/img/Asics_Gel-1130.jpg', stock:7,hidden:false},
+        {id:"sp-gsnk-5",sku:'SP025',name:'Giày Sneaker Nữ Nike Air Force 1 07 - Trắng', category:['Giày Sneaker','Giày Nữ'],  priceCurrent:500000, company:'NIKE', img:'./assest/img/Nike_Air_Force.jpg', stock:8,hidden:false},
+        {id:"sp-gsnk-6",sku:'SP026',name:'Giày Sneaker Nam Asics Jog 100S - Đen', category:['Giày Sneaker','Giày Nam'], priceCurrent:6000000,  company:'ASICS', img:'./assest/img/Asics_Jog_100S.jpg', stock:6,hidden:false},
+        {id:"sp-gsnk-7",sku:'SP027',name:'Giày Sneaker Nam Asics Japan S - Trắng', category:['Giày Sneaker','Giày Nam'],priceCurrent:4000000,   company:'ASICS', img:'./assest/img/Asics_Japan_S.jpg', stock:5,hidden:false},
+        {id:"sp-gsnk-8",sku:'SP028',name:'Giày Sneaker Nam Nike V2K Run - Đen', category:['Giày Sneaker','Giày Nam'], priceCurrent:3400000,  company:'NIKE', img:'./assest/img/Nike_V2K_Run.jpg', stock:7,hidden:false},
+        {id:"sp-gsnk-9",sku:'SP029',name:'Giày Sneaker Nam Nike Big Low - Trắng', category:['Giày Sneaker','Giày Nam'],priceCurrent:3400000,   company:'NIKE', img:'./assest/img/Nike_Big_Low.jpg', stock:8,hidden:false},
+        {id:"sp-gsnk-10",sku:'SP030',name:'Giày Sneaker Nam Adidas Grand Court 2.0 - Be', category:['Giày Sneaker','Giày Nam'], priceCurrent:3400000,   company:'ADIDAS',img:'./assest/img/Adidas_Grand_Court_2.jpg', stock:6,hidden:false}
       ];
 
       write('products', sampleProducts);
@@ -304,7 +304,6 @@ function ensureSampleCategories() {
     const sampleCats = Array.from(cats).map(name => ({id:uid('cat'),name, profitPercent:0}));
     write('categories', sampleCats);
 
-    // Render option filter
     const categorySelect = document.getElementById('filter-category');
     if(categorySelect){
         categorySelect.innerHTML = '<option value="">--Tất cả danh mục--</option>';
@@ -347,7 +346,6 @@ function renderProducts(filter='', catFilter='', showHidden=true){
             <td>${Array.isArray(p.category)?p.category.join(', '):p.category}</td>
             <td>
                 <div style="color:#e53935;font-weight:bold;">${formatVND(p.priceCurrent)}</div>
-                ${p.priceOld?`<div style="text-decoration:line-through;color:#888;font-size:0.9em;">${formatVND(p.priceOld)}</div>`:''}
             </td>
             <td>${p.stock||0}</td>
             <td>${p.company||''}</td>
@@ -366,7 +364,6 @@ document.getElementById('add-product')?.addEventListener('click', ()=>{
     const sku = prompt('Mã SKU:'); if(!sku) return;
     const name = prompt('Tên sản phẩm:'); if(!name) return;
     const priceCurrent = prompt('Giá hiện tại:'); 
-    const priceOld = prompt('Giá cũ:'); 
     const company = prompt('Thương hiệu:'); 
     const img = prompt('Link ảnh:'); 
     const category = prompt('Danh mục (ngăn cách dấu ,):');
@@ -376,7 +373,6 @@ document.getElementById('add-product')?.addEventListener('click', ()=>{
         sku,
         name,
         priceCurrent: priceCurrent||'0',
-        priceOld: priceOld||'',
         company,
         img,
         category: category ? category.split(',').map(x=>x.trim()) : [],
@@ -398,7 +394,6 @@ window.editProduct = function(id){
     const sku = prompt('Mã SKU:', p.sku); if(sku!=null) p.sku = sku;
     const name = prompt('Tên sản phẩm:', p.name); if(name!=null) p.name = name;
     const priceCurrent = prompt('Giá hiện tại:', p.priceCurrent); if(priceCurrent!=null) p.priceCurrent = priceCurrent;
-    const priceOld = prompt('Giá cũ:', p.priceOld); if(priceOld!=null) p.priceOld = priceOld;
     const company = prompt('Thương hiệu:', p.company); if(company!=null) p.company = company;
     const img = prompt('Link ảnh:', p.img); if(img!=null) p.img = img;
     const category = prompt('Danh mục (ngăn cách dấu ,):', Array.isArray(p.category)?p.category.join(', '):p.category);
@@ -728,7 +723,6 @@ function calcSellingPrice(cost, profitPercent){
 function getProductCostFallback(p){
   if(p == null) return 0;
   if(p.cost != null && p.cost !== '') return Number(p.cost);
-  if(p.priceOld != null && p.priceOld !== '') return Number(p.priceOld);
   if(p.priceCurrent != null && p.priceCurrent !== '') return Number(p.priceCurrent);
   return 0;
 }

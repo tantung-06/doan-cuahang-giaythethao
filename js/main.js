@@ -245,7 +245,6 @@ function showHome(e) {
     homeLink.classList.add('active');
     productLink.classList.remove('active');
 
-    // --- Reset lọc sản phẩm ---
     const productLists = document.querySelectorAll('.product-list');
     productLists.forEach(p => {
         p.style.display = 'block';
@@ -255,14 +254,11 @@ function showHome(e) {
     const noProductDiv = document.querySelector('.container-right .no-product');
     if (noProductDiv) noProductDiv.style.display = 'none';
     
-    // Reset tất cả checkbox
     document.querySelectorAll('.category input[type="checkbox"], .category input[type="radio"]').forEach(i => i.checked = false);
     
-    // Reset search input
     const searchInput = document.getElementById('basic-search');
     if (searchInput) searchInput.value = '';
 
-    // Reset phân trang
     if (typeof window.resetPagination === 'function') {
         setTimeout(() => {
             window.resetPagination();

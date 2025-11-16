@@ -581,11 +581,6 @@ header {
     padding-bottom: 10px;
 }
 
-.price-old {
-    color: rgba(0, 0, 0, 0.5);
-    text-decoration: line-through;
-}
-
 .price-current {
     color: red;
 }
