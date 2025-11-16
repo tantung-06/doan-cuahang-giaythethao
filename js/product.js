@@ -45,7 +45,6 @@ function renderProductsUser() {
         <h4 class="product-name">${product.name}</h4>
         <p class="product-company">${product.company}</p>
         <div class="price">
-          <span class="price-old" data-value="${product.priceOld}">${formatVND(product.priceOld)}</span>
           <span class="price-current" data-value="${product.priceCurrent}">${formatVND(product.priceCurrent)}</span>
         </div>
       </div>
@@ -66,7 +65,6 @@ function renderProductsUser() {
           <h4 class="product-name">${product.name}</h4>
           <div class="price">
             <span class="price-current" data-value="${product.priceCurrent}">${formatVND(product.priceCurrent)}</span>
-            <span class="price-old" data-value="${product.priceOld}">${formatVND(product.priceOld)}</span>
           </div>
           <div class="product-size">
             <label>Kích thước:</label>
