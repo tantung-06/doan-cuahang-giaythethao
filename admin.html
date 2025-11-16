@@ -93,7 +93,6 @@
         <div class="controls">
           <input id="product-search" placeholder="Tìm theo tên hoặc mã">
           <select id="filter-category"><option value="">Tất cả danh mục</option></select>
-          <!-- <button id="import-sample" class="btn">Import mẫu</button> -->
           <button id="add-product" class="btn primary">Thêm sản phẩm</button>
         </div>
         <div id="products-wrap">
@@ -119,6 +118,26 @@
         <div class="controls">
           <button id="add-import" class="btn primary">Tạo phiếu nhập mới</button>
         </div>
+        <div id="import-form" class="card hidden" style="margin-top:20px;">
+          <h3>Tạo phiếu nhập mới</h3>
+
+          <label for="import-product">Chọn sản phẩm</label>
+          <select id="import-product"></select>
+
+          <label for="import-qty">Số lượng nhập</label>
+          <input type="number" id="import-qty" min="1" placeholder="Nhập số lượng">
+
+          <label for="import-status">Trạng thái phiếu</label>
+          <select id="import-status">
+            <option value="pending">Chờ duyệt</option>
+            <option value="done">Đã nhập</option>
+          </select>
+
+          <div style="margin-top:10px;">
+            <button id="btn-save-import" class="btn primary">Lưu phiếu nhập</button>
+            <button id="btn-cancel-import" class="btn">Hủy</button>
+          </div>
+        </div>
         <table>
           <thead>
             <tr><th>#</th><th>Ngày</th><th>Sản phẩm</th><th>Tổng SL</th><th>Trạng thái</th><th>Hành động</th><th>Thao tác</th></tr>
@@ -134,13 +153,13 @@
             <option value="">Tất cả</option>
             <option value="new">Mới</option>
             <option value="processing">Đang xử lý</option>
-            <option value="shipped">Đã giao</option>
-            <option value="cancelled">Hủy</option>
+            <option value="done">Đã giao</option>
+            <option value="cancel">Hủy</option>
           </select>
         </div>
         <table>
           <thead>
-            <tr><th>#</th><th>Ngày</th><th>Khách hàng</th><th>TT</th><th>Tổng</th><th>Hành động</th></tr>
+            <tr><th>#</th><th>Ngày</th><th>Khách hàng</th><th>Trạng thái</th><th>Tổng</th><th>Hành động</th></tr>
           </thead>
           <tbody id="orders-table"></tbody>
         </table>
@@ -164,36 +183,27 @@
         </div>
       </section>
 
-      <section id="inventory" class="card section hidden">
-        <h3>Tồn kho & cảnh báo</h3>
+      <section id="inventory" class="card section">
+        <h3>Tồn kho</h3>
+
         <div class="controls" style="display:flex;gap:12px;flex-wrap:wrap">
-          <!-- Chọn sản phẩm -->
-          <div>
-            <label>Sản phẩm:</label>
-            <select id="inventory-product">
-              <option value="">Tất cả sản phẩm</option>
-            </select>
-          </div>
+            <!-- Chọn sản phẩm -->
+            <div>
+                <label for="inventory-product">Sản phẩm:</label>
+                <select id="inventory-product">
+                    <option value="">Tất cả sản phẩm</option>
+                </select>
+            </div>
 
-          <!-- Chọn thời gian -->
-          <div>
-            <label>Từ ngày:</label>
-            <input type="date" id="inventory-date-from">
-          </div>
-          <div>
-            <label>Đến ngày:</label>
-            <input type="date" id="inventory-date-to">
-          </div>
-
-          <!-- Ngưỡng cảnh báo -->
-          <div>
-            <label>Ngưỡng cảnh báo:</label>
-            <input type="number" id="stock-threshold" placeholder="Ví dụ 5" min="0">
-          </div>
-
-          <div style="align-self:end">
-            <button id="check-stock" class="btn primary">Kiểm tra</button>
-          </div>
+            <!-- Chọn thời gian -->
+            <div>
+                <label for="inventory-date-from">Từ ngày:</label>
+                <input type="date" id="inventory-date-from">
+            </div>
+            <div>
+                <label for="inventory-date-to">Đến ngày:</label>
+                <input type="date" id="inventory-date-to">
+            </div>
         </div>
 
         <!-- Kết quả tồn kho -->

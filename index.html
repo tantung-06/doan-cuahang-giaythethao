@@ -151,7 +151,11 @@
                     <div class="form-btn">
                         <button id="edit-btn">Sửa</button>
                         <button id="save-btn">Lưu</button>
-                    </div> 
+                    </div>
+                    
+                    <div>
+                        <button id="view-orders-btn">Xem đơn hàng</button>
+                    </div>
 
                     <button id="logout-btn">Đăng xuất</button>
                 </div>
@@ -320,6 +324,64 @@
                     </div>
 
                     <button class="submit-btn">Thanh Toán</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Xem đơn hàng -->
+    <div class="order-history" id="order-history">
+        <div class="order-history-header">
+            <button class="back-btn"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2 class="order-history-header-title">Đơn Hàng Của Tôi</h2>
+        </div>
+        
+        <div class="order-history-container">
+            <div class="order-empty" id="order-empty" style="display: none;">
+                <i class="fa-solid fa-box-open"></i>
+                <p>Bạn chưa có đơn hàng nào</p>
+            </div>
+
+            <div id="order-list">
+                <div class="order-item">
+                    <table class="order-detail-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 150px;">Mã</th>
+                                <th style="width: 350px;">Sản phẩm</th>
+                                <th style="width: 150px;">Giá</th>
+                                <th style="width: 100px;">Số lượng</th>
+                                <th style="width: 150px;">Thành tiền</th>
+                                <th style="width: 130px;">Trạng thái</th>
+                                <th style="width: 150px;">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- <tr>
+                                <td class="order-info-cell">
+                                    <div><span class="order-info-value">DH001234</span></div>
+                                </td>
+                                <td>
+                                    <div class="order-product-name">Giày Chạy Bộ Nam Nike Pegasus Plus - Đen</div>
+                                    <div class="order-product-details">Size: 42</div>
+                                </td>
+                                <td class="order-product-price">3.485.400₫</td>
+                                <td class="order-product-quantity">1</td>
+                                <td class="order-product-price">3.485.400₫</td>
+                                <td>
+                                    <span class="order-status processing">Đang xử lý</span>
+                                    <span class="order-status completed">Hoàn thành</span>
+                                </td>
+                                </td>
+                                <td>
+                                    <div class="order-actions">
+                                        <button class="order-btn order-btn-cancel">Hủy đơn</button>
+                                    </div>
+                                </td>
+                                </div>
+                            </tr> -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

@@ -212,3 +212,132 @@
         updateMiniCart();
         updateCartDetail();
     });
+
+// ========================= XEM LẠI ĐƠN HÀNG =====================
+const viewOrdersBtn = document.getElementById('view-orders-btn');
+if (viewOrdersBtn) {
+    viewOrdersBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        // Ẩn form thông tin khách hàng
+        const customerInfo = document.getElementById('customer-info');
+        customerInfo.classList.remove('active');
+        customerInfo.style.display = 'none';
+
+        // Hiển thị form đơn hàng
+        const orderHistory = document.getElementById('order-history');
+        orderHistory.style.display = 'block';
+        orderHistory.classList.add('active');
+
+        document.body.classList.add('no-scroll');
+
+        // Load đơn hàng từ localStorage
+        loadOrders();
+    });
+}
+
+function loadOrders() {
+    const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+
+    const orderEmpty = document.getElementById('order-empty');
+    const orderList = document.getElementById('order-list');
+
+    orderList.innerHTML = '';
+
+    if (orders.length === 0) {
+        orderEmpty.style.display = 'block';
+        orderList.style.display = 'none';
+        return;
+    } else {
+        orderEmpty.style.display = 'none';
+        orderList.style.display = 'block';
+    }
+
+    const statusMap = {
+        'new': 'Mới',
+        'processing': 'Đang xử lý',
+        'done': 'Đã giao',
+        'cancel': 'Hủy'
+    };
+
+    orders.forEach((order, orderIndex) => {
+        const orderItem = document.createElement('div');
+        orderItem.className = 'order-item';
+
+        let orderTotal = 0;
+        order.items.forEach(item => {
+            orderTotal += item.price * item.qty;
+        });
+
+        let tableHTML = `
+            <table class="order-detail-table">
+                <thead>
+                    <tr>
+                        <th style="width: 150px;">Mã</th>
+                        <th style="width: 350px;">Sản phẩm</th>
+                        <th style="width: 150px;">Giá</th>
+                        <th style="width: 100px;">Số lượng</th>
+                        <th style="width: 150px;">Thành tiền</th>
+                        <th style="width: 130px;">Trạng thái</th>
+                        <th style="width: 150px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        order.items.forEach(item => {
+            const itemTotal = item.price * item.qty;
+            tableHTML += `
+                <tr>
+                    <td class="order-info-cell">${order.id}</td>
+                    <td>
+                        <div class="order-product-name">${item.name}</div>
+                        <div class="order-product-details">Size: ${item.size}</div>
+                    </td>
+                    <td class="order-product-price">${item.price.toLocaleString('vi-VN')}₫</td>
+                    <td class="order-product-quantity">${item.qty}</td>
+                    <td class="order-product-price">${itemTotal.toLocaleString('vi-VN')}₫</td>
+                    <td>
+                        <span class="order-status ${order.status.toLowerCase()}">${statusMap[order.status]}</span>
+                    </td>
+                    <td>
+                        <div class="order-actions">
+                            <button class="order-btn order-btn-cancel" data-index="${orderIndex}">Hủy đơn</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+
+        tableHTML += `
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" style="text-align: right; font-weight: bold;">Tổng đơn:</td>
+                        <td colspan="3" style="font-weight: bold;">${orderTotal.toLocaleString('vi-VN')}₫</td>
+                    </tr>
+                </tfoot>
+            </table>
+        `;
+
+        orderItem.innerHTML = tableHTML;
+        orderList.appendChild(orderItem);
+    });
+
+    // --- Thêm sự kiện cho nút Hủy đơn ---
+    const cancelBtns = document.querySelectorAll('.order-btn-cancel');
+    cancelBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = this.dataset.index;
+            orders[index].status = 'cancel'; 
+            localStorage.setItem('orders', JSON.stringify(orders));
+            loadOrders(); 
+        });
+    });
+}
+
+const orderBackBtn = document.querySelector('#order-history .back-btn');
+orderBackBtn.addEventListener('click', () => {
+    document.getElementById('order-history').style.display = 'none';
+    document.body.classList.remove('no-scroll');
+});

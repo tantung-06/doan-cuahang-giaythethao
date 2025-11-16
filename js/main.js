@@ -229,14 +229,6 @@ window.onload = () => {
     }
 };
 
-// // ================== MENU MOBILE ==================
-// const navBars = document.querySelector('.nav_bars a');
-// const nav = document.querySelector('.nav');
-// navBars.onclick = e => {
-//     e.preventDefault();
-//     nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
-// };
-
 // ================== HEADER NAV ==================
 const homeLink = document.getElementById('home-link');
 const productLink = document.getElementById('product-link');

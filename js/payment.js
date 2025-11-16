@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!name || !phone || !detail) return alert('Vui lòng điền đầy đủ họ tên, số điện thoại và địa chỉ!');
       const newAddress = { name, phone, email, address: detail, note };
-      saveAddress(newAddress); // Lưu vào localStorage
+      saveAddress(newAddress);
     }
 
     // ===== TẠO ĐƠN HÀNG CHO ADMIN =====
@@ -223,6 +223,44 @@ document.addEventListener('DOMContentLoaded', () => {
       localStorage.setItem('address_' + user.email, JSON.stringify(addressData));
     }
 
+    // ===== CẬP NHẬT TỒN KHO =====
+  const products = JSON.parse(localStorage.getItem('products')) || [];
+  let stockError = false;
+  
+  // Kiểm tra tồn kho trước
+  for (const orderItem of orderItems) {
+    // Tìm sản phẩm theo TÊN chính xác
+    const product = products.find(p => p.name === orderItem.name);
+    
+    if (product) {
+      const currentStock = parseInt(product.stock) || 0;
+      if (currentStock < orderItem.qty) {
+        alert(`Sản phẩm "${orderItem.name}" chỉ còn ${currentStock} sản phẩm trong kho!`);
+        stockError = true;
+        break;
+      }
+    } else {
+      console.warn(`Không tìm thấy sản phẩm trong kho: ${orderItem.name}`);
+    }
+  }
+  
+  if (stockError) return;
+  
+  // Trừ tồn kho
+  for (const orderItem of orderItems) {
+    // Tìm sản phẩm theo TÊN chính xác
+    const product = products.find(p => p.name === orderItem.name);
+    
+    if (product) {
+      const oldStock = parseInt(product.stock) || 0;
+      product.stock = Math.max(0, oldStock - orderItem.qty);
+      console.log(`Cập nhật tồn kho: ${product.name} từ ${oldStock} xuống ${product.stock}`);
+    }
+  }
+  
+  // Lưu lại products với stock đã cập nhật
+  localStorage.setItem('products', JSON.stringify(products));
+
     const orders = JSON.parse(localStorage.getItem('orders')) || [];
     orders.push({
       id: orderId,
@@ -232,11 +270,10 @@ document.addEventListener('DOMContentLoaded', () => {
       items: orderItems,
       total: totalAmount,
       status: 'new',
-      address: addressData  // Lưu địa chỉ vào đơn hàng
+      address: addressData 
     });
     localStorage.setItem('orders', JSON.stringify(orders));
 
-    // ===============================================
 
     saveCart([]); // Xóa giỏ hàng
     if (typeof updateMiniCart === 'function') updateMiniCart();

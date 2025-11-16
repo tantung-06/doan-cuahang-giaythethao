@@ -1,7 +1,7 @@
-// === Thông tin đăng nhập Admin ===
+// ====================== THÔNG TIN ĐĂNG NHẬP ADMIN ===================================
 const ADMIN_CRED = { user: 'admin', pass: '123' };
 
-// === Xử lý đăng nhập (yêu cầu mỗi lần mở) ===
+// === Xử lý đăng nhập ===
 const loginScreen = document.getElementById('login-screen')
 const adminApp = document.getElementById('admin-app')
 document.getElementById('login-btn').addEventListener('click', attemptLogin)
@@ -78,7 +78,7 @@ function renderStats(){
   document.getElementById('stat-orders').innerText = read('orders').length
 }
 
-// ===== QUẢN LÝ NGƯỜI DÙNG =====
+// =================================== QUẢN LÝ NGƯỜI DÙNG ========================================
 // Hiển thị danh sách người dùng
 function renderUsers(filter=''){
   const tbody=document.getElementById('users-table'); 
@@ -177,9 +177,8 @@ document.getElementById('add-user').addEventListener('click',()=>{
 
 // Tìm kiếm người dùng
 document.getElementById('user-search').addEventListener('input',e=>renderUsers(e.target.value.toLowerCase()))
-// =======================================================================================================
 
-// ===== QUẢN LÝ DANH MỤC =====
+// ==================================== QUẢN LÝ DANH MỤC ===============================================
 // Hiển thị danh sách danh mục
 function renderCategories(){
     const list=document.getElementById('category-list');
@@ -240,9 +239,8 @@ document.getElementById('add-category').addEventListener('click',()=>{
   document.getElementById('category-name').value='';
   renderCategories()
 })
-// ==============================================================================================
 
-// ===== QUẢN LÝ SẢN PHẨM =====
+// ================================== QUẢN LÝ SẢN PHẨM ==========================================
 let productsCache = [];
 
 // --- Đọc / Ghi localStorage ---
@@ -439,157 +437,187 @@ categorySelect?.addEventListener('change', ()=>renderProducts(searchInput.value.
 ensureSampleProducts();
 ensureSampleCategories();
 renderProducts('', '', true);
-// =======================================================================================================
-// ===== QUẢN LÝ PHIẾU NHẬP HÀNG =====
+
+/// ================================ QUẢN LÝ PHIẾU NHẬP =================================================
+function read(key) {
+  return JSON.parse(localStorage.getItem(key) || '[]');
+}
+function write(key, data) {
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+// Tạo mã phiếu tự động
+function generateImportID() {
+  return "IMP" + Date.now();
+}
+
 // Hiển thị danh sách phiếu nhập
-function renderImports(){
-    const tbody = document.getElementById('imports-table');
-    tbody.innerHTML = '';
+function renderImports() {
+  const tbody = document.getElementById("imports-table");
+  const imports = read("imports");
+  tbody.innerHTML = "";
 
-    const imports = read('imports') || [];
-
-    imports.forEach((imp, i) => {
-        const totalQty = imp.items.reduce((s, it) => s + it.qty, 0);
-        const totalCost = imp.items.reduce((s, it) => s + it.qty * it.cost, 0);
-
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td>${i + 1}</td>
-            <td>${imp.date}</td>
-            <td>${imp.items.length} sp</td>
-            <td>${totalQty}</td>
-            <td>${formatVND(totalCost)}</td>
-            <td>${imp.status}</td>
-            <td>
-                <button class="btn" onclick="viewImport('${imp.id}')">Xem</button>
-                ${imp.status === 'pending' ? `<button class="btn" onclick="completeImport('${imp.id}')">Hoàn thành</button>` : ''}
-            </td>
-        `;
-        tbody.appendChild(tr);
-    });
+  imports.forEach((imp, index) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${index + 1}</td>
+      <td>${imp.date}</td>
+      <td>${imp.items.length} SP</td>
+      <td>${imp.totalQty}</td>
+      <td>${imp.status}</td>
+      <td><button class="btn small" onclick="viewImport('${imp.id}')">Xem</button></td>
+      <td><button class="btn small danger" onclick="deleteImport('${imp.id}')">X</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
 }
 
 // Xem chi tiết phiếu nhập
-window.viewImport = function(id){
-    const imports = read('imports') || [];
-    const imp = imports.find(x => x.id === id);
-    if(!imp) return alert('Không tìm thấy phiếu nhập!');
+function viewImport(id) {
+  const imports = read("imports");
+  const imp = imports.find(i => i.id === id);
+  if (!imp) return;
 
-    let content = `Phiếu nhập: ${imp.id}\nNgày: ${imp.date}\nTrạng thái: ${imp.status}\n\nSản phẩm:\n`;
-    imp.items.forEach((item, i) => {
-        const product = read('products').find(p => p.id === item.productId);
-        content += `${i+1}. ${product?.name || item.productId} | Số lượng: ${item.qty} | Giá nhập: ${formatVND(item.cost)} | Thành tiền: ${formatVND(item.qty * item.cost)}\n`;
-    });
-    const totalCost = imp.items.reduce((s, it) => s + it.qty * it.cost, 0);
-    content += `\nTổng tiền nhập: ${formatVND(totalCost)}`;
-
-    alert(content);
+  let text = `PHIẾU NHẬP: ${id}\nNgày: ${imp.date}\n\nSẢN PHẨM:\n`;
+  imp.items.forEach(item => {
+    text += `- ${item.name}: SL ${item.qty}\n`;
+  });
+  alert(text);
 }
 
-// --- Hoàn thành phiếu nhập (cộng số lượng vào kho) ---
-window.completeImport = function(id){
-    const imports = read('imports') || [];
-    const imp = imports.find(x => x.id === id);
-    if(!imp || imp.status === 'completed') return;
-
-    const products = read('products') || [];
-
-    // Cộng số lượng vào stock
-    imp.items.forEach(it => {
-        const p = products.find(pr => pr.id === it.productId);
-        if(p) p.stock = (p.stock || 0) + it.qty;
-    });
-
-    // Lưu lại sản phẩm
-    write('products', products);
-
-    // Đồng bộ lại cache để render đúng
-    productsCache = products.map(p => ({...p, hidden: p.hidden || false}));
-
-    // Render lại danh sách sản phẩm
-    renderProducts(searchInput.value.trim(), categorySelect.value, true);
-    renderStats();
-
-    // Đánh dấu phiếu hoàn thành
-    imp.status = 'completed';
-    write('imports', imports);
-
-    // Render lại tất cả
-    renderImports();
-    renderProducts(searchInput.value.trim(), categorySelect.value, true);
-    renderStats();
+// Xóa phiếu nhập
+function deleteImport(id) {
+  let imports = read("imports");
+  imports = imports.filter(i => i.id !== id);
+  write("imports", imports);
+  renderImports();
+  alert("Đã xóa phiếu nhập");
 }
 
-// Tạo phiếu nhập mới (có thể nhập nhiều sản phẩm)
-document.getElementById('add-import').addEventListener('click', () => {
-    const products = read('products') || [];
-    if(!products.length){
-        alert('Chưa có sản phẩm nào trong kho');
-        return;
-    }
+// ==== TẠO PHIẾU NHẬP ============
+const addImportBtn = document.getElementById("add-import");
+const importForm = document.getElementById("import-form");
+const importProduct = document.getElementById("import-product");
+const importQty = document.getElementById("import-qty");
+const importStatus = document.getElementById("import-status");
+const btnSaveImport = document.getElementById("btn-save-import");
+const btnCancelImport = document.getElementById("btn-cancel-import");
 
-    let items = [];
-    while(true){
-        const pid = prompt('Nhập ID sản phẩm (để trống sẽ dùng sản phẩm đầu tiên, nhập "x" để kết thúc)') || products[0].id;
-        if(pid.toLowerCase() === 'x') break;
+// Điền danh sách sản phẩm vào select
+function loadProductsToSelect() {
+  const products = read("products");
+  importProduct.innerHTML = products.map(p => `<option value="${p.id}">${p.name}</option>`).join("");
+}
 
-        const qty = Number(prompt('Nhập số lượng', 10));
-        const cost = Number(prompt('Nhập giá nhập (VND) cho 1 đơn vị', 100000));
+// Hiển thị / ẩn form ngay dưới nút
+addImportBtn.onclick = () => {
+  importForm.classList.toggle("hidden");
+  loadProductsToSelect();
+};
 
-        if(!pid || !qty || !cost){
-            alert('Thông tin sản phẩm không hợp lệ, thử lại');
-            continue;
-        }
+// Hủy phiếu nhập
+btnCancelImport.onclick = () => {
+  importForm.classList.add("hidden");
+  importQty.value = 1;
+};
 
-        items.push({ productId: pid, qty, cost });
-        const more = confirm('Thêm sản phẩm khác vào phiếu nhập?');
-        if(!more) break;
-    }
+// Lưu phiếu nhập
+btnSaveImport.onclick = () => {
+  const date = new Date().toISOString().split("T")[0];
+  const productId = importProduct.value;
+  const qty = Number(importQty.value);
+  const status = importStatus.value;
 
-    if(!items.length) return alert('Không có sản phẩm nào được thêm vào phiếu nhập!');
+  if (!productId || qty <= 0) {
+    alert("Chọn sản phẩm và nhập số lượng hợp lệ");
+    return;
+  }
 
-    const imports = read('imports') || [];
-    imports.push({
-        id: uid('imp'),
-        date: new Date().toLocaleDateString(),
-        items,
-        status: 'pending'
-    });
-    write('imports', imports);
-    renderImports();
-});
-// =============================================================================================================
-// ===== QUẢN LÝ ĐƠN HÀNG =====
-// Hiển thị danh sách đơn hàng trong bảng
-function renderOrders(filter='') {
+  // Lấy danh sách sản phẩm
+  const products = read("products");
+  const prod = products.find(p => p.id === productId);
+  if (!prod) return;
+
+  // Cập nhật số lượng kho
+  prod.stock = (prod.stock || 0) + qty;
+  write("products", products);
+
+  // **Cập nhật productsCache để đồng bộ dữ liệu**
+  productsCache = products;
+
+  // **Cập nhật giao diện danh sách sản phẩm ngay**
+  const searchInput = document.getElementById('product-search');
+  const categorySelect = document.getElementById('filter-category');
+  if (typeof renderProducts === "function") {
+    renderProducts(
+      searchInput ? searchInput.value.trim() : '', 
+      categorySelect ? categorySelect.value : '', 
+      true
+    );
+  }
+
+  // Tạo phiếu nhập mới
+  const imports = read("imports");
+  imports.push({
+    id: generateImportID(),
+    date,
+    totalQty: qty,
+    status: status === "done" ? "Hoàn tất" : "Chờ duyệt",
+    items: [{ id: prod.id, name: prod.name, qty }]
+  });
+  write("imports", imports);
+
+  // Render lại danh sách phiếu nhập
+  renderImports();
+
+  // Reset và ẩn form
+  importForm.classList.add("hidden");
+  importQty.value = 1;
+
+  alert("Đã tạo phiếu nhập thành công");
+};
+
+// Khởi tạo danh sách
+renderImports();
+
+// ======================================== QUẢN LÝ ĐƠN HÀNG ==================================================
+const statusMap = {
+  'new': 'Mới',
+  'processing': 'Đang xử lý',
+  'done': 'Đã giao',
+  'cancel': 'Hủy'
+};
+
+// Hiển thị danh sách đơn hàng
+function renderOrders(filter = '') {
   const tbody = document.getElementById('orders-table');
   tbody.innerHTML = '';
 
   const orders = read('orders') || [];
-
-  // Lọc đơn hàng theo trạng thái nếu có
-  orders.filter(o => !filter || o.status === filter).forEach((o, i) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${i+1}</td>
-      <td>${o.date}</td>
-      <td>${o.customerName}</td>
-      <td>${o.status}</td>
-      <td>${formatVND(o.total)}</td>
-      <td>
-        <button class="btn" onclick="viewOrder('${o.id}')">Xem</button> 
-        <button class="btn" onclick="updateOrderStatus('${o.id}')">Cập nhật</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
+  orders
+    .filter(o => !filter || o.status === filter)
+    .forEach((o, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${o.date}</td>
+        <td>${o.customerName}</td>
+        <td>${statusMap[o.status] || o.status}</td>
+        <td>${formatVND(o.total)}</td>
+        <td>
+          <button class="btn" onclick="viewOrder('${o.id}')">Xem</button>
+          <button class="btn" onclick="updateOrderStatus('${o.id}')">Cập nhật</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
 }
 
 // Xem chi tiết đơn hàng
 window.viewOrder = function(id) {
   const orders = read('orders') || [];
   const order = orders.find(o => o.id === id);
-  if(!order) return alert('Không tìm thấy đơn hàng!');
+  if (!order) return alert('Không tìm thấy đơn hàng!');
 
   const address = order.address || {};
   let content = `Đơn hàng: ${order.id}
@@ -599,41 +627,78 @@ Số điện thoại: ${address.phone || 'Chưa cập nhật'}
 Ngày: ${order.date}
 Địa chỉ: ${address.address || 'Chưa cập nhật'}
 Ghi chú: ${address.note || 'Không có'}
-Trạng thái: ${order.status}
+Trạng thái: ${statusMap[order.status] || order.status}
 
 Sản phẩm:\n`;
 
   order.items.forEach((item, i) => {
-    content += `${i+1}. ${item.name} | Size: ${item.size} | Số lượng: ${item.qty} | Giá: ${formatVND(item.price)} | Thành tiền: ${formatVND(item.qty * item.price)}\n`;
+    const itemTotal = item.price * item.qty;
+    content += `${i + 1}. ${item.name} | Size: ${item.size} | Số lượng: ${item.qty} | Giá: ${formatVND(item.price)} | Thành tiền: ${formatVND(itemTotal)}\n`;
   });
 
   content += `\nTổng tiền: ${formatVND(order.total)}`;
-
   alert(content);
 }
 
 // Cập nhật trạng thái đơn hàng
 window.updateOrderStatus = function(id) {
-  const statuses = ['Mới', 'Đang xử lý', 'Đã giao', 'Hủy'];
   const orders = read('orders') || [];
-  const order = orders.find(x => x.id === id);
-  if(!order) return alert('Không tìm thấy đơn hàng!');
+  const order = orders.find(o => o.id === id);
+  if (!order) return alert('Không tìm thấy đơn hàng!');
 
-  const s = prompt('Trạng thái mới (Mới, Đang xử lý, Đã giao, Hủy):', order.status);
-  if(!s || !statuses.includes(s)) return alert('Trạng thái không hợp lệ!');
+  const tbody = document.getElementById('orders-table');
+  const tr = Array.from(tbody.children).find(r => r.children[0].textContent == orders.indexOf(order) + 1);
+  if (!tr) return;
 
-  order.status = s;
-  write('orders', orders);
-  renderOrders();
+  const statusCell = tr.children[3];
+  statusCell.innerHTML = `
+    <select id="status-select">
+      ${Object.entries(statusMap).map(([key, val]) =>
+        `<option value="${key}" ${key === order.status ? 'selected' : ''}>${val}</option>`
+      ).join('')}
+    </select>
+    <button onclick="saveOrderStatus('${id}')">Lưu</button>
+  `;
 }
 
-// Lọc đơn hàng theo trạng thái
-document.getElementById('order-filter').addEventListener('change', e => renderOrders(e.target.value));
+// Lưu trạng thái đơn hàng
+window.saveOrderStatus = function(id) {
+  const select = document.getElementById('status-select');
+  if (!select) return;
 
-// Hiển thị lần đầu
-renderOrders();
-// ========================================================================================
-// ==== QUẢN LÝ GIÁ BÁN VÀ LỢI NHUẬN ====
+  const orders = read('orders') || [];
+  const order = orders.find(o => o.id === id);
+  if (!order) return;
+
+  order.status = select.value;
+  write('orders', orders);
+  renderOrders(document.getElementById('order-filter').value);
+}
+
+// Gắn sự kiện lọc khi trang load xong
+document.addEventListener('DOMContentLoaded', () => {
+  renderOrders();
+
+  const orderFilter = document.getElementById('order-filter');
+  orderFilter.addEventListener('change', () => {
+    renderOrders(orderFilter.value);
+  });
+});
+
+// Hàm reload dữ liệu products từ localStorage
+function reloadProducts() {
+    productsCache = read('products').map(p => ({...p, hidden: p.hidden || false}));
+    renderProducts(searchInput?.value?.trim() || '', categorySelect?.value || '', true);
+}
+
+// Tự động reload khi localStorage thay đổi
+window.addEventListener('storage', (e) => {
+    if (e.key === 'products') {
+        reloadProducts();
+    }
+});
+
+// ============================== QUẢN LÝ GIÁ BÁN VÀ LỢI NHUẬN =======================================
 function getCategoryProfitList(){ return read('categoryProfit') || []; }
 function saveCategoryProfitList(list){ write('categoryProfit', list); }
 function getProductProfitList(){ return read('productProfit') || []; }
@@ -879,37 +944,53 @@ window.addEventListener('load', ()=> {
   setTimeout(()=> { try{ initPricingModule(); }catch(e){ /* ignore */ } }, 50);
 });
 
-// ==============================================================================================
-// ===== QUẢN LÝ TỒN KHO =====
-document.getElementById('check-stock').addEventListener('click', () => {
-    const th = Number(document.getElementById('stock-threshold').value) || 5; // Ngưỡng cảnh báo
+// ================================= QUẢN LÝ TỒN KHO ====================================================
+function renderInventory() {
     const products = read('products');
-    const low = products.filter(p => (p.stock || 0) <= th); // Dùng stock
+    const selectedProduct = document.getElementById('inventory-product').value;
+
+    // Lọc theo sản phẩm nếu chọn
+    let filtered = selectedProduct ? products.filter(p => p.id === selectedProduct) : products.slice();
+
+    // Sắp xếp: sản phẩm hết hàng (stock=0) lên đầu
+    filtered.sort((a, b) => (b.stock === 0 ? 1 : 0) - (a.stock === 0 ? 1 : 0));
 
     const wrap = document.getElementById('inventory-result');
     wrap.innerHTML = '';
 
-    if (!low.length) {
-        wrap.innerHTML = '<div class="small">Không có sản phẩm sắp hết</div>';
+    if (!filtered.length) {
+        wrap.innerHTML = '<div class="small">Không có sản phẩm nào</div>';
     } else {
         const ul = document.createElement('ul');
-        low.forEach(p => {
+        ul.style.listStyle = 'none';
+        ul.style.padding = '0';
+
+        filtered.forEach(p => {
             const li = document.createElement('li');
+            li.style.marginBottom = '6px';
+            li.style.padding = '6px';
+            li.style.border = '1px solid #ddd';
+            li.style.borderRadius = '4px';
+            li.style.display = 'flex';
+            li.style.justifyContent = 'space-between';
+            li.style.alignItems = 'center';
+
+            // Nếu stock = 0 thì màu đỏ
+            if(p.stock === 0) li.style.backgroundColor = '#ffe6e6';
+
             li.innerHTML = `
-                ${p.name} - Tồn: ${p.stock || 0} 
+                <span>${p.name} - Tồn: ${p.stock}</span>
                 <button class="btn" onclick="goToProduct('${p.id}')">Mở</button>
             `;
             ul.appendChild(li);
         });
         wrap.appendChild(ul);
     }
-});
+}
 
 // Chuyển đến sản phẩm trong bảng và highlight
 window.goToProduct = function(id){
-    // Chuyển sang tab sản phẩm
     document.querySelector('[data-section="products"]').click();
-
     setTimeout(() => {
         const tr = Array.from(document.querySelectorAll('#products-table tr'))
                         .find(row => row.querySelector(`button[onclick*="${id}"]`));
@@ -920,9 +1001,24 @@ window.goToProduct = function(id){
         }
     }, 200);
 }
-// =================================================================================================
 
-// ===== ĐỒNG BỘ & RESET =====
+// Khi load trang hoặc đổi sản phẩm trong select
+document.addEventListener('DOMContentLoaded', () => {
+    renderInventory();
+    
+    const inventorySelect = document.getElementById('inventory-product');
+    if(inventorySelect) {
+        inventorySelect.addEventListener('change', renderInventory);
+    }
+});
+
+setInterval(() => {
+    if(document.getElementById('inventory-result')) {
+        renderInventory();
+    }
+}, 1000);
+
+// ===================================== ĐỒNG BỘ & RESET =============================================
 // Đồng bộ dữ liệu cho phần khách hàng
 document.getElementById('sync-to-customer').addEventListener('click',()=>{
   alert('Dữ liệu đã sẵn sàng để phần khách hàng đọc từ localStorage (keys: products, users, orders)')
