@@ -94,6 +94,14 @@ header {
 }
 
 /* đăng nhập, đăng ký, giỏ hàng */
+.err {
+    color: red;
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 3px;
+    margin-left: 2px;
+}
+
 
 .action ul {
     align-items: center;

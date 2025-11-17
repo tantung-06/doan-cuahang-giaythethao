@@ -207,86 +207,87 @@
       </section>
 
     <section id="pricing" class="card section hidden">
-  <h2>Quản lý Giá & Lợi nhuận</h2>
-  <p class="small">Điều chỉnh % lợi nhuận theo danh mục hoặc từng sản phẩm. Giá bán và giảm giá được cập nhật tự động.</p>
+      <h2>Quản lý Giá & Lợi nhuận</h2>
+      <p class="small">Điều chỉnh % lợi nhuận theo danh mục hoặc từng sản phẩm. Giá bán và giảm giá được cập nhật tự động.</p>
 
-  <!-- =================== Form quản lý -->
-  <div class="form-container">
-    <div class="form-box">
-      <h3>Lợi nhuận theo danh mục</h3>
-      <div class="form-group">
-        <label for="profit-category">Danh mục:</label>
-        <select id="profit-category"></select>
-      </div>
-      <div class="form-group">
-        <label for="profit-percent">% Lợi nhuận:</label>
-        <input type="number" id="profit-percent" min="0" max="100"> 
-      </div>
-      <button id="apply-profit">Áp dụng theo danh mục</button>
-    </div>
+      <!-- =================== Form quản lý -->
+      <div class="form-container">
+        <div class="form-box">
+          <h3>Lợi nhuận theo danh mục</h3>
+          <div class="form-group">
+            <label for="profit-category">Danh mục:</label>
+            <select id="profit-category"></select>
+          </div>
+          <div class="form-group">
+            <label for="profit-percent">% Lợi nhuận:</label>
+            <input type="number" id="profit-percent" min="0" max="100"> 
+          </div>
+          <button id="apply-profit">Áp dụng theo danh mục</button>
+        </div>
 
-    <div class="form-box">
-      <h3>Lợi nhuận theo sản phẩm</h3>
-      <div class="form-group">
-        <label for="product-price-select">Sản phẩm:</label>
-        <select id="product-price-select"></select>
+        <div class="form-box">
+          <h3>Lợi nhuận theo sản phẩm</h3>
+          <div class="form-group">
+            <label for="product-price-select">Sản phẩm:</label>
+            <select id="product-price-select"></select>
+          </div>
+          <div class="form-group">
+            <label for="product-price-input">% Lợi nhuận:</label>
+            <input type="number" id="product-price-input" min="0" max="100">
+          </div>
+          <button id="save-product-price">Lưu theo sản phẩm</button>
+        </div>
       </div>
-      <div class="form-group">
-        <label for="product-price-input">% Lợi nhuận:</label>
-        <input type="number" id="product-price-input" min="0" max="100">
-      </div>
-      <button id="save-product-price">Lưu theo sản phẩm</button>
-    </div>
-  </div>
 
-  
-  <!-- Tra cứu lợi nhuận theo ngày -->
-  <div class="profit-date-search" style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-    <label for="profit-from">Từ ngày:</label>
-    <input type="date" id="profit-from">
-    <label for="profit-to">Đến ngày:</label>
-    <input type="date" id="profit-to">
-    <button id="btn-search-profit" class="btn">Tra cứu lợi nhuận</button>
-    <div id="profit-result" style="margin-left:8px;min-width:220px"></div>
-  </div>
-  <!-- =================== Bảng giá -->
-  <div id="priceTable" class="price-table"></div>
-</section>
+      
+      <!-- Tra cứu lợi nhuận theo ngày -->
+      <div class="profit-date-search" style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <label for="profit-from">Từ ngày:</label>
+        <input type="date" id="profit-from">
+        <label for="profit-to">Đến ngày:</label>
+        <input type="date" id="profit-to">
+        <button id="btn-search-profit" class="btn">Tra cứu lợi nhuận</button>
+        <div id="profit-result" style="margin-left:8px;min-width:220px"></div>
+      </div>
+      <!-- =================== Bảng giá -->
+      <div id="priceTable" class="price-table"></div>
+    </section>
 
 
      <section id="inventory" class="card section hidden">
-  <h3>📦 Quản lý tồn kho & cảnh báo</h3>
+      <h3>📦 Quản lý tồn kho & cảnh báo</h3>
 
-  <div class="controls">
-    <input id="inv-stock-threshold" type="number" placeholder="Nhập ngưỡng cảnh báo (ví dụ 10)">
-    <button id="inv-check-stock" class="btn">Kiểm tra tồn kho</button>
-  </div>
-  <div id="inv-stock-result" style="margin-top:15px;"></div>
+      <div class="controls">
+        <input id="inv-stock-threshold" type="number" placeholder="Nhập ngưỡng cảnh báo (ví dụ 10)">
+        <button id="inv-check-stock" class="btn">Kiểm tra tồn kho</button>
+      </div>
+      <div id="inv-stock-result" style="margin-top:15px;"></div>
 
-  <hr>
+      <hr>
 
-  <div class="controls">
-    <select id="inv-stock-category">
-      <option value="">-- Tất cả danh mục --</option>
-    </select>
-    <select id="inv-stock-product">
-      <option value="">-- Chọn sản phẩm --</option>
-    </select>
-    <button id="inv-btn-search-stock" class="btn">Tra cứu tồn</button>
-  </div>
-  <div id="inv-stock-search-result" class="mt-2"></div>
+      <div class="controls">
+        <select id="inv-stock-category">
+          <option value="">-- Tất cả danh mục --</option>
+        </select>
+        <select id="inv-stock-product">
+          <option value="">-- Chọn sản phẩm --</option>
+        </select>
+        <button id="inv-btn-search-stock" class="btn">Tra cứu tồn</button>
+      </div>
+      <div id="inv-stock-search-result" class="mt-2"></div>
 
-  <hr>
+      <hr>
 
-  <div class="controls">
-    <label>Từ ngày:</label>
-    <input type="date" id="inv-date-from">
-    <label>Đến ngày:</label>
-    <input type="date" id="inv-date-to">
-    <button id="inv-btn-stock-stats" class="btn">Thống kê</button>
-  </div>
-  <div id="inv-stock-stats" class="mt-2"></div>
-</section>
+      <div class="controls">
+        <label>Từ ngày:</label>
+        <input type="date" id="inv-date-from">
+        <label>Đến ngày:</label>
+        <input type="date" id="inv-date-to">
+        <button id="inv-btn-stock-stats" class="btn">Thống kê</button>
+      </div>
+      <div id="inv-stock-stats" class="mt-2"></div>
+    </section>
+    
       <section id="settings" class="card section hidden">
         <h3>Cài đặt</h3>
         <div class="small">Một số tùy chọn: đồng bộ dữ liệu khách hàng, reset dữ liệu mẫu.</div>

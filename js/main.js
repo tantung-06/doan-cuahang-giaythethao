@@ -49,14 +49,34 @@ const formRegister = document.getElementById('form-2');
 formRegister.onsubmit = e => {
     e.preventDefault();
     const { username, email, password } = formRegister;
-    if (!username.value.trim() || !email.value.trim() || !password.value.trim())
-        return alert('Vui lòng điền đầy đủ thông tin!');
+
+    document.querySelector('.err-username').textContent = "";
+    document.querySelector('.err-email').textContent = "";
+    document.querySelector('.err-password').textContent = "";
+
+    let hasError = false;
+
+    if (!username.value.trim()) {
+        document.querySelector('.err-username').textContent = "Vui lòng nhập họ và tên";
+        hasError = true;
+    }
+    if (!email.value.trim()) {
+        document.querySelector('.err-email').textContent = "Vui lòng nhập email";
+        hasError = true;
+    }
+    if (!password.value.trim()) {
+        document.querySelector('.err-password').textContent = "Vui lòng nhập mật khẩu";
+        hasError = true;
+    }
+
+    if (hasError) return;
+
 
     // --- Kiểm tra đuôi email ---
     const validDomains = ['@gmail.com', '@sgu.edu.vn'];
     const emailValue = email.value.trim();
     if (!validDomains.some(domain => emailValue.endsWith(domain))) {
-        return alert('Email phải có đuôi @gmail.com hoặc @sgu.edu.vn!');
+        return alert('Email phải có đuôi @gmail.com hoặc @sgu.edu.vn');
     }
 
     // ĐỌC TỪ 'users' (dùng chung với admin)
@@ -93,6 +113,22 @@ formLogin.onsubmit = e => {
     e.preventDefault();
     const { email, password } = formLogin;
 
+    document.querySelector('.login-err-email').textContent = "";
+    document.querySelector('.login-err-password').textContent = "";
+
+    let loginError = false;
+
+    if (!email.value.trim()) {
+        document.querySelector('.login-err-email').textContent = "Vui lòng nhập email";
+        loginError = true;
+    }
+    if (!password.value.trim()) {
+        document.querySelector('.login-err-password').textContent = "Vui lòng nhập mật khẩu";
+        loginError = true;
+    }
+
+    if (loginError) return;
+
     // --- Kiểm tra đuôi email ---
     const validDomains = ['@gmail.com', '@sgu.edu.vn'];
     const emailValue = email.value.trim();
@@ -119,6 +155,13 @@ formLogin.onsubmit = e => {
     if (typeof updateMiniCart === 'function') updateMiniCart();
     if (typeof updateCartDetail === 'function') updateCartDetail();
 };
+
+document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('input', () => {
+        const err = input.parentElement.querySelector('.err');
+        if (err) err.textContent = "";
+    });
+});
 
 // --- Hiển thị tên người dùng ---
 function showUserName(name) {

@@ -800,19 +800,34 @@ function getProducts() {
       profitPercent,
       saleOff,
       finalPrice,
+      // Keep legacy display field in sync so Products view shows updated price
+      priceCurrent: finalPrice || price || basePrice,
       category
     };
   });
 
   // Persist normalized data back so subsequent calls are consistent
   localStorage.setItem('products', JSON.stringify(productsLocal));
+  // Keep the in-memory cache in sync so UI views reflect changes
+  try{ productsCache = productsLocal.map(p=>({...p, hidden: p.hidden || false})); }catch(e){ productsCache = productsLocal; }
   return productsLocal;
 }
 
 // Lưu sản phẩm và cập nhật bảng giá cuối
 function saveProducts(productsLocal) {
+    // Ensure display priceCurrent is set from finalPrice so Products view reflects changes
+    try{
+      productsLocal = productsLocal.map(p => ({ ...p, priceCurrent: p.finalPrice ?? p.price ?? p.basePrice }));
+    }catch(e){ /* ignore */ }
+    // Persist normalized products and update pricing table
     localStorage.setItem('products', JSON.stringify(productsLocal));
     updatePriceTableWithSale(productsLocal);
+    // Keep the in-memory cache and products list in sync so changes appear in Products view
+    try{
+      productsCache = productsLocal.map(p=>({...p, hidden: p.hidden || false}));
+    }catch(e){ productsCache = productsLocal; }
+    // Re-render products table with current filters/search
+    try{ renderProducts(searchInput?.value?.trim() || '', categorySelect?.value || '', true); }catch(e){ /* ignore if UI not ready */ }
 }
 
 // Cập nhật bảng prices trong localStorage
