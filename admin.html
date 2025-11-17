@@ -93,6 +93,34 @@
           <select id="filter-category"><option value="">Tất cả danh mục</option></select>
           <button id="add-product" class="btn primary">Thêm sản phẩm</button>
         </div>
+        <!-- Form thêm sản phẩm (Admin) -->
+        <div id="admin-add-product-form" class="card hidden" style="margin-bottom:12px;">
+          <h3>Thêm sản phẩm mới</h3>
+          <div class="form-grid">
+            <input id="ap-sku" placeholder="Mã SKU">
+            <input id="ap-name" placeholder="Tên sản phẩm *">
+            <input id="ap-company" placeholder="Thương hiệu">
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="ap-img" placeholder="Link ảnh (ví dụ ./assest/img/your.jpg)">
+              <input id="ap-img-file" type="file" accept="image/*" style="width:220px">
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <img id="ap-img-preview" src="" alt="preview" style="max-width:120px;max-height:80px;display:none;border-radius:6px;border:1px solid #ddd">
+              <small class="small">Chọn file từ máy sẽ lưu ảnh dưới dạng data URL.</small>
+            </div>
+            <input id="ap-priceCurrent" type="number" placeholder="Giá hiện tại (VNĐ)" min="0">
+            <input id="ap-stock" type="number" placeholder="Tồn kho" min="0">
+            <input id="ap-category" list="ap-category-list" placeholder="Danh mục (phân cách bằng ,)">
+            <datalist id="ap-category-list"></datalist>
+            <input id="ap-saleOff" type="number" placeholder="Giảm giá (%)" min="0" max="100">
+            <input id="ap-finalPrice" type="number" placeholder="Giá sau giảm (tùy chọn)">
+            <textarea id="ap-description" placeholder="Mô tả (không bắt buộc)" rows="2"></textarea>
+          </div>
+          <div style="margin-top:8px;display:flex;gap:8px;">
+            <button id="ap-save-product" class="btn primary">Lưu sản phẩm</button>
+            <button id="ap-cancel-product" class="btn">Hủy</button>
+          </div>
+        </div>
         <div id="products-wrap">
           <table>
             <thead>
@@ -115,6 +143,7 @@
         <h3>Phiếu nhập</h3>
         <div class="controls">
           <button id="add-import" class="btn primary">Tạo phiếu nhập mới</button>
+          <select id="import-filter-category"><option value="">Tất cả danh mục</option></select>
         </div>
         <div id="import-form" class="card hidden" style="margin-top:20px;">
           <h3>Tạo phiếu nhập mới</h3>
@@ -124,6 +153,9 @@
 
           <label for="import-qty">Số lượng nhập</label>
           <input type="number" id="import-qty" min="1" placeholder="Nhập số lượng">
+
+          <label for="import-price">Giá nhập (VNĐ)</label>
+          <input type="number" id="import-price" min="0" placeholder="Giá nhập (VNĐ)">
 
           <label for="import-status">Trạng thái phiếu</label>
           <select id="import-status">
@@ -138,7 +170,18 @@
         </div>
         <table>
           <thead>
-            <tr><th>#</th><th>Ngày</th><th>Sản phẩm</th><th>Tổng SL</th><th>Trạng thái</th><th>Hành động</th><th>Thao tác</th></tr>
+            <tr>
+              <th>#</th>
+              <th>Ngày</th>
+              <th>Sản phẩm</th>
+              <th>Loại</th>
+              <th>Giá nhập</th>
+              <th>Thành tiền</th>
+              <th>Tổng SL</th>
+              <th>Trạng thái</th>
+              <th>Hành động</th>
+              <th>Thao tác</th>
+            </tr>
           </thead>
           <tbody id="imports-table"></tbody>
         </table>
@@ -163,58 +206,87 @@
         </table>
       </section>
 
-      <section id="pricing" class="card section hidden">
-        <h3>Quản lý giá & tỉ lệ lợi nhuận</h3>
-        <div style="margin-top:12px" class="form-grid">
-          <div>
-            <label>Tỉ lệ lợi nhuận (theo danh mục)</label>
-            <select id="profit-category"><option value="">Chọn danh mục</option></select>
-            <input id="profit-percent" placeholder="% lợi nhuận (vd: 20)">
-            <button id="apply-profit" class="btn primary">Áp dụng</button>
-          </div>
-          <div>
-            <label>Chỉnh giá sản phẩm trực tiếp</label>
-            <select id="product-price-select"><option value="">Chọn sản phẩm</option></select>
-            <input id="product-price-input" placeholder="Giá bán (VND)">
-            <button id="save-product-price" class="btn primary">Lưu</button>
-          </div>
-        </div>
-      </section>
+    <section id="pricing" class="card section hidden">
+  <h2>Quản lý Giá & Lợi nhuận</h2>
+  <p class="small">Điều chỉnh % lợi nhuận theo danh mục hoặc từng sản phẩm. Giá bán và giảm giá được cập nhật tự động.</p>
 
-      <section id="inventory" class="card section hidden">
-        <h3>📦 Quản lý tồn kho & cảnh báo</h3>
+  <!-- =================== Form quản lý -->
+  <div class="form-container">
+    <div class="form-box">
+      <h3>Lợi nhuận theo danh mục</h3>
+      <div class="form-group">
+        <label for="profit-category">Danh mục:</label>
+        <select id="profit-category"></select>
+      </div>
+      <div class="form-group">
+        <label for="profit-percent">% Lợi nhuận:</label>
+        <input type="number" id="profit-percent" min="0" max="100"> 
+      </div>
+      <button id="apply-profit">Áp dụng theo danh mục</button>
+    </div>
 
-        <div class="controls">
-          <input id="inv-stock-threshold" type="number" placeholder="Nhập ngưỡng cảnh báo (ví dụ 10)">
-          <button id="inv-check-stock" class="btn">Kiểm tra tồn kho</button>
-        </div>
-        <div id="inv-stock-result" style="margin-top:15px;"></div>
+    <div class="form-box">
+      <h3>Lợi nhuận theo sản phẩm</h3>
+      <div class="form-group">
+        <label for="product-price-select">Sản phẩm:</label>
+        <select id="product-price-select"></select>
+      </div>
+      <div class="form-group">
+        <label for="product-price-input">% Lợi nhuận:</label>
+        <input type="number" id="product-price-input" min="0" max="100">
+      </div>
+      <button id="save-product-price">Lưu theo sản phẩm</button>
+    </div>
+  </div>
 
-        <hr>
+  
+  <!-- Tra cứu lợi nhuận theo ngày -->
+  <div class="profit-date-search" style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+    <label for="profit-from">Từ ngày:</label>
+    <input type="date" id="profit-from">
+    <label for="profit-to">Đến ngày:</label>
+    <input type="date" id="profit-to">
+    <button id="btn-search-profit" class="btn">Tra cứu lợi nhuận</button>
+    <div id="profit-result" style="margin-left:8px;min-width:220px"></div>
+  </div>
+  <!-- =================== Bảng giá -->
+  <div id="priceTable" class="price-table"></div>
+</section>
 
-        <div class="controls">
-          <select id="inv-stock-category">
-            <option value="">-- Tất cả danh mục --</option>
-          </select>
-          <select id="inv-stock-product">
-            <option value="">-- Chọn sản phẩm --</option>
-          </select>
-          <button id="inv-btn-search-stock" class="btn">Tra cứu tồn</button>
-        </div>
-        <div id="inv-stock-search-result" class="mt-2"></div>
 
-        <hr>
+     <section id="inventory" class="card section hidden">
+  <h3>📦 Quản lý tồn kho & cảnh báo</h3>
 
-        <div class="controls">
-          <label>Từ ngày:</label>
-          <input type="date" id="inv-date-from">
-          <label>Đến ngày:</label>
-          <input type="date" id="inv-date-to">
-          <button id="inv-btn-stock-stats" class="btn">Thống kê</button>
-        </div>
-        <div id="inv-stock-stats" class="mt-2"></div>
-      </section>
+  <div class="controls">
+    <input id="inv-stock-threshold" type="number" placeholder="Nhập ngưỡng cảnh báo (ví dụ 10)">
+    <button id="inv-check-stock" class="btn">Kiểm tra tồn kho</button>
+  </div>
+  <div id="inv-stock-result" style="margin-top:15px;"></div>
 
+  <hr>
+
+  <div class="controls">
+    <select id="inv-stock-category">
+      <option value="">-- Tất cả danh mục --</option>
+    </select>
+    <select id="inv-stock-product">
+      <option value="">-- Chọn sản phẩm --</option>
+    </select>
+    <button id="inv-btn-search-stock" class="btn">Tra cứu tồn</button>
+  </div>
+  <div id="inv-stock-search-result" class="mt-2"></div>
+
+  <hr>
+
+  <div class="controls">
+    <label>Từ ngày:</label>
+    <input type="date" id="inv-date-from">
+    <label>Đến ngày:</label>
+    <input type="date" id="inv-date-to">
+    <button id="inv-btn-stock-stats" class="btn">Thống kê</button>
+  </div>
+  <div id="inv-stock-stats" class="mt-2"></div>
+</section>
       <section id="settings" class="card section hidden">
         <h3>Cài đặt</h3>
         <div class="small">Một số tùy chọn: đồng bộ dữ liệu khách hàng, reset dữ liệu mẫu.</div>

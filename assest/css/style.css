@@ -706,18 +706,22 @@ header {
     background: var(--gray-d);
     color: var(--white);
     font-size: 1.5rem;
-    height: 40px;
+    height: auto;
+    width: 100%;
 }
 
 .footer-list {
     padding: 10px 0 0 20px;
     line-height: 20px;
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width:100%;
+    max-width: 1500px;
 }
 
-.footer-list a {
-    color: var(--white);
-    text-decoration: underline;
+.footer-list p {
+    text-align: center;
 }
 
 /* Mobile: width < 740px */
@@ -774,12 +778,5 @@ header {
 
     .container-left {
         display: none;
-    }
-}
-/* Tablet: width >= 740px and width < 1024px */
-@media only screen and (min-width: 740px) and (max-width: 1023px) {
-    /* container */
-    .product-list {
-        width: 25%;
     }
 }

@@ -430,7 +430,7 @@ ensureSampleProducts();
 ensureSampleCategories();
 renderProducts('', '', true);
 
-/// ================================ QUẢN LÝ PHIẾU NHẬP =================================================
+// ================================ QUẢN LÝ PHIẾU NHẬP =================================================
 function read(key) {
   return JSON.parse(localStorage.getItem(key) || '[]');
 }
@@ -449,30 +449,73 @@ function renderImports() {
   const imports = read("imports");
   tbody.innerHTML = "";
 
+  const selectedCat = document.getElementById('import-filter-category')?.value || '';
+
   imports.forEach((imp, index) => {
     const tr = document.createElement("tr");
+    const statusText = importStatusMap[imp.status] || imp.status || '';
+
+    const item = (imp.items && imp.items[0]) || {};
+    let itemCategory = item.category || '';
+    if(!itemCategory && item.id){
+      const prod = read('products').find(p => p.id === item.id);
+      if(prod){ itemCategory = Array.isArray(prod.category) ? prod.category.join(', ') : (prod.category || ''); }
+    }
+
+    if(selectedCat && !itemCategory.includes(selectedCat)) return;
+
+    const canEdit = imp.status !== 'done';
+    const unitPrice = Number(item.price || 0);
+    const lineTotal = unitPrice * (Number(item.qty) || 0);
     tr.innerHTML = `
       <td>${index + 1}</td>
       <td>${imp.date}</td>
-      <td>${imp.items.length} SP</td>
+      <td>${(item.name) ? item.name : ((imp.items||[]).length + ' SP')}</td>
+      <td>${itemCategory}</td>
+      <td>${unitPrice? formatVND(unitPrice) : ''}</td>
+      <td>${lineTotal? formatVND(lineTotal) : ''}</td>
       <td>${imp.totalQty}</td>
-      <td>${imp.status}</td>
-      <td><button class="btn small" onclick="viewImport('${imp.id}')">Xem</button></td>
+      <td>${statusText}</td>
+      <td>
+        <button class="btn small" onclick="viewImport('${imp.id}')">Xem</button>
+        ${canEdit ? `<button class="btn small" onclick="editImport('${imp.id}')">Chỉnh sửa</button>` : ''}
+      </td>
       <td><button class="btn small danger" onclick="deleteImport('${imp.id}')">X</button></td>
     `;
     tbody.appendChild(tr);
   });
 }
 
+window.editImport = function(id){
+  const imports = read('imports') || [];
+  const imp = imports.find(i => i.id === id);
+  if(!imp) return alert('Không tìm thấy phiếu nhập');
+
+  if(imp.status === 'done') return alert('Phiếu nhập đã hoàn tất, không thể chỉnh sửa');
+
+  editingImportId = id;
+  importForm.classList.remove('hidden');
+  loadProductsToSelect();
+  const item = (imp.items && imp.items[0]) || {};
+  importProduct.value = item.id || '';
+  importQty.value = item.qty || 1;
+  const importPriceInput = document.getElementById('import-price');
+  if(importPriceInput) importPriceInput.value = (item.price != null) ? item.price : '';
+  importStatus.value = imp.status || 'pending';
+};
+
 // Xem chi tiết phiếu nhập
 function viewImport(id) {
   const imports = read("imports");
   const imp = imports.find(i => i.id === id);
   if (!imp) return;
+  const statusText = importStatusMap[imp.status] || imp.status || '';
 
-  let text = `PHIẾU NHẬP: ${id}\nNgày: ${imp.date}\n\nSẢN PHẨM:\n`;
+  let text = `PHIẾU NHẬP: ${id}\nNgày: ${imp.date}\nTrạng thái: ${statusText}\n\nSẢN PHẨM:\n`;
   imp.items.forEach(item => {
-    text += `- ${item.name}: SL ${item.qty}\n`;
+    const price = Number(item.price || 0);
+    const line = price ? ` | Giá: ${formatVND(price)} | Thành tiền: ${formatVND(price * (Number(item.qty)||0))}` : '';
+    text += `- ${item.name}: SL ${item.qty}${line}\n`;
   });
   alert(text);
 }
@@ -495,22 +538,44 @@ const importStatus = document.getElementById("import-status");
 const btnSaveImport = document.getElementById("btn-save-import");
 const btnCancelImport = document.getElementById("btn-cancel-import");
 
+let editingImportId = null;
+
+const importStatusMap = { pending: 'Chờ duyệt', done: 'Hoàn tất' };
+
 // Điền danh sách sản phẩm vào select
 function loadProductsToSelect() {
   const products = read("products");
   importProduct.innerHTML = products.map(p => `<option value="${p.id}">${p.name}</option>`).join("");
 }
 
+if(typeof importProduct !== 'undefined' && importProduct){
+  importProduct.addEventListener('change', ()=>{
+    const p = read('products').find(x=>x.id === importProduct.value);
+    const priceInput = document.getElementById('import-price');
+    if(priceInput) priceInput.value = p ? (p.priceCurrent || p.price || 0) : '';
+  });
+}
+
 // Hiển thị / ẩn form ngay dưới nút
 addImportBtn.onclick = () => {
+  editingImportId = null;
   importForm.classList.toggle("hidden");
   loadProductsToSelect();
+  setTimeout(()=>{
+    const p = read('products').find(x=>x.id === importProduct.value);
+    const priceInput = document.getElementById('import-price');
+    if(priceInput) priceInput.value = p ? (p.priceCurrent || p.price || '') : '';
+  }, 10);
 };
 
 // Hủy phiếu nhập
 btnCancelImport.onclick = () => {
   importForm.classList.add("hidden");
   importQty.value = 1;
+  importProduct.value = '';
+  importStatus.value = 'pending';
+  const importPriceInput = document.getElementById('import-price'); if(importPriceInput) importPriceInput.value = '';
+  editingImportId = null;
 };
 
 // Lưu phiếu nhập
@@ -519,6 +584,7 @@ btnSaveImport.onclick = () => {
   const productId = importProduct.value;
   const qty = Number(importQty.value);
   const status = importStatus.value;
+  const unitPrice = Number(document.getElementById('import-price')?.value) || 0;
 
   if (!productId || qty <= 0) {
     alert("Chọn sản phẩm và nhập số lượng hợp lệ");
@@ -530,48 +596,68 @@ btnSaveImport.onclick = () => {
   const prod = products.find(p => p.id === productId);
   if (!prod) return;
 
-  // Cập nhật số lượng kho
-  prod.stock = (prod.stock || 0) + qty;
-  write("products", products);
+  const imports = read("imports");
 
-  // **Cập nhật productsCache để đồng bộ dữ liệu**
-  productsCache = products;
+  if(editingImportId){
+    const imp = imports.find(i => i.id === editingImportId);
+    if(!imp) return alert('Không tìm thấy phiếu nhập để chỉnh sửa');
 
-  // **Cập nhật giao diện danh sách sản phẩm ngay**
-  const searchInput = document.getElementById('product-search');
-  const categorySelect = document.getElementById('filter-category');
-  if (typeof renderProducts === "function") {
-    renderProducts(
-      searchInput ? searchInput.value.trim() : '', 
-      categorySelect ? categorySelect.value : '', 
-      true
-    );
+    const oldItem = (imp.items && imp.items[0]) || {};
+    const oldProdId = oldItem.id;
+    const oldQty = Number(oldItem.qty) || 0;
+
+    if(oldProdId !== productId){
+      const oldProd = products.find(p => p.id === oldProdId);
+      if(oldProd){ oldProd.stock = Math.max(0, (oldProd.stock || 0) - oldQty); }
+      prod.stock = (prod.stock || 0) + qty;
+    } else {
+      const diff = qty - oldQty;
+      prod.stock = Math.max(0, (prod.stock || 0) + diff);
+    }
+
+    const catStr = Array.isArray(prod.category) ? prod.category.join(', ') : (prod.category || '');
+    imp.items = [{ id: prod.id, name: prod.name, qty, category: catStr, price: unitPrice }];
+    imp.totalQty = qty;
+    imp.status = status;
+    imp.date = date;
+
+    write('products', products);
+    productsCache = products;
+    write('imports', imports);
+    renderImports();
+    renderProducts(searchInput.value.trim(), categorySelect.value, true);
+
+    editingImportId = null;
+    importForm.classList.add('hidden');
+    importQty.value = 1;
+    importProduct.value = '';
+    importStatus.value = 'pending';
+    alert('Đã cập nhật phiếu nhập');
+    return;
   }
 
-  // Tạo phiếu nhập mới
-  const imports = read("imports");
+  prod.stock = (prod.stock || 0) + qty;
+  write('products', products);
+  productsCache = products;
+  renderProducts(searchInput.value.trim(), categorySelect.value, true);
+
+  const catStrNew = Array.isArray(prod.category) ? prod.category.join(', ') : (prod.category || '');
   imports.push({
     id: generateImportID(),
     date,
     totalQty: qty,
-    status: status === "done" ? "Hoàn tất" : "Chờ duyệt",
-    items: [{ id: prod.id, name: prod.name, qty }]
+    status: status,
+    items: [{ id: prod.id, name: prod.name, qty, category: catStrNew, price: unitPrice }]
   });
-  write("imports", imports);
-
-  // Render lại danh sách phiếu nhập
+  write('imports', imports);
   renderImports();
-
-  // Reset và ẩn form
-  importForm.classList.add("hidden");
+  importForm.classList.add('hidden');
   importQty.value = 1;
-
-  alert("Đã tạo phiếu nhập thành công");
+  alert('Đã tạo phiếu nhập thành công');
 };
 
 // Khởi tạo danh sách
 renderImports();
-
 // ======================================== QUẢN LÝ ĐƠN HÀNG ==================================================
 const statusMap = {
   'new': 'Mới',
@@ -691,249 +777,320 @@ window.addEventListener('storage', (e) => {
 });
 
 // ============================== QUẢN LÝ GIÁ BÁN VÀ LỢI NHUẬN =======================================
-function getCategoryProfitList(){ return read('categoryProfit') || []; }
-function saveCategoryProfitList(list){ write('categoryProfit', list); }
-function getProductProfitList(){ return read('productProfit') || []; }
-function saveProductProfitList(list){ write('productProfit', list); }
+// Lấy danh sách sản phẩm, chuẩn hóa dữ liệu
+function getProducts() {
+  // Normalize product entries from different schema versions so pricing module
+  // can safely assume fields: id (string), ma, basePrice, price, profitPercent, saleOff, finalPrice, category (string)
+  let productsLocal = JSON.parse(localStorage.getItem('products')) || [];
+  productsLocal = productsLocal.map(p => {
+    const basePrice = Number(p.basePrice ?? p.price ?? p.priceCurrent ?? 0) || 0;
+    const profitPercent = Number(p.profitPercent ?? 0) || 0;
+    const saleOff = Number(p.saleOff ?? 0) || 0;
+    const price = Number(p.price ?? p.priceCurrent ?? Math.round(basePrice * (1 + profitPercent / 100))) || 0;
+    const finalPrice = Number(p.finalPrice ?? Math.round(price * (1 - saleOff / 100))) || 0;
+    const ma = p.ma ?? p.sku ?? p.id ?? '';
+    const category = Array.isArray(p.category) ? p.category.join(', ') : (p.category ?? '');
 
-function getProductProfit(product){
-  const productProfit = getProductProfitList();
-  const found = productProfit.find(x => x.id === product.id);
-  if(found) return Number(found.profit) || 0;
-
-  const categoryProfit = getCategoryProfitList();
-  let max = 0;
-  const cats = Array.isArray(product.category) ? product.category : (product.category ? [product.category] : []);
-  cats.forEach(cat => {
-    const cp = categoryProfit.find(c => c.category === cat);
-    if(cp && Number(cp.profit) > max) max = Number(cp.profit);
-  });
-  return max;
-}
-
-function calcSellingPrice(cost, profitPercent){
-  cost = Number(cost) || 0;
-  profitPercent = Number(profitPercent) || 0;
-  return Math.round(cost * (1 + profitPercent/100));
-}
-
-function getProductCostFallback(p){
-  if(p == null) return 0;
-  if(p.cost != null && p.cost !== '') return Number(p.cost);
-  if(p.priceCurrent != null && p.priceCurrent !== '') return Number(p.priceCurrent);
-  return 0;
-}
-
-function populatePricingSelections(){
-  const profitCategory = document.getElementById('profit-category');
-  const productSelect = document.getElementById('product-price-select');
-  if(!profitCategory || !productSelect) return;
-
-  const products = read('products') || [];
-  const cats = new Set();
-  products.forEach(p => {
-    if(Array.isArray(p.category)) p.category.forEach(c => cats.add(c));
-    else if(p.category) cats.add(p.category);
-  });
-
-  profitCategory.innerHTML = '<option value="">Chọn danh mục</option>';
-  Array.from(cats).sort().forEach(cat => {
-    const opt = document.createElement('option');
-    opt.value = cat;
-    opt.textContent = cat;
-    profitCategory.appendChild(opt);
-  });
-
-  productSelect.innerHTML = '<option value="">Chọn sản phẩm</option>';
-  products.forEach(p => {
-    const opt = document.createElement('option');
-    opt.value = p.id;
-    opt.textContent = `${p.name}${p.sku? ' — ' + p.sku : ''}`;
-    productSelect.appendChild(opt);
-  });
-}
-
-function applyCategoryProfit(){
-  const profitCategory = document.getElementById('profit-category');
-  const profitPercentInput = document.getElementById('profit-percent');
-  if(!profitCategory || !profitPercentInput) return alert('UI pricing chưa sẵn sàng');
-
-  const cat = profitCategory.value;
-  const profit = Number(profitPercentInput.value);
-  if(!cat) return alert('Chọn danh mục trước');
-  if(isNaN(profit)) return alert('Nhập % lợi nhuận hợp lệ');
-
-  const list = getCategoryProfitList();
-  const exist = list.find(x => x.category === cat);
-  if(exist) exist.profit = profit;
-  else list.push({category: cat, profit: profit});
-  saveCategoryProfitList(list);
-
-  let products = read('products') || [];
-  const productProfit = getProductProfitList();
-  products = products.map(p => {
-    const cats = Array.isArray(p.category) ? p.category : (p.category? [p.category] : []);
-    if(cats.includes(cat)){
-      const override = productProfit.find(pp => pp.id === p.id);
-      if(!override){
-        const cost = getProductCostFallback(p);
-        p.priceCurrent = calcSellingPrice(cost, profit);
-      }
-    }
-    return p;
-  });
-  write('products', products);
-
-  populatePricingSelections();
-  renderProductPricingTable();
-  if(typeof renderProducts === 'function') renderProducts('', '', true);
-  if(typeof renderProductsUser === 'function') renderProductsUser();
-
-  alert('Đã áp dụng % lợi nhuận cho danh mục: ' + cat);
-}
-
-function saveProductPriceDirect(){
-  const productSelect = document.getElementById('product-price-select');
-  const productPriceInput = document.getElementById('product-price-input');
-  if(!productSelect || !productPriceInput) return alert('UI pricing chưa sẵn sàng');
-
-  const id = productSelect.value;
-  let price = Number(productPriceInput.value);
-  if(!id) return alert('Chọn sản phẩm trước');
-  if(isNaN(price) || price < 0) return alert('Nhập giá hợp lệ');
-
-  const products = read('products') || [];
-  const p = products.find(x => x.id === id);
-  if(!p) return alert('Không tìm thấy sản phẩm');
-
-  p.priceCurrent = Math.round(price);
-  write('products', products);
-
-  renderProductPricingTable();
-  if(typeof renderProducts === 'function') renderProducts('', '', true);
-  if(typeof renderProductsUser === 'function') renderProductsUser();
-
-  alert('Đã lưu giá cho sản phẩm.');
-}
-
-function saveProductProfitOverride(id, profitValue){
-  const list = getProductProfitList();
-  const exist = list.find(x => x.id === id);
-  if(exist) exist.profit = Number(profitValue);
-  else list.push({id: id, profit: Number(profitValue)});
-  saveProductProfitList(list);
-
-  const products = read('products') || [];
-  const p = products.find(x => x.id === id);
-  if(p){
-    const cost = getProductCostFallback(p);
-    p.priceCurrent = calcSellingPrice(cost, profitValue);
-    write('products', products);
-  }
-}
-
-function renderProductPricingTable(){
-  const pricingSection = document.getElementById('pricing');
-  if(!pricingSection) return;
-
-  const old = document.getElementById('pricing-product-table');
-  if(old) old.remove();
-
-  const wrapper = document.createElement('div');
-  wrapper.id = 'pricing-product-table';
-  wrapper.style.marginTop = '12px';
-  wrapper.innerHTML = '<h4>Danh sách sản phẩm (tóm tắt)</h4>';
-
-  const table = document.createElement('table');
-  table.style.width = '100%';
-  table.style.borderCollapse = 'collapse';
-  table.innerHTML = `
-    <thead>
-      <tr style="text-align:left;background:#f5f5f5">
-        <th style="padding:6px">#</th>
-        <th style="padding:6px">Ảnh</th>
-        <th style="padding:6px">Tên</th>
-        <th style="padding:6px">Giá vốn</th>
-        <th style="padding:6px">% Lợi nhuận</th>
-        <th style="padding:6px">Giá bán</th>
-        <th style="padding:6px">Hành động</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  `;
-  wrapper.appendChild(table);
-  pricingSection.appendChild(wrapper);
-
-  const tbody = table.querySelector('tbody');
-  const products = read('products') || [];
-  const productProfit = getProductProfitList();
-
-  products.forEach((p, idx) => {
-    const cost = getProductCostFallback(p);
-    const appliedProfit = getProductProfit(p);
-    const selling = calcSellingPrice(cost, appliedProfit);
-
-    const tr = document.createElement('tr');
-    tr.style.borderTop = '1px solid #eee';
-    tr.innerHTML = `
-      <td style="padding:6px;vertical-align:middle">${idx+1}</td>
-      <td style="padding:6px;vertical-align:middle"><img src="${p.img||''}" width="48" style="object-fit:cover;border-radius:4px"></td>
-      <td style="padding:6px;vertical-align:middle">${p.name}</td>
-      <td style="padding:6px;vertical-align:middle">${formatVND(cost)}</td>
-      <td style="padding:6px;vertical-align:middle">
-        <input type="number" data-pid="${p.id}" class="pricing-profit-input" value="${appliedProfit}" style="width:80px">
-      </td>
-      <td style="padding:6px;vertical-align:middle">${formatVND(selling)}</td>
-      <td style="padding:6px;vertical-align:middle">
-        <button class="btn small apply-product-profit" data-id="${p.id}">Áp dụng</button>
-      </td>
-    `;
-    tbody.appendChild(tr);
-  });
-
-  wrapper.querySelectorAll('.apply-product-profit').forEach(btn => {
-    btn.onclick = () => {
-      const id = btn.dataset.id;
-      const input = wrapper.querySelector(`input[data-pid="${id}"]`);
-      const v = Number(input.value);
-      if(isNaN(v)) return alert('Nhập % lợi nhuận hợp lệ');
-      saveProductProfitOverride(id, v);
-      renderProductPricingTable();
-      if(typeof renderProducts === 'function') renderProducts('', '', true);
-      if(typeof renderProductsUser === 'function') renderProductsUser();
-      alert('Đã lưu % lợi nhuận cho sản phẩm');
+    return {
+      ...p,
+      id: p.id,
+      ma,
+      basePrice,
+      price,
+      profitPercent,
+      saleOff,
+      finalPrice,
+      category
     };
   });
+
+  // Persist normalized data back so subsequent calls are consistent
+  localStorage.setItem('products', JSON.stringify(productsLocal));
+  return productsLocal;
 }
 
-function initPricingModule(){
-  populatePricingSelections();
-  renderProductPricingTable();
+// Lưu sản phẩm và cập nhật bảng giá cuối
+function saveProducts(productsLocal) {
+    localStorage.setItem('products', JSON.stringify(productsLocal));
+    updatePriceTableWithSale(productsLocal);
+}
 
-  const applyBtn = document.getElementById('apply-profit');
-  const savePriceBtn = document.getElementById('save-product-price');
+// Cập nhật bảng prices trong localStorage
+function updatePriceTableWithSale(productsLocal) {
+    let prices = JSON.parse(localStorage.getItem("prices")) || [];
+    productsLocal.forEach(p => {
+        const idx = prices.findIndex(pr => pr.ma === p.ma);
+        const finalPrice = Math.round(p.price * (1 - (p.saleOff ?? 0)/100));
+        p.finalPrice = finalPrice;
+        if(idx >= 0){
+            prices[idx] = { ...prices[idx], price: p.price, finalPrice, saleOff: p.saleOff ?? 0 };
+        } else {
+            prices.push({ ma: p.ma, name: p.name, price: p.price, saleOff: p.saleOff ?? 0, finalPrice });
+        }
+    });
+    localStorage.setItem("prices", JSON.stringify(prices));
+}
 
-  applyBtn?.addEventListener('click', applyCategoryProfit);
-  savePriceBtn?.addEventListener('click', saveProductPriceDirect);
+// Populate danh mục & sản phẩm
+function populateCategoryFilters() {
+    const profitCat = document.getElementById("profit-category");
+    const productSelect = document.getElementById("product-price-select");
+    if (!profitCat || !productSelect) return;
 
-  const productSelect = document.getElementById('product-price-select');
-  const productPriceInput = document.getElementById('product-price-input');
-  productSelect?.addEventListener('change', ()=> {
-    const id = productSelect.value;
-    if(!id){ productPriceInput.value = ''; return; }
-    const products = read('products') || [];
-    const p = products.find(x => x.id === id);
-    if(p) productPriceInput.value = p.priceCurrent || '';
+    const selectedCat = profitCat.value;
+    const selectedProduct = productSelect.value;
+
+    const productsLocal = getProducts();
+    const categories = [...new Set(productsLocal.map(p => p.category))];
+
+    profitCat.innerHTML = `<option value="">Chọn danh mục</option>`;
+    categories.forEach(c => {
+        profitCat.innerHTML += `<option value="${c}" ${c === selectedCat ? 'selected' : ''}>${c}</option>`;
+    });
+
+    productSelect.innerHTML = `<option value="">Chọn sản phẩm</option>`;
+    productsLocal.forEach(p => {
+        productSelect.innerHTML += `<option value="${p.id}" ${p.id == selectedProduct ? 'selected' : ''}>${p.name}</option>`;
+    });
+}
+
+// Áp dụng lợi nhuận theo danh mục
+function applyProfitByCategory() {
+    const btn = document.getElementById("apply-profit");
+    if (!btn) return;
+
+    btn.addEventListener("click", () => {
+        const cat = document.getElementById("profit-category").value;
+        const percent = parseFloat(document.getElementById("profit-percent").value);
+        if (!cat || isNaN(percent)) return alert("Chọn danh mục và nhập % lợi nhuận hợp lệ");
+
+        const productsLocal = getProducts();
+        productsLocal.forEach(p => {
+            if (p.category === cat) {
+                p.profitPercent = percent;
+                p.price = Math.round(p.basePrice * (1 + percent / 100));
+                p.finalPrice = Math.round(p.price * (1 - (p.saleOff ?? 0)/100));
+            }
+        });
+        saveProducts(productsLocal);
+        renderProfitTable();
+        populateCategoryFilters();
+        if(percent < 5) alert(`⚠️ % lợi nhuận thấp (${percent}%) cho danh mục "${cat}"`);
+    });
+}
+
+// Áp dụng lợi nhuận theo sản phẩm
+function applyProfitByProduct() {
+    const btn = document.getElementById("save-product-price");
+    if (!btn) return;
+
+    btn.addEventListener("click", () => {
+    const id = document.getElementById("product-price-select").value; // keep ID as string
+        const percent = parseFloat(document.getElementById("product-price-input").value);
+        if (!id || isNaN(percent)) return alert("Chọn sản phẩm và nhập % lợi nhuận hợp lệ");
+
+        const productsLocal = getProducts();
+    const product = productsLocal.find(p => String(p.id) === String(id));
+        if (product) {
+            product.profitPercent = percent;
+            product.price = Math.round(product.basePrice * (1 + percent / 100));
+            product.finalPrice = Math.round(product.price * (1 - (product.saleOff ?? 0)/100));
+            saveProducts(productsLocal);
+            updateProductRow(product);
+            if(percent < 5) alert(`⚠️ % lợi nhuận thấp (${percent}%) cho sản phẩm "${product.name}"`);
+        }
+    });
+}
+
+// Render toàn bộ bảng lợi nhuận + giảm giá
+function renderProfitTable() {
+    const container = document.getElementById("priceTable");
+    if (!container) return;
+
+    const productsLocal = getProducts();
+    if (productsLocal.length === 0) {
+        container.innerHTML = "<p>Chưa có sản phẩm!</p>";
+        return;
+    }
+
+    let html = `
+        <table border="1" cellspacing="0" cellpadding="6" width="100%">
+            <tr style="background:#2f3e46;color:white;">
+                <th>Mã SP</th>
+                <th>Tên SP</th>
+                <th>Danh mục</th>
+                <th>Giá vốn (VNĐ)</th>
+                <th>% Lợi nhuận</th>
+                <th>Giá bán (VNĐ)</th>
+                <th>Giảm giá (%)</th>
+                <th>Giá cuối (VNĐ)</th>
+                <th>Chỉnh % lợi nhuận</th>
+            </tr>
+    `;
+
+    productsLocal.forEach(p => {
+        const colorAlert = p.profitPercent < 5 ? 'style="background:#ffcccc"' : '';
+        html += `
+            <tr id="row-${p.id}" ${colorAlert}>
+                <td>${p.ma}</td>
+                <td>${p.name}</td>
+                <td>${p.category}</td>
+                <td>${p.basePrice.toLocaleString("vi-VN")}</td>
+                <td class="cell-profit">${p.profitPercent}</td>
+                <td class="cell-price">${p.price.toLocaleString("vi-VN")}</td>
+                <td><input type="number" min="0" max="100" value="${p.saleOff ?? 0}" data-id="${p.id}" class="inputSale" style="width:50px"></td>
+                <td class="cell-finalPrice">${p.finalPrice.toLocaleString("vi-VN")}</td>
+                <td>
+                    <input type="number" min="0" max="100" value="${p.profitPercent}" data-id="${p.id}" class="inputProfit" style="width:60px">
+                    <button class="btnUpdateProfit" data-id="${p.id}">Lưu</button>
+                </td>
+            </tr>
+        `;
+    });
+
+    html += "</table>";
+    container.innerHTML = html;
+
+    // Gắn event delegation chỉ 1 lần
+    attachTableEvents();
+}
+
+// Cập nhật dòng sản phẩm thay vì render toàn bộ
+function updateProductRow(p) {
+    const row = document.getElementById(`row-${p.id}`);
+    if(!row) return;
+
+    row.querySelector('.cell-profit').textContent = p.profitPercent;
+    row.querySelector('.cell-price').textContent = p.price.toLocaleString("vi-VN");
+    row.querySelector('.cell-finalPrice').textContent = p.finalPrice.toLocaleString("vi-VN");
+    const inputSale = row.querySelector('.inputSale');
+    if(inputSale) inputSale.value = p.saleOff ?? 0;
+    const inputProfit = row.querySelector('.inputProfit');
+    if(inputProfit) inputProfit.value = p.profitPercent;
+
+    row.style.background = p.profitPercent < 5 ? '#ffcccc' : '';
+}
+
+// Gắn sự kiện cho table (Event Delegation)
+function attachTableEvents() {
+    const container = document.getElementById("priceTable");
+    if(!container) return;
+
+    container.onclick = function(e){
+        const btn = e.target.closest('.btnUpdateProfit');
+        if(btn){
+      const id = btn.dataset.id; // IDs are strings in our dataset
+      const input = container.querySelector(`.inputProfit[data-id='${id}']`);
+            const percent = parseFloat(input.value);
+            if (isNaN(percent) || percent < 0) return alert("Nhập % lợi nhuận hợp lệ (>=0)");
+            const productsLocal = getProducts();
+      const product = productsLocal.find(p => String(p.id) === String(id));
+            if(product){
+                product.profitPercent = percent;
+                product.price = Math.round(product.basePrice * (1 + percent / 100));
+                product.finalPrice = Math.round(product.price * (1 - (product.saleOff ?? 0)/100));
+                saveProducts(productsLocal);
+                updateProductRow(product);
+                if(percent < 5) alert(`⚠️ % lợi nhuận thấp (${percent}%) cho sản phẩm "${product.name}"`);
+            }
+        }
+    };
+
+    container.onchange = function(e){
+        const input = e.target.closest('.inputSale');
+        if(input){
+      const id = input.dataset.id;
+      let sale = parseFloat(input.value);
+            if (isNaN(sale) || sale < 0 || sale > 100){
+                alert("Nhập giảm giá hợp lệ 0-100%");
+                input.value = 0; sale = 0;
+            }
+            const productsLocal = getProducts();
+      const product = productsLocal.find(p => String(p.id) === String(id));
+            if(product){
+                product.saleOff = sale;
+                product.finalPrice = Math.round(product.price * (1 - sale/100));
+                saveProducts(productsLocal);
+                updateProductRow(product);
+            }
+        }
+    };
+}
+
+// Khởi chạy module
+function initProfitManagement() {
+    populateCategoryFilters();
+    applyProfitByCategory();
+    applyProfitByProduct();
+    renderProfitTable();
+}
+
+document.addEventListener("DOMContentLoaded", initProfitManagement);
+
+// ====================== Tra cứu lợi nhuận theo ngày =============================
+function computeProfitBetweenDates(){
+  const fromVal = document.getElementById('profit-from').value;
+  const toVal = document.getElementById('profit-to').value;
+  const resultWrap = document.getElementById('profit-result');
+  resultWrap.innerHTML = '';
+
+  if(!fromVal || !toVal){
+    resultWrap.innerHTML = '<span style="color:#d32f2f">Vui lòng chọn đủ 2 ngày</span>';
+    return;
+  }
+
+  const fromDate = new Date(fromVal + 'T00:00:00');
+  const toDate = new Date(toVal + 'T23:59:59');
+  if(fromDate > toDate){
+    resultWrap.innerHTML = '<span style="color:#d32f2f">Ngày bắt đầu phải trước hoặc bằng ngày kết thúc</span>';
+    return;
+  }
+
+  const orders = read('orders') || [];
+  const productsLocal = getProducts();
+
+  let totalRevenue = 0; // doanh thu
+  let totalCost = 0; // vốn
+  let totalProfit = 0;
+  let totalOrders = 0;
+  let totalItems = 0;
+
+  orders.forEach(o => {
+    // order.date expected in YYYY-MM-DD or ISO format
+    const od = new Date(o.date + 'T00:00:00');
+    if(od >= fromDate && od <= toDate){
+      totalOrders++;
+      (o.items || []).forEach(item => {
+        const qty = Number(item.qty) || 0;
+        const sellPrice = Number(item.price) || 0; // price at time of order
+        totalRevenue += sellPrice * qty;
+        totalItems += qty;
+
+        // try to find product to get basePrice
+        let prod = null;
+        if(item.id){ prod = productsLocal.find(p => String(p.id) === String(item.id)); }
+        if(!prod && item.name){ prod = productsLocal.find(p => p.name === item.name); }
+
+        const base = prod ? (Number(prod.basePrice) || Number(prod.price) || 0) : 0;
+        totalCost += base * qty;
+        totalProfit += (sellPrice - base) * qty;
+      });
+    }
   });
+
+  const format = formatVND;
+  resultWrap.innerHTML = `
+    <div style="font-size:14px">
+    <div><strong>Đơn hàng:</strong> ${totalOrders}</div>
+    <div><strong>Tổng số lượng:</strong> ${totalItems}</div>
+    <div><strong>Doanh thu:</strong> ${format(totalRevenue)}</div>
+    <div><strong>Vốn:</strong> ${format(totalCost)}</div>
+    <div><strong>Lợi nhuận:</strong> ${format(Math.round(totalProfit))}</div>
+    </div>
+  `;
 }
 
-window.initPricingModule = initPricingModule;
-window.renderProductPricingTable = renderProductPricingTable;
-window.populatePricingSelections = populatePricingSelections;
-
-window.addEventListener('load', ()=> {
-  setTimeout(()=> { try{ initPricingModule(); }catch(e){ /* ignore */ } }, 50);
-});
+document.getElementById('btn-search-profit')?.addEventListener('click', computeProfitBetweenDates);
 
 // ================================= QUẢN LÝ TỒN KHO ====================================================
 (function inventoryModule(){
